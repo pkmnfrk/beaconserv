@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    @Styles.Render("~/Content/css")
+    @*@@Scripts.Render("~/bundles/modernizr")*@
+</head>
+<body>
+
+    <div class="content" data-bind="template: { name:displayMode, foreach: cards }">
+        
+    </div>
+
+    <div class="header">
+        Cards in an HTML UI
+        <button data-bind="click: addTest1">Add 1.1</button>
+        <button data-bind="click: addTest41">Add 4.1</button>
+        <button data-bind="click: addTest42">Add 4.2</button>
+    </div>
+
+    <div class="footer">
+        &copy; 2014 Klick Inc.
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+
+    @Scripts.Render("~/Scripts/Main.js")
+    <script type="text/html" id="card_no_image">
+        <div class="card">
+            <h1 data-bind="text: title">Beacon hit!</h1>
+            <p data-bind="text: body">Body!</p>
+            <p data-bind="if: url, text:url"></p>
+        </div>
+    </script>
+    <script type="text/html" id="card_image">
+        <div class="card">
+            <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
+                <h1 data-bind="text: title">Beacon hit!</h1>
+            </div>
+            <p data-bind="text: body">Body!</p>
+            <p data-bind="if: url, text:url"></p>
+        </div>
+    </script>
+</body>
+</html>
+

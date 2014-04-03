@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    @Styles.Render("~/Content/css")
+    @*@@Scripts.Render("~/bundles/modernizr")*@
+</head>
+<body>
+
+    <div class="content">
+        <div data-bind="foreach: beacons">
+            <div class="card admin">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 100px"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>UUID:</td>
+                            <td><input type="text" data-bind="value: uuid" /></td>
+                        </tr>
+                        <tr>
+                            <td>Beacon ID:</td>
+                            <td><input type="text" data-bind="value: beaconid" /></td>
+                        </tr>
+                        <tr>
+                            <td>Title:</td>
+                            <td><input type="text" data-bind="value: title" /></td>
+                        </tr>
+                        <tr>
+                            <td>Url:</td>
+                            <td><input type="text" data-bind="value: url" /></td>
+                        </tr>
+                        <tr>
+                            <td>Body:</td>
+                            <td><textarea data-bind="value: bodyText"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>Image:</td>
+                            <td>
+                                <span data-bind="visible: image">
+                                    <img data-bind="attr: { src: image }" />
+                                </span>
+                                <span data-bind="visible: !image">
+                                    No image
+                                </span>
+
+                                <form style="display:inline-block; width: 400px;" enctype="multipart/form-data">
+                                    <input type="file" name="image" />
+                                    <br/>
+                                    <button type="button" data-bind="visible: image, click: $parent.removeImage">Remove Image</button>
+                                    @*<input type="button" value="Upload" data-bind="click: $parent.uploadImage" />*@
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <button data-bind="click: $parent.save">Save</button>
+                                <span class="savingmessage">Saving</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <button data-bind="click: addNew">Add New</button>
+    </div>
+
+    <div class="header">
+        Beacon admin
+    </div>
+
+    <div class="footer">
+        &copy; 2014 Klick Inc.
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+
+    @Scripts.Render("~/Scripts/Admin.js")
+    
+</body>
+</html>
+
