@@ -10,15 +10,10 @@
         return "card_no_image";
     }
 
-    self.addTest1 = function() {
-        beacon("2F73D96D-F86E-4F95-B88D-694CEFE5837F", 1, 1, "123456");
-    }
-
-    self.addTest41 = function () {
-        beacon("2F73D96D-F86E-4F95-B88D-694CEFE5837F", 4, 1, "123456");
-    }
-    self.addTest42 = function () {
-        beacon("2F73D96D-F86E-4F95-B88D-694CEFE5837F", 4, 2, "123456");
+    self.addTest = function () {
+        var major = prompt("Major", "4");
+        var minor = prompt("Minor", "1");
+        beacon("2F73D96D-F86E-4F95-B88D-694CEFE5837F", major, minor, "123456");
     }
 
     window.beacon = function (beacon_id, major, minor, device_id) {
