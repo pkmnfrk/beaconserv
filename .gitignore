@@ -3,5 +3,5 @@
 bin
 obj
 
-BeaconServSite\App_Data
-BeaconServSite\Content\photos
+BeaconServSite/App_Data/
+BeaconServSite/Content/photos/
