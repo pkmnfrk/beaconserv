@@ -5,6 +5,7 @@
     self.addNewUUID = function () {
         var uuid = prompt("What is the GUID?");
         if (!uuid) return;
+        if (uuid == "-") uuid = null;
 
         var newUUID = {
             uuid: uuid,
@@ -17,6 +18,8 @@
     self.addNewMajor = function (uuid) {
         var major = prompt("What is the major value?");
         if (!major) return;
+
+        if (major == "-") major = null;
 
         var newMajor = {
             uuid: uuid.uuid,
@@ -98,6 +101,8 @@
     
     self.addNewMinor = function (majore, evt) {
         var newBeacon = {};
+
+        majore.visible(true);
 
         newBeacon.uuid = ko.observable(majore.uuid);
         newBeacon.major = majore.major;

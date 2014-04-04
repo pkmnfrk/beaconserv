@@ -207,6 +207,12 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\hook-bg.png" />
+    <Content Include="Content\hook-bgs.png" />
+    <Content Include="Content\hook-spinner%402x.png" />
+    <Content Include="Content\hook-spinner.gif" />
+    <Content Include="Content\hook-spinner.png" />
+    <Content Include="Content\hook.css" />
     <Content Include="Content\images\arrow.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />

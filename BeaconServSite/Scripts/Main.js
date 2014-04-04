@@ -69,4 +69,6 @@
 
 ko.applyBindings(new MainViewModel());
 
-$("#hook").hook();
+$("#hook").hook({
+    swipeDistance: 150
+});
