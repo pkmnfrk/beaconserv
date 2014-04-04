@@ -15,6 +15,7 @@
     @*@@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
+    <div class="hook" id="hook"></div>
 
     <div class="content" data-bind="template: { name:displayMode, foreach: cards }">
         
@@ -31,8 +32,10 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/hook")
 
     @Scripts.Render("~/Scripts/Main.js")
+
     <script type="text/html" id="card_no_image">
         <div class="card">
             <h1 data-bind="text: title">Beacon hit!</h1>

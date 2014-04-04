@@ -68,3 +68,5 @@
 }
 
 ko.applyBindings(new MainViewModel());
+
+$("#hook").hook();

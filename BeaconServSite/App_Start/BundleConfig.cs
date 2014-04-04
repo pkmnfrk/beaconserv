@@ -39,8 +39,13 @@ namespace BeaconServSite
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/hook").Include(
+               "~/Scripts/hook.min.js",
+               "~/Scripts/mousewheel.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                 "~/Content/Site.css"));
+                 "~/Content/Site.css",
+                 "~/Content/hook.css"));
         }
     }
 }
