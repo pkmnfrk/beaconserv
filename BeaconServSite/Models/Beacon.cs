@@ -9,8 +9,7 @@ namespace BeaconServSite.Models
 {
     public class Beacon
     {
-        public string Id { get; set; }
-        public Guid UUID { get; set; }
+        public Guid? UUID { get; set; }
         public int? Major { get; set; }
         public int? Minor { get; set; }
 
@@ -24,14 +23,10 @@ namespace BeaconServSite.Models
 
         }
 
-        public Beacon(Guid g, XElement beacon)
+        public Beacon(Guid g, int? major, XElement beacon)
         {
-            if (beacon.Attribute("id") != null)
-                Id = beacon.Attribute("id").Value;
-
             UUID = g;
-            if(beacon.Attribute("major") != null)
-                Major = int.Parse(beacon.Attribute("major").Value);
+            Major = major;
 
             if (beacon.Attribute("minor") != null)
                 Minor = int.Parse(beacon.Attribute("minor").Value);
@@ -41,49 +36,83 @@ namespace BeaconServSite.Models
 
             Title = beacon.Element("title").Value;
             BodyText = beacon.Element("body").Value;
-            if(beacon.Element("image")!= null)
+            if (beacon.Element("image") != null)
                 Image = beacon.Element("image").Value;
         }
 
-        public static List<Beacon> LoadFromXml(XDocument doc)
+        public static Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> LoadFromXml(XDocument doc)
         {
 
-            List<Beacon> ret = new List<Beacon>();
+            if (doc.Root.Attribute("version") == null || doc.Root.Attribute("version").Value == "1")
+            {
+                throw new InvalidOperationException("Version 1 of the beacon format is not supported");
+                //return loadV1(doc);
+            }
+
+            if (doc.Root.Attribute("version").Value == "2")
+            {
+                return loadV2(doc);
+            }
+            throw new InvalidOperationException();
+        }
+
+        private static Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> loadV2(XDocument doc)
+        {
+            var ret = new Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>>();
 
             foreach (var uuid in doc.Root.Elements("uuid"))
             {
                 Guid g = new Guid(uuid.Attribute("value").Value);
+                if (ret.ContainsKey(g))
+                    throw new InvalidOperationException("The same UUID is listed twice");
 
-                foreach (var beacon in uuid.Elements("beacon"))
+                ret[g] = new Dictionary<int, Dictionary<int, Beacon>>();
+
+                foreach (var maj in uuid.Elements("major"))
                 {
-                    Beacon b = new Beacon(g, beacon);
-                    
-                    ret.Add(b);
-                }
+                    int? major = maj.Attribute("value") != null ? (int?)int.Parse(maj.Attribute("value").Value) : null;
 
-                if (uuid.Element("default") != null)
-                {
-                    Beacon b = new Beacon(g, uuid.Element("default"));
+                    if (ret[g].ContainsKey(major ?? -1))
+                        throw new InvalidOperationException("The same Major is listed twice in " + g);
 
+                    ret[g][major ?? -1] = new Dictionary<int, Beacon>();
 
-                    ret.Add(b);
+                    foreach (var beacon in maj.Elements("beacon"))
+                    {
+                        Beacon b = new Beacon(g, major, beacon);
+
+                        ret[g][major??-1].Add(b.Minor ?? -1, b);
+                    }
                 }
             }
 
             return ret;
         }
 
-        public static XDocument SerializeBeaconList(List<Beacon> beacons)
+        public static XDocument SerializeBeaconList(Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> beacons)
         {
             var ret = new XDocument(new XElement("beacons"));
 
-            var uuids = beacons.GroupBy(b => b.UUID).OrderBy(b => b.Key);
+            var uuids = beacons;
 
             foreach(var uuid in uuids) {
 
-                var el = new XElement("uuid", new XAttribute("value", uuid.Key), uuid.OrderBy(b => b.Major).ThenBy(b => b.Minor).Select(u => u.ToXml()));
+                var u = new XElement("uuid", new XAttribute("value", uuid.Key));
 
-                ret.Root.Add(el);
+                foreach (var major in uuid.Value)
+                {
+                    var ma = new XElement("major", new XAttribute("value", major.Key));
+
+                    foreach (var minor in major.Value.Values)
+                    {
+                        var b = minor.ToXml();
+                        ma.Add(b);
+                    }
+
+                    u.Add(ma);
+                }
+
+                ret.Root.Add(u);
             }
 
             return ret;
@@ -93,11 +122,6 @@ namespace BeaconServSite.Models
         {
             var ret = new XElement("beacon");
 
-            if (!string.IsNullOrEmpty(Id))
-                ret.Add(new XAttribute("id", Id));
-
-            if(Major.HasValue)
-                ret.Add(new XAttribute("major", Major));
             if(Minor.HasValue)
                 ret.Add(new XAttribute("minor", Minor));
             if(!string.IsNullOrEmpty(Title))

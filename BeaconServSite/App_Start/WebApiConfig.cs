@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using BeaconServSite.Formatters;
 
 namespace BeaconServSite
 {
@@ -19,6 +20,8 @@ namespace BeaconServSite
 
             // Use camel case for JSON data.
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            config.Formatters.Add(new BrowserJsonFormatter());
 
             // Web API routes
             config.MapHttpAttributeRoutes();

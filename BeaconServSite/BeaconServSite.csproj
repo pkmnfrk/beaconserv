@@ -203,8 +203,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Code\NullableDictionary.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Filters\EnsureClientAttribute.cs" />
+    <Compile Include="Formatters\BrowserJsonFormatter.cs" />
     <Compile Include="Models\Beacon.cs" />
     <Compile Include="Controllers\BeaconController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -219,7 +221,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\beacons.xml" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
