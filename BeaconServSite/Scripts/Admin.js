@@ -2,21 +2,30 @@
     var self = this;
 
     self.beacons = ko.observableArray([]);
-    self.addNew = function () {
-        var newBeacon = {};
+    self.addNewUUID = function () {
+        var uuid = prompt("What is the GUID?");
+        if (!uuid) return;
 
-        newBeacon.uuid = ko.observable(self.beacons()[self.beacons().length - 1].uuid());
-        newBeacon.major = ko.observable(null);
-        newBeacon.minor = ko.observable(null);
-        newBeacon.id = ko.observable("");
-        newBeacon.title = ko.observable("");
-        newBeacon.bodyText = ko.observable("");
-        newBeacon.url = ko.observable("");
-        newBeacon.image = ko.observable("");
+        var newUUID = {
+            uuid: uuid,
+            values: ko.observableArray()
+        };
 
-        newBeacon.beaconid = makebeaconid(newBeacon);
+        self.beacons.push(newUUID);
+    }
 
-        self.beacons.push(newBeacon);
+    self.addNewMajor = function (uuid) {
+        var major = prompt("What is the major value?");
+        if (!major) return;
+
+        var newMajor = {
+            uuid: uuid.uuid,
+            major: ko.observable(major),
+            visible: ko.observable(true),
+            values: ko.observableArray()
+        };
+
+        uuid.values.push(newMajor);
     }
 
     self.removeImage = function (newBeacon, evt) {
@@ -55,8 +64,19 @@
             return;
         }
 
+        var url = "/beacon/image";
+        if (obj.uuid) {
+            url += "?uuid=" + obj.uuid();
+            if (obj.major) {
+                url += "&major=" + obj.major();
+                if (obj.minor) {
+                    url += "&minor=" + obj.minor();
+                }
+            }
+        }
+
         $.ajax({
-            url: "/beacon/image",
+            url: url,
             type: "POST",
             data: formData,
             cache: false,
@@ -76,6 +96,27 @@
         });
     }
     
+    self.addNewMinor = function (majore, evt) {
+        var newBeacon = {};
+
+        newBeacon.uuid = ko.observable(majore.uuid);
+        newBeacon.major = majore.major;
+        newBeacon.minor = ko.observable(null);
+        newBeacon.id = ko.observable("");
+        newBeacon.title = ko.observable("");
+        newBeacon.bodyText = ko.observable("");
+        newBeacon.url = ko.observable("");
+        newBeacon.image = ko.observable("");
+
+
+        var newMinor = {
+            minor: newBeacon.minor,
+            value: newBeacon
+        };
+
+        majore.values.push(newMinor);
+
+    }
 
 
     var makebeaconid = function(to){
@@ -97,21 +138,85 @@
         });
     }
 
+    function addObservables(obj) {
+        for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                if (typeof (obj[i]) == "object") {
+                    addObservables(obj[i]);
+                }
+
+                obj[i] = ko.observable(obj[i]);
+            }
+        }
+
+        return obj;
+    };
+
+    self.expandMajor = function (majore, evt) {
+        var arrow = $(evt.currentTarget);
+
+        majore.visible(!majore.visible());
+        /*
+        if (!arrow.hasClass("open")) {
+            //arrow[0].style.animation = "arrowRotateOpen 1s ease 0 1 normal";
+            arrow
+                .addClass("open")
+                .removeClass("closed");
+        } else {
+            arrow
+                .removeClass("open")
+                .addClass("closed");
+        }
+        */
+
+    }
+
     jQuery.getJSON("/beacon/", {}, function (data, status) {
 
-        for (var i = 0; i < data.length; i++) {
-            var to = data[i];
+        var newGuid, newMajor, newMinor;
 
-            for (var j in data[i]) {
+        for (var g in data) {
+            if (data.hasOwnProperty(g)) {
 
-                if (to.hasOwnProperty(j)) {
-                    to[j] = ko.observable(to[j]);
+                newGuid = {
+                    uuid: g,
+                    values: ko.observableArray()
+                };
+
+                self.beacons.push(newGuid);
+                
+                for (var ma in data[g]) {
+
+                    if (data[g].hasOwnProperty(ma)) {
+
+                        newMajor = {
+                            uuid: g,
+                            major: ma,
+                            visible: ko.observable(false),
+                            values: ko.observableArray()
+                        };
+
+                        newGuid.values.push(newMajor)
+
+                        for (var mi in data[g][ma]) {
+                            if (data[g][ma].hasOwnProperty(mi)) {
+                                newMinor = {
+                                    minor: mi,
+                                    value: data[g][ma][mi]
+                                }
+
+                                addObservables(newMinor.value);
+
+                                newMajor.values.push(newMinor);
+                            }
+                        }
+                    }
                 }
             }
-
-            to.beaconid = makebeaconid(to);
         }
-        self.beacons(data);
+        
+        //to.beaconid = makebeaconid(to);
+        
 
     });
 }

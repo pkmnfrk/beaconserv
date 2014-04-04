@@ -60,6 +60,13 @@ namespace BeaconServSite.Controllers
             }
             else
             {
+                var app_data = HttpContext.Current.Server.MapPath("~/App_Data");
+
+                if (!Directory.Exists(app_data))
+                {
+                    Directory.CreateDirectory(app_data);
+                }
+
                 beacons = new Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>>();
             }
 
@@ -118,7 +125,7 @@ namespace BeaconServSite.Controllers
 
             if (old != null)
             {
-                if (!string.IsNullOrEmpty(old.Image))
+                if (!string.IsNullOrEmpty(old.Image) && old.Image != beacon.Image)
                 {
                     File.Delete(HttpContext.Current.Server.MapPath("~" + old.Image));
                 }
@@ -133,7 +140,7 @@ namespace BeaconServSite.Controllers
 
         [HttpPost]
         [Route("image")]
-        public async Task<string> UploadImage(Guid? uuid, int? major, int? minor)
+        public async Task<string> UploadImage([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
         {
             loadBeacons();
 
@@ -144,7 +151,14 @@ namespace BeaconServSite.Controllers
                 throw new HttpResponseException(System.Net.HttpStatusCode.BadRequest);
             }
 
-            var streamProvider = new MultipartFormDataStreamProvider(HttpContext.Current.Server.MapPath("~/Content/photos"));
+            var photoPath = HttpContext.Current.Server.MapPath("~/Content/photos");
+
+            if (!Directory.Exists(photoPath))
+            {
+                Directory.CreateDirectory(photoPath);
+            }
+
+            var streamProvider = new MultipartFormDataStreamProvider(photoPath);
 
             var bodyparts = await Request.Content.ReadAsMultipartAsync(streamProvider);
 
@@ -157,14 +171,30 @@ namespace BeaconServSite.Controllers
 
             var filename = Path.GetFileName(file.Headers.ContentDisposition.FileName.Trim('"'));
 
-            var destFilename = string.Format("{0}.{1}.{2}{3}", uuid ?? Guid.Empty, major ?? -1, minor ?? -1, Path.GetExtension(filename));
+            var rand = new Random();
+
+            var prefix = string.Format(
+                "{0}.{1}.{2}"
+                , uuid ?? Guid.Empty
+                , major ?? -1
+                , minor ?? -1
+            );
+
+            var destFilename = string.Format(
+                "{0}.{1:x}{2}"
+                , prefix
+                , rand.Next(0x1000,0xffff)
+                , Path.GetExtension(filename)
+            );
 
             var realNewFilename = HttpContext.Current.Server.MapPath("~/Content/photos/" + destFilename);
 
             try
             {
-                if (File.Exists(realNewFilename))
-                    File.Delete(realNewFilename);
+                foreach (var f in Directory.GetFiles(HttpContext.Current.Server.MapPath("~/Content/photos/"), prefix + ".*"))
+                {
+                    File.Delete(f);
+                }
                     
                 File.Move(file.LocalFileName, realNewFilename);
 

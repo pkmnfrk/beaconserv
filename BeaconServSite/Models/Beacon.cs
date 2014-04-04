@@ -18,6 +18,8 @@ namespace BeaconServSite.Models
         public string Url { get; set; }
         public string Image { get; set; }
 
+        public int MaxProximity { get; set; }
+
         public Beacon()
         {
 
@@ -91,7 +93,7 @@ namespace BeaconServSite.Models
 
         public static XDocument SerializeBeaconList(Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> beacons)
         {
-            var ret = new XDocument(new XElement("beacons"));
+            var ret = new XDocument(new XElement("beacons", new XAttribute("version", "2")));
 
             var uuids = beacons;
 

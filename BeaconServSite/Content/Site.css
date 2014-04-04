@@ -149,3 +149,37 @@
     width: 95%;
     height: 100px;
 }
+
+.arrow.open {
+    animation: arrowRotateOpen 500ms ease 0 1 normal forwards;
+    -webkit-animation: arrowRotateOpen 500ms ease 0 1 normal forwards;
+}
+
+.arrow.closed {
+    animation: arrowRotateClosed 500ms ease 0 1 normal forwards;
+    -webkit-animation: arrowRotateClosed 500ms ease 0 1 normal forwards;
+}
+
+@-webkit-keyframes arrowRotateOpen
+{
+    from{-webkit-transform: rotate( 0deg); }
+    to  {-webkit-transform: rotate(90deg);}
+}
+
+@keyframes arrowRotateOpen
+{
+    from{-webkit-transform: rotate( 0deg); }
+    to  {-webkit-transform: rotate(90deg);}
+}
+
+@-webkit-keyframes arrowRotateClosed
+{
+    from{-webkit-transform: rotate(90deg); }
+    to  {-webkit-transform: rotate( 0deg);}
+}
+
+@keyframes arrowRotateClosed
+{
+    from{-webkit-transform: rotate(90deg); }
+    to  {-webkit-transform: rotate( 0deg);}
+}
