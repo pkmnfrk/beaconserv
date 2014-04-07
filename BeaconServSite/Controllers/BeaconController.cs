@@ -140,7 +140,7 @@ namespace BeaconServSite.Controllers
 
         [HttpPost]
         [Route("image")]
-        public async Task<string> UploadImage([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
+        public async Task<object> UploadImage([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
         {
             loadBeacons();
 
@@ -170,6 +170,7 @@ namespace BeaconServSite.Controllers
             }
 
             var filename = Path.GetFileName(file.Headers.ContentDisposition.FileName.Trim('"'));
+            var extension = Path.GetExtension(filename);
 
             var rand = new Random();
 
@@ -184,10 +185,16 @@ namespace BeaconServSite.Controllers
                 "{0}.{1:x}{2}"
                 , prefix
                 , rand.Next(0x1000,0xffff)
-                , Path.GetExtension(filename)
+                , extension
             );
 
             var realNewFilename = HttpContext.Current.Server.MapPath("~/Content/photos/" + destFilename);
+            var type = Beacon.ImageTypeEnum.Image;
+
+            if (extension == ".avi" || extension == ".mp4")
+            {
+                type = Beacon.ImageTypeEnum.Video;
+            }
 
             try
             {
@@ -205,7 +212,11 @@ namespace BeaconServSite.Controllers
                 throw;
             }
 
-            return ControllerContext.Configuration.VirtualPathRoot + "Content/photos/" + destFilename;
+            return new
+            {
+                path = ControllerContext.Configuration.VirtualPathRoot + "Content/photos/" + destFilename,
+                type = type
+            };
             
             
         }

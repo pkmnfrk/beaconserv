@@ -189,6 +189,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Code\EnumHelper.cs" />
     <Compile Include="Code\NullableDictionary.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Filters\EnsureClientAttribute.cs" />
