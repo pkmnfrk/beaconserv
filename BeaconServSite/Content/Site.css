@@ -113,6 +113,15 @@
     margin:0px;
     padding:6px;
     border:none;
+    z-index: 100;
+}
+
+.card-image video {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    z-index: 150;
+
 }
 
 .rightColumn,
@@ -182,4 +191,12 @@
 {
     from{-webkit-transform: rotate(90deg); }
     to  {-webkit-transform: rotate( 0deg);}
+}
+
+.ping {
+    display: none;
+}
+
+@media  (min-height: 1024px) {
+    .ping { display: initial; }
 }

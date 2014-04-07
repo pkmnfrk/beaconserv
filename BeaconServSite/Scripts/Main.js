@@ -6,7 +6,12 @@
     ]);
 
     self.displayMode = function (item) {
-        if (item.image) return "card_image";
+        if (item.image) {
+            if (item.imageType == 'Image')
+                return "card_image";
+            else if (item.imageType == 'Video')
+                return "card_video";
+        }
         return "card_no_image";
     }
 
@@ -42,7 +47,8 @@
             title: "DEBUG",
             body: "ID: " + major + "." + minor + "\nProximity:" + proximity,
             url: null,
-            image: null
+            image: null,
+            imageType: null,
         })
         */
 
@@ -73,7 +79,8 @@
                     title: data.title,
                     body: data.bodyText,
                     url: data.url,
-                    image: data.image
+                    image: data.image,
+                    imageType: data.imageType
                 });
 
             }

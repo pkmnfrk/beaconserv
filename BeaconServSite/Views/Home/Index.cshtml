@@ -23,7 +23,7 @@
 
     <div class="header">
         iBeacon Demo
-        <!--<button data-bind="click: addTest">Fake Ping</button>-->
+        <button data-bind="click: addTest" class="ping">Fake Ping</button>
         <button data-bind="click: refresh">Refresh</button>
     </div>
 
@@ -49,6 +49,18 @@
             <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
                 <h1 data-bind="text: title">Beacon hit!</h1>
             </div>
+            <p data-bind="text: body">Body!</p>
+            <p data-bind="if: url, text:url"></p>
+        </div>
+    </script>
+    <script type="text/html" id="card_video">
+        <div class="card">
+            <div class="card-image">
+                <video webkit-playsinline="webkit-playsinline" controls="controls">
+                    <source data-bind="attr: { src: image }" type="video/mp4" />
+                </video>
+            </div>
+            <h1 data-bind="text: title">Beacon hit!</h1>
             <p data-bind="text: body">Body!</p>
             <p data-bind="if: url, text:url"></p>
         </div>
