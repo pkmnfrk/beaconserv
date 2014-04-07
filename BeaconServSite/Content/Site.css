@@ -235,6 +235,6 @@
     display: none;
 }
 
-@media  (min-height: 1024px) {
+@media  (min-width: 1024px) {
     .ping { display: initial; }
 }

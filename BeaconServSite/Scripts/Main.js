@@ -5,9 +5,17 @@
 
     ]);
 
+    function isMobile() {
+        return navigator.userAgent.indexOf("Mobile") != -1;
+    }
+
     self.displayMode = function (item) {
         if (item.video) {
-            return "card_video"
+            if (isMobile) {
+                return "mobile_card_video";
+            } else {
+                return "desktop_card_video"
+            }
         }
         if (item.image) {
             return "card_image";
