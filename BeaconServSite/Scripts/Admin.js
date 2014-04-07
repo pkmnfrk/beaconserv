@@ -114,7 +114,7 @@
         majore.visible(true);
 
         newBeacon.uuid = ko.observable(majore.uuid);
-        newBeacon.major = majore.major;
+        newBeacon.major = ko.observable(majore.major);
         newBeacon.minor = ko.observable(null);
         newBeacon.id = ko.observable("");
         newBeacon.title = ko.observable("");

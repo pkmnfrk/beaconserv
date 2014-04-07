@@ -140,7 +140,20 @@ namespace BeaconServSite.Controllers
 
         [HttpPost]
         [Route("image")]
-        public async Task<object> UploadImage([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
+        public Task<object> UploadImage([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
+        {
+            return uploadToFolder(uuid, major, minor, "Content/photos/");
+        }
+
+        [HttpPost]
+        [Route("video")]
+        public Task<object> UploadVideo([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
+        {
+            return uploadToFolder(uuid, major, minor, "Content/videos/");
+        }
+
+
+        private async Task<object> uploadToFolder(Guid? uuid, int? major, int? minor, string folder)
         {
             loadBeacons();
 
@@ -151,7 +164,7 @@ namespace BeaconServSite.Controllers
                 throw new HttpResponseException(System.Net.HttpStatusCode.BadRequest);
             }
 
-            var photoPath = HttpContext.Current.Server.MapPath("~/Content/photos");
+            var photoPath = HttpContext.Current.Server.MapPath("~/" + folder);
 
             if (!Directory.Exists(photoPath))
             {
@@ -184,25 +197,19 @@ namespace BeaconServSite.Controllers
             var destFilename = string.Format(
                 "{0}.{1:x}{2}"
                 , prefix
-                , rand.Next(0x1000,0xffff)
+                , rand.Next(0x1000, 0xffff)
                 , extension
             );
 
-            var realNewFilename = HttpContext.Current.Server.MapPath("~/Content/photos/" + destFilename);
-            var type = Beacon.ImageTypeEnum.Image;
-
-            if (extension == ".avi" || extension == ".mp4")
-            {
-                type = Beacon.ImageTypeEnum.Video;
-            }
+            var realNewFilename = photoPath + destFilename;
 
             try
             {
-                foreach (var f in Directory.GetFiles(HttpContext.Current.Server.MapPath("~/Content/photos/"), prefix + ".*"))
+                foreach (var f in Directory.GetFiles(photoPath, prefix + ".*"))
                 {
                     File.Delete(f);
                 }
-                    
+
                 File.Move(file.LocalFileName, realNewFilename);
 
             }
@@ -214,11 +221,8 @@ namespace BeaconServSite.Controllers
 
             return new
             {
-                path = ControllerContext.Configuration.VirtualPathRoot + "Content/photos/" + destFilename,
-                type = type
+                path = ControllerContext.Configuration.VirtualPathRoot + folder + destFilename
             };
-            
-            
         }
 
         private Beacon findBeacon(Guid uuid, int major, int minor, bool returnDefault)

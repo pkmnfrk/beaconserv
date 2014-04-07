@@ -18,7 +18,7 @@ namespace BeaconServSite.Models
         public string Title { get; set; }
         public string Url { get; set; }
         public string Image { get; set; }
-        public ImageTypeEnum? ImageType { get; set; }
+        public string Video { get; set; }
 
         public int MaxProximity { get; set; }
 
@@ -41,14 +41,11 @@ namespace BeaconServSite.Models
             Title = beacon.Element("title").Value;
             BodyText = beacon.Element("body").Value;
             if (beacon.Element("image") != null)
-            {
                 Image = beacon.Element("image").Value;
-                ImageType = ImageTypeEnum.Image;
 
-                if (beacon.Element("image").Attribute("type") != null)
-                    ImageType = beacon.Element("image").Attribute("type").Value.AsEnum<ImageTypeEnum>();
+            if (beacon.Element("video") != null)
+                Video = beacon.Element("video").Value;
 
-            }
             if (beacon.Element("maxProximity") != null)
                 MaxProximity = int.Parse(beacon.Element("maxProximity").Value);
         }
@@ -144,25 +141,14 @@ namespace BeaconServSite.Models
             if (!string.IsNullOrEmpty(Url))
                 ret.Add(new XElement("url", Url));
             if (!string.IsNullOrEmpty(Image))
-                ret.Add(
-                    new XElement("image",
-                        Image,
-                        new XAttribute("type", ImageType)
-                    )
-                );
-
-
+                ret.Add(new XElement("image", Image));
+            if (!string.IsNullOrEmpty(Video))
+                ret.Add(new XElement("video", Video));
             if (MaxProximity != 0)
                 ret.Add(new XElement("maxProximity", MaxProximity));
 
             return ret;
 
-        }
-
-        public enum ImageTypeEnum
-        {
-            Image,
-            Video
         }
     }
 }
