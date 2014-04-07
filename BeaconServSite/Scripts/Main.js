@@ -6,11 +6,11 @@
     ]);
 
     self.displayMode = function (item) {
+        if (item.video) {
+            return "card_video"
+        }
         if (item.image) {
-            if (item.imageType == 'Image')
-                return "card_image";
-            else if (item.imageType == 'Video')
-                return "card_video";
+            return "card_image";
         }
         return "card_no_image";
     }
@@ -34,6 +34,14 @@
         window.location.href = window.location.href;
     }
 
+    self.onPlay = function (model, evt) {
+        $(evt.currentTarget).addClass("fadeToDark").removeClass("fadeFromDark");
+    };
+
+    self.onEnded = function (model, evt) {
+        $(evt.currentTarget).addClass("fadeFromDark").removeClass("fadeToDark");
+    };
+
     window.beacon = function (beacon_id, major, minor, device_id, proximity) {
 
         beacon_id = beacon_id.toLowerCase();
@@ -48,7 +56,7 @@
             body: "ID: " + major + "." + minor + "\nProximity:" + proximity,
             url: null,
             image: null,
-            imageType: null,
+            video: null,
         })
         */
 
@@ -80,7 +88,7 @@
                     body: data.bodyText,
                     url: data.url,
                     image: data.image,
-                    imageType: data.imageType
+                    video: data.video
                 });
 
             }

@@ -43,31 +43,40 @@
         newBeacon.image(null);
     };
 
+    self.removeVideo = function (newBeacon, evt) {
+        newBeacon.video(null);
+    };
+
     self.save = function (newBeacon, evt) {
         var message = $(evt.currentTarget).next("span");
         message.text("Saving...").fadeIn();
 
         $(evt.currentTarget).attr("disabled", "disabled")
 
-        self.uploadImage(newBeacon, evt, function () {
+        self.uploadImage(newBeacon, "image", evt, function () {
+            self.uploadImage(newBeacon, "video", evt, function () {
 
-            var js = ko.toJS(newBeacon);
+                var js = ko.toJS(newBeacon);
 
-            jQuery.ajax({
-                type: "POST",
-                url: "/beacon/",
-                data: js,
-                success: function () {
-                    $(evt.currentTarget).attr("disabled", null);
-                    message.text("Saved!").fadeOut(2000);
-                }
+                jQuery.ajax({
+                    type: "POST",
+                    url: "/beacon/",
+                    data: js,
+                    success: function () {
+                        $(evt.currentTarget).attr("disabled", null);
+                        message.text("Saved!").fadeOut(2000);
+                    }
+                });
             });
         });
     };
 
-    self.uploadImage = function (obj, evt, cont) {
-        var form = $("form", $(evt.currentTarget).closest("table")[0])[0];
+    self.uploadImage = function (obj, type, evt, cont) {
+        type = type || "image";
+        var form = $("form[data-name='" + type + "']", $(evt.currentTarget).closest("table")[0])[0];
         var file = $("input[type='file']", form)[0];
+        
+
         var formData = new FormData(form);
 
         if (!file.value) {
@@ -75,7 +84,7 @@
             return;
         }
 
-        var url = "/beacon/image";
+        var url = "/beacon/" + type;
         if (obj.uuid) {
             url += "?uuid=" + obj.uuid();
             if (obj.major) {
@@ -94,8 +103,11 @@
             contentType: false,
             processData: false,
             success: function (data) {
-                obj.image(data.path);
-                obj.imageType(data.type);
+                if (type == "image") {
+                    obj.image(data.path);
+                } else {
+                    obj.video(data.path);
+                }
 
                 file.value = '';
                 if (file.value) {
@@ -120,8 +132,8 @@
         newBeacon.title = ko.observable("");
         newBeacon.bodyText = ko.observable("");
         newBeacon.url = ko.observable("");
-        newBeacon.image = ko.observable("");
-        newBeacon.imageType = ko.observable(null);
+        newBeacon.image = ko.observable(null);
+        newBeacon.video = ko.observable(null);
         newBeacon.maxProximity = ko.observable(0);
 
 

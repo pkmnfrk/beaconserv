@@ -55,9 +55,11 @@
     </script>
     <script type="text/html" id="card_video">
         <div class="card">
-            <div class="card-image">
-                <video webkit-playsinline="webkit-playsinline">
-                    <source data-bind="attr: { src: image }" type="video/mp4" />
+            <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
+                <video controls="controls"
+                       poster="/Content/images/transparent.gif"
+                       data-bind="event: { play: $parent.onPlay }">
+                    <source data-bind="attr: { src: video }" type="video/mp4" />
                 </video>
             </div>
             <h1 data-bind="text: title">Beacon hit!</h1>

@@ -63,23 +63,37 @@
                                     <td>Image:</td>
                                     <td>
                                         <span data-bind="if: image">
-                                            <!--ko if: imageType() == 'Image'-->
+                                            
                                             <img data-bind="attr: { src: image }" />
-                                            <!--/ko-->
-                                            <!--ko if: imageType() == 'Video' -->
-                                            <video controls="controls">
-                                                <source data-bind="attr: {src: image}" type="video/mp4" />
-                                            </video>
-                                            <!--/ko-->
                                         </span>
                                         <span data-bind="if: !image">
                                             No image
                                         </span>
 
-                                        <form style="display:inline-block; width: 400px;" enctype="multipart/form-data">
+                                        <form data-name="image" style="display:inline-block; width: 400px;" enctype="multipart/form-data">
                                             <input type="file" name="image" />
                                             <br />
                                             <button type="button" data-bind="visible: image, click: $parent.removeImage">Remove Image</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Video:</td>
+                                    <td>
+                                        <span data-bind="if: video">
+
+                                            <video controls="controls">
+                                                <source data-bind="attr: {src: video, poster: image }" type="video/mp4" />
+                                            </video>
+                                        </span>
+                                        <span data-bind="if: !video">
+                                            No image
+                                        </span>
+
+                                        <form data-name="video" style="display:inline-block; width: 400px;" enctype="multipart/form-data">
+                                            <input type="file" name="video" />
+                                            <br />
+                                            <button type="button" data-bind="visible: video, click: $parent.removeVideo">Remove Image</button>
                                         </form>
                                     </td>
                                 </tr>

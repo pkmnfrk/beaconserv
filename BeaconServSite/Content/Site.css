@@ -122,6 +122,7 @@
     width: 100%;
     height: 200px;
     z-index: 150;
+    background-color: transparent;
 
 }
 
@@ -170,6 +171,16 @@
     -webkit-animation: arrowRotateClosed 500ms ease 0 1 normal forwards;
 }
 
+.fadeToDark {
+    animation: fadeToDark 1000ms ease 0 1 normal forwards;
+    -webkit-animation: fadeToDark 1000ms ease 0 1 normal forwards;
+}
+
+.fadeFromDark {
+    animation: fadeFromDark 1000ms ease 0 1 normal forwards;
+    -webkit-animation: fadeFromDark 1000ms ease 0 1 normal forwards;
+}
+
 @-webkit-keyframes arrowRotateOpen
 {
     from{-webkit-transform: rotate( 0deg); }
@@ -193,6 +204,32 @@
     from{-webkit-transform: rotate(90deg); }
     to  {-webkit-transform: rotate( 0deg);}
 }
+
+@-webkit-keyframes fadeToDark
+{
+    from{ background-color: rgba(0,0,0,0); }
+    to  { background-color: rgba(0,0,0,0.75); }
+}
+
+@keyframes fadeToDark
+{
+    from{ background-color: rgba(0,0,0,0); }
+    to  { background-color: rgba(0,0,0,0.75); }
+}
+
+
+@-webkit-keyframes fadeFromDark
+{
+    from{ background-color: rgba(0,0,0,0.75); }
+    to  { background-color: rgba(0,0,0,0); }
+}
+
+@keyframes fadeFromDark
+{
+    from{ background-color: rgba(0,0,0,0.75); }
+    to  { background-color: rgba(0,0,0,0); }
+}
+
 
 .ping {
     display: none;
