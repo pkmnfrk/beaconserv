@@ -63,10 +63,10 @@
                                     <td>Image:</td>
                                     <td>
                                         <span data-bind="if: image">
-                                            <!--ko if: imageType == 'image'-->
+                                            <!--ko if: imageType() == 'Image'-->
                                             <img data-bind="attr: { src: image }" />
                                             <!--/ko-->
-                                            <!-- ko if: imageType == 'video' -->
+                                            <!--ko if: imageType() == 'Video' -->
                                             <video controls="controls">
                                                 <source data-bind="attr: {src: image}" type="video/mp4" />
                                             </video>

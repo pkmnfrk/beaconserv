@@ -18,11 +18,18 @@ namespace BeaconServSite
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
+            //disable xml
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+
             // Use camel case for JSON data.
+            
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+            config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
 
-            config.Formatters.Add(new BrowserJsonFormatter());
+            //config.Formatters.Add(new BrowserJsonFormatter());
 
+            
             // Web API routes
             config.MapHttpAttributeRoutes();
 
