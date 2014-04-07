@@ -12,8 +12,15 @@
 
     self.addTest = function () {
         var major = prompt("Major", "4");
-        var minor = prompt("Minor", "1");
-        beacon("2F73D96D-F86E-4F95-B88D-694CEFE5837F", major, minor, "123456");
+        if (major != null) {
+            var minor = prompt("Minor", "1");
+            if (minor != null) {
+                var proximity = prompt("Proximity", "2");
+                if (proximity != null) {
+                    beacon("2F73D96D-F86E-4F95-B88D-694CEFE5837F", major, minor, "123456", proximity);
+                }
+            }
+        }
     }
 
     self.previousBeacon = ko.observable();
@@ -21,7 +28,10 @@
     window.beacon = function (beacon_id, major, minor, device_id, proximity) {
 
         beacon_id = beacon_id.toLowerCase();
-        proximity = proximity || 0;
+
+        proximity = parseInt(proximity, 10);
+
+        if (!proximity) proximity = 4;
 
         if (self.previousBeacon()) {
             if(
@@ -29,7 +39,7 @@
                 && self.previousBeacon().major == major
                 && self.previousBeacon().minor == minor)
             {
-                if (proximity > self.previousBeacon().maxProximity) {
+                if (self.previousBeacon().maxProximity != 0 && proximity > self.previousBeacon().maxProximity) {
                     return;
                 }
             }
@@ -44,7 +54,7 @@
                 maxProximity: data.maxProximity
             });
 
-            if (proximity <= data.maxProximity) {
+            if (data.maxProximity == 0 || proximity <= data.maxProximity) {
 
                 self.cards.unshift({
                     title: data.title,
