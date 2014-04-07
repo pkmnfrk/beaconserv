@@ -25,6 +25,10 @@
 
     self.previousBeacon = ko.observable();
 
+    self.refresh = function () {
+        window.location.href = window.location.href;
+    }
+
     window.beacon = function (beacon_id, major, minor, device_id, proximity) {
 
         beacon_id = beacon_id.toLowerCase();
@@ -33,15 +37,24 @@
 
         if (!proximity) proximity = 4;
 
+        /*
+        self.cards.unshift({
+            title: "DEBUG",
+            body: "ID: " + major + "." + minor + "\nProximity:" + proximity,
+            url: null,
+            image: null
+        })
+        */
+
         if (self.previousBeacon()) {
             if(
                 self.previousBeacon().beacon_id == beacon_id
                 && self.previousBeacon().major == major
                 && self.previousBeacon().minor == minor)
             {
-                if (self.previousBeacon().maxProximity != 0 && proximity > self.previousBeacon().maxProximity) {
+               // if (self.previousBeacon().maxProximity != 0 && proximity > self.previousBeacon().maxProximity) {
                     return;
-                }
+                //}
             }
         }
 
@@ -64,6 +77,8 @@
                 });
 
             }
+
+
             /*
             self.cards.push({
                 title: "Beacon",
