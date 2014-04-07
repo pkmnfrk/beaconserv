@@ -94,7 +94,8 @@
             contentType: false,
             processData: false,
             success: function (data) {
-                obj.image(data);
+                obj.image(data.path);
+                obj.imageType(data.type);
 
                 file.value = '';
                 if (file.value) {
@@ -120,6 +121,7 @@
         newBeacon.bodyText = ko.observable("");
         newBeacon.url = ko.observable("");
         newBeacon.image = ko.observable("");
+        newBeacon.imageType = ko.observable(null);
         newBeacon.maxProximity = ko.observable(0);
 
 

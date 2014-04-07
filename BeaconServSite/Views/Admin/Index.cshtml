@@ -62,10 +62,17 @@
                                 <tr>
                                     <td>Image:</td>
                                     <td>
-                                        <span data-bind="visible: image">
+                                        <span data-bind="if: image">
+                                            <!--ko if: imageType == 'image'-->
                                             <img data-bind="attr: { src: image }" />
+                                            <!--/ko-->
+                                            <!-- ko if: imageType == 'video' -->
+                                            <video controls="controls">
+                                                <source data-bind="attr: {src: image}" type="video/mp4" />
+                                            </video>
+                                            <!--/ko-->
                                         </span>
-                                        <span data-bind="visible: !image">
+                                        <span data-bind="if: !image">
                                             No image
                                         </span>
 
