@@ -115,6 +115,35 @@ namespace BeaconServSite.Controllers
 
         }
 
+        [HttpGet]
+        [Route("{uuid}")]
+        public object GetBeaconsByUuid(Guid uuid)
+        {
+            loadBeacons();
+
+            if(!beacons.ContainsKey(uuid))
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+            
+            return beacons[uuid];
+        }
+
+        [HttpGet]
+        [Route("{uuid}/{major}")]
+        public object GetBeaconsByUuid(Guid uuid, int? major)
+        {
+            loadBeacons();
+
+            if (!beacons.ContainsKey(uuid))
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+
+            if (!beacons[uuid].ContainsKey(major.Value))
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+
+            return beacons[uuid][major.Value];
+            
+
+        }
+
         [HttpPost]
         [Route("")]
         public void SaveBeacon(Beacon beacon)
