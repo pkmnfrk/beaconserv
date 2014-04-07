@@ -2,6 +2,14 @@
     var self = this;
 
     self.beacons = ko.observableArray([]);
+
+    self.proximityValues = [
+        { value: 0, label: "Any" },
+        { value: 1, label: "Immediate" },
+        { value: 2, label: "Near" },
+        { value: 3, label: "Far" },
+    ];
+
     self.addNewUUID = function () {
         var uuid = prompt("What is the GUID?");
         if (!uuid) return;
@@ -112,6 +120,7 @@
         newBeacon.bodyText = ko.observable("");
         newBeacon.url = ko.observable("");
         newBeacon.image = ko.observable("");
+        newBeacon.maxProximity = ko.observable(0);
 
 
         var newMinor = {

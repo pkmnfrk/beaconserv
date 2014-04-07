@@ -49,6 +49,17 @@
                                     <td><textarea data-bind="value: bodyText"></textarea></td>
                                 </tr>
                                 <tr>
+                                    <td>Proximity:</td>
+                                    <td>
+                                        <select data-bind="value: maxProximity">
+                                            <option value="0">Any</option>
+                                            <option value="1">Immediate</option>
+                                            <option value="2">Near</option>
+                                            <option value="3">Far</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Image:</td>
                                     <td>
                                         <span data-bind="visible: image">

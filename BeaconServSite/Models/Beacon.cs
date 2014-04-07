@@ -40,6 +40,8 @@ namespace BeaconServSite.Models
             BodyText = beacon.Element("body").Value;
             if (beacon.Element("image") != null)
                 Image = beacon.Element("image").Value;
+            if (beacon.Element("maxProximity") != null)
+                MaxProximity = int.Parse(beacon.Element("maxProximity").Value);
         }
 
         public static Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> LoadFromXml(XDocument doc)
@@ -134,6 +136,9 @@ namespace BeaconServSite.Models
                 ret.Add(new XElement("url", Url));
             if (!string.IsNullOrEmpty(Image))
                 ret.Add(new XElement("image", Image));
+
+            if (MaxProximity != 0)
+                ret.Add(new XElement("maxProximity", MaxProximity));
 
             return ret;
 
