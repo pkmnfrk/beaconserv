@@ -5,9 +5,7 @@
 
     ]);
 
-    function isMobile() {
-        return navigator.userAgent.indexOf("Mobile") != -1;
-    }
+    var isMobile = navigator.userAgent.indexOf("Mobile") != -1;
 
     self.displayMode = function (item) {
         if (item.video) {

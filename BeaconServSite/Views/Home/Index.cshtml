@@ -54,8 +54,8 @@
     <script type="text/html" id="desktop_card_video">
         <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
             <video controls="controls"
-                    poster="/Content/images/transparent.gif"
-                    data-bind="event: { play: $parent.onPlay }">
+                   poster="/Content/images/transparent.gif"
+                   data-bind="event: { play:$root.onPlay, ended: $root.onEnded }">
                 <source data-bind="attr: { src: video }" type="video/mp4" />
             </video>
         </div>

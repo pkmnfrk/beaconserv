@@ -221,13 +221,13 @@
 @-webkit-keyframes fadeFromDark
 {
     from{ background-color: rgba(0,0,0,0.75); }
-    to  { background-color: rgba(0,0,0,0); }
+    to  { background-color: rgba(0,0,0,0.25); }
 }
 
 @keyframes fadeFromDark
 {
     from{ background-color: rgba(0,0,0,0.75); }
-    to  { background-color: rgba(0,0,0,0); }
+    to  { background-color: rgba(0,0,0,0.25); }
 }
 
 
