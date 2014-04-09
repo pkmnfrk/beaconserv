@@ -17,70 +17,18 @@ namespace BeaconServSite.Controllers
     [RoutePrefix("beacon")]
     public class BeaconController : ApiController
     {
-        public static readonly Guid KlickGuid = new Guid("2F73D96D-F86E-4F95-B88D-694CEFE5837F");
+        public static readonly Guid KlickGuid;
 
-        private static Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> beacons;
-        private DateTime? lastLoad;
+        IBeaconProvider beaconProvider;
 
+        static BeaconController()
+        {
+            KlickGuid = new Guid(System.Configuration.ConfigurationManager.AppSettings["klickguid"]);
+        }
 
         public BeaconController()
         {
-
-        }
-
-        private string XmlPath
-        {
-            get
-            {
-                var path = System.Configuration.ConfigurationManager.AppSettings["beaconfile"];
-
-                path = path.Replace("|App_Data|", HttpContext.Current.Server.MapPath("~/App_Data"));
-
-                return path;
-            }
-        }
-
-        private void loadBeacons()
-        {
-
-            if (File.Exists(XmlPath))
-            {
-                var fileTime = File.GetLastWriteTime(XmlPath);
-
-                if (beacons != null && fileTime <= lastLoad)
-                {
-                    return;
-                }
-
-                lastLoad = fileTime;
-
-                var doc = XDocument.Load(XmlPath);
-
-                beacons = Beacon.LoadFromXml(doc);
-            }
-            else
-            {
-                var app_data = HttpContext.Current.Server.MapPath("~/App_Data");
-
-                if (!Directory.Exists(app_data))
-                {
-                    Directory.CreateDirectory(app_data);
-                }
-
-                beacons = new Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>>();
-            }
-
-        }
-
-        private void saveBeacons()
-        {
-            var doc = Beacon.SerializeBeaconList(beacons);
-
-            doc.Save(XmlPath);
-
-            var fileTime = File.GetLastWriteTime(XmlPath);
-
-            lastLoad = fileTime;
+            beaconProvider = TypeResolver.IBeaconProvider;
         }
 
         [HttpGet]
@@ -94,10 +42,8 @@ namespace BeaconServSite.Controllers
         [Route("{uuid}/{major}/{minor}")]
         public Beacon Get(Guid uuid, int major, int minor)
         {
-            loadBeacons();
-
             var response = new BeaconResponse();
-            Beacon result = findBeacon(uuid, major, minor, true);
+            var result = beaconProvider.FindBeacon(uuid, major, minor);
 
             if (result != null) return result;
 
@@ -109,9 +55,8 @@ namespace BeaconServSite.Controllers
         [Route("")]
         public object GetAllBeacons()
         {
-            loadBeacons();
-
-            return beacons;
+            var ret = beaconProvider.GetAllBeacons();
+            return ret;
 
         }
 
@@ -119,27 +64,24 @@ namespace BeaconServSite.Controllers
         [Route("{uuid}")]
         public object GetBeaconsByUuid(Guid uuid)
         {
-            loadBeacons();
+            var ret = beaconProvider.GetBeaconsByUuid(uuid);
 
-            if(!beacons.ContainsKey(uuid))
+            if(ret == null)
                 throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
             
-            return beacons[uuid];
+            return ret;
         }
 
         [HttpGet]
         [Route("{uuid}/{major}")]
-        public object GetBeaconsByUuid(Guid uuid, int? major)
+        public object GetBeaconsByUuid(Guid uuid, int major)
         {
-            loadBeacons();
+            var ret = beaconProvider.GetBeaconsByUuidAndMajor(uuid, major);
 
-            if (!beacons.ContainsKey(uuid))
+            if(ret == null)
                 throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
 
-            if (!beacons[uuid].ContainsKey(major.Value))
-                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
-
-            return beacons[uuid][major.Value];
+            return ret;
             
 
         }
@@ -148,23 +90,23 @@ namespace BeaconServSite.Controllers
         [Route("")]
         public void SaveBeacon(Beacon beacon)
         {
-            loadBeacons();
 
-            var old = findBeacon(beacon.UUID ?? Guid.Empty, beacon.Major ?? -1, beacon.Minor ?? -1, false);
+            var oldBeacon = beaconProvider.FindExactBeacon(beacon.UUID, beacon.Major, beacon.Minor);
 
-            if (old != null)
+            if (oldBeacon != null)
             {
-                if (!string.IsNullOrEmpty(old.Image) && old.Image != beacon.Image)
+                if (!string.IsNullOrEmpty(oldBeacon.Image) && oldBeacon.Image != beacon.Image)
                 {
-                    File.Delete(HttpContext.Current.Server.MapPath("~" + old.Image));
+                    File.Delete(HttpContext.Current.Server.MapPath("~" + oldBeacon.Image));
                 }
 
-                deleteBeacon(old);
+                if (!string.IsNullOrEmpty(oldBeacon.Video) && oldBeacon.Video != beacon.Video)
+                {
+                    File.Delete(HttpContext.Current.Server.MapPath("~" + oldBeacon.Video));
+                }
             }
 
-            insertBeacon(beacon);
-
-            saveBeacons();
+            beaconProvider.StoreBeacon(beacon);
         }
 
         [HttpPost]
@@ -184,7 +126,6 @@ namespace BeaconServSite.Controllers
 
         private async Task<object> uploadToFolder(Guid? uuid, int? major, int? minor, string folder)
         {
-            loadBeacons();
 
             MultipartFileData file = null;
 
@@ -254,60 +195,7 @@ namespace BeaconServSite.Controllers
             };
         }
 
-        private Beacon findBeacon(Guid uuid, int major, int minor, bool returnDefault)
-        {
-            if (beacons.ContainsKey(uuid))
-            {
-                if (beacons[uuid].ContainsKey(major))
-                {
-                    if (beacons[uuid][major].ContainsKey(minor))
-                    {
-                        return beacons[uuid][major][minor];
-                    }
-                    else if (returnDefault && beacons[uuid][major].ContainsKey(-1))
-                    {
-                        return beacons[uuid][major][-1];
-                    }
-                }
-                else if (returnDefault && beacons[uuid].ContainsKey(-1))
-                {
-                    return beacons[uuid][-1][-1];
-                }
-            }
-            else if (returnDefault && beacons.ContainsKey(Guid.Empty))
-            {
-                return beacons[Guid.Empty][-1][-1];
-            }
-
-            return null;
-
-        }
-
-        private void deleteBeacon(Beacon beacon)
-        {
-            beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1].Remove(beacon.Minor ?? -1);
-
-            if (beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1].Count == 0)
-            {
-                beacons[beacon.UUID ?? Guid.Empty].Remove(beacon.Major ?? -1);
-
-                if (beacons[beacon.UUID ?? Guid.Empty].Count == 0)
-                {
-                    beacons.Remove(beacon.UUID ?? Guid.Empty);
-                }
-            }
-        }
-
-        private void insertBeacon(Beacon beacon)
-        {
-            if (!beacons.ContainsKey(beacon.UUID ?? Guid.Empty))
-                beacons[beacon.UUID ?? Guid.Empty] = new Dictionary<int, Dictionary<int, Beacon>>();
-
-            if (!beacons[beacon.UUID ?? Guid.Empty].ContainsKey(beacon.Major ?? -1))
-                beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1] = new Dictionary<int, Beacon>();
-
-            beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1][beacon.Minor ?? -1] = beacon;
-        }
+        
     }
 
 

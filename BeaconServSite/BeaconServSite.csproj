@@ -190,7 +190,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Code\EnumHelper.cs" />
+    <Compile Include="Code\IBeaconProvider.cs" />
     <Compile Include="Code\NullableDictionary.cs" />
+    <Compile Include="Code\TypeResolver.cs" />
+    <Compile Include="Code\XmlBeaconProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Filters\EnsureClientAttribute.cs" />
     <Compile Include="Formatters\BrowserJsonFormatter.cs" />

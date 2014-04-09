@@ -99,7 +99,7 @@ namespace BeaconServSite.Models
             return ret;
         }
 
-        public static XDocument SerializeBeaconList(Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> beacons)
+        public static XDocument SerializeBeaconList(IDictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> beacons)
         {
             var ret = new XDocument(new XElement("beacons", new XAttribute("version", "2")));
 
