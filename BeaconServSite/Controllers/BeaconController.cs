@@ -107,6 +107,7 @@ namespace BeaconServSite.Controllers
             }
 
             beaconProvider.StoreBeacon(beacon);
+            beaconProvider.Persist();
         }
 
         [HttpPost]

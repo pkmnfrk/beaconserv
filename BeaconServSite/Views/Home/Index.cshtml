@@ -18,7 +18,7 @@
     <div class="hook" id="hook"></div>
 
     <div class="content" data-bind="foreach: cards">
-        <div class="card" data-bind="template: { name:$parent.displayMode, data: $data }">
+        <div class="card" data-bind="template: { name: $root.displayMode, data: $data, afterRender: $root.addCardSwipe }">
 
         </div>
     </div>
@@ -43,6 +43,7 @@
         <h1 data-bind="text: title">Beacon hit!</h1>
         <p data-bind="text: body">Body!</p>
         <p data-bind="if: url, text:url"></p>
+        <p data-bind="text: proximity"></p>
     </script>
     <script type="text/html" id="card_image">
         <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
@@ -50,6 +51,7 @@
         </div>
         <p data-bind="text: body">Body!</p>
         <p data-bind="if: url, text:url"></p>
+        <p data-bind="text: proximity"></p>
     </script>
     <script type="text/html" id="desktop_card_video">
         <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
@@ -62,6 +64,7 @@
         <h1 data-bind="text: title">Beacon hit!</h1>
         <p data-bind="text: body">Body!</p>
         <p data-bind="if: url, text:url"></p>
+        <p data-bind="text: proximity"></p>
     </script>
 
     <script type="text/html" id="mobile_card_video">
@@ -74,6 +77,7 @@
         <h1 data-bind="text: title">Beacon hit!</h1>
         <p data-bind="text: body">Body!</p>
         <p data-bind="if: url, text:url"></p>
+        <p data-bind="text: proximity"></p>
     </script>
 </body>
 </html>

@@ -48,6 +48,21 @@
         $(evt.currentTarget).addClass("fadeFromDark").removeClass("fadeToDark");
     };
 
+    self.addCardSwipe = function (elements, obj) {
+        return;
+        var el = elements[0].parentElement;
+        $(el).touchwipe({
+            wipeRight: function (e) {
+                $(el).css("position", "relative").animate({
+                    left: screen.width + "px"
+                }, function () {
+                    self.cards.remove(obj)
+                })
+            },
+            preventDefaultEvents: false,
+        });
+    }
+
     window.beacon = function (beacon_id, major, minor, device_id, proximity) {
 
         beacon_id = beacon_id.toLowerCase();
@@ -56,6 +71,20 @@
 
         if (!proximity) proximity = 4;
 
+        if (self.previousBeacon()) {
+            if(
+                self.previousBeacon().beacon_id == beacon_id
+                && self.previousBeacon().major == major
+                && self.previousBeacon().minor == minor)
+            {
+                if (proximity >= self.previousBeacon().proximity) {
+                    // if (self.previousBeacon().maxProximity != 0 && proximity > self.previousBeacon().maxProximity) {
+                    return;
+                    //}
+                }
+            }
+        }
+
         /*
         self.cards.unshift({
             title: "DEBUG",
@@ -63,20 +92,9 @@
             url: null,
             image: null,
             video: null,
+            proximity: -1
         })
         */
-
-        if (self.previousBeacon()) {
-            if(
-                self.previousBeacon().beacon_id == beacon_id
-                && self.previousBeacon().major == major
-                && self.previousBeacon().minor == minor)
-            {
-               // if (self.previousBeacon().maxProximity != 0 && proximity > self.previousBeacon().maxProximity) {
-                    return;
-                //}
-            }
-        }
 
         jQuery.getJSON("/beacon/" + beacon_id + "/" + major + "/" + minor, { device_id: device_id }, function (data, textStatus) {
 
@@ -84,7 +102,8 @@
                 beacon_id: data.uuid,
                 major: data.major,
                 minor: data.minor,
-                maxProximity: data.maxProximity
+                maxProximity: data.maxProximity,
+                proximity: proximity
             });
 
             if (data.maxProximity == 0 || proximity <= data.maxProximity) {
@@ -94,7 +113,8 @@
                     body: data.bodyText,
                     url: data.url,
                     image: data.image,
-                    video: data.video
+                    video: data.video,
+                    proximity: proximity
                 });
 
             }
