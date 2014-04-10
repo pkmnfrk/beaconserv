@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using BeaconServSite.Code;
+using System.ComponentModel.DataAnnotations;
 
 namespace BeaconServSite.Models
 {
     public class Beacon
     {
+        [Key]
+        public int BeaconID { get; set; }
         public Guid? UUID { get; set; }
         public int? Major { get; set; }
         public int? Minor { get; set; }

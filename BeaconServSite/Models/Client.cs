@@ -9,5 +9,6 @@ namespace BeaconServSite.Models
     {
         public Guid ClientID { get; set; }
 
+        public virtual List<BeaconPing> BeaconPings { get; set; }
     }
 }

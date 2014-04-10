@@ -10,5 +10,6 @@ namespace BeaconServSite.Models
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Beacon> Beacons { get; set; }
+        public DbSet<BeaconPing> BeaconPings { get; set; }
     }
 }

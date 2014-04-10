@@ -19,15 +19,19 @@ namespace BeaconServSite.Filters
             if (cookie != null)
             {
                 Guid.TryParse(cookie.Value, out clientid);
-
             }
 
             if (clientid == Guid.Empty)
             {
                 clientid = Guid.NewGuid();
-                cookie = new HttpCookie("ClientID", clientid.ToString());
-                filterContext.HttpContext.Response.SetCookie(cookie);
             }
+
+            cookie = new HttpCookie("ClientID", clientid.ToString());
+            cookie.Domain = filterContext.RequestContext.HttpContext.Request.Url.Host;
+            cookie.Expires = DateTime.Now.AddYears(1);
+            cookie.HttpOnly = true;
+            filterContext.HttpContext.Response.SetCookie(cookie);
+            
 
             using (var db = new Context())
             {
