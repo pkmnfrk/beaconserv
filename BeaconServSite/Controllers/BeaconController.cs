@@ -11,11 +11,12 @@ using System.Web.Http;
 using System.Xml.Linq;
 
 using BeaconServSite.Code;
+using BeaconServSite.Filters;
 
 namespace BeaconServSite.Controllers
 {
     [RoutePrefix("beacon")]
-    public class BeaconController : ApiController
+    public class BeaconController : ApiController, IEnsureClientController
     {
         public static readonly Guid KlickGuid;
 
@@ -196,7 +197,13 @@ namespace BeaconServSite.Controllers
             };
         }
 
-        
+
+
+        public Guid ClientID
+        {
+            get;
+            set;
+        }
     }
 
 

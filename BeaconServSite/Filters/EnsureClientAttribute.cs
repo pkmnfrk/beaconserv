@@ -7,14 +7,20 @@ using System.Web.Mvc;
 
 namespace BeaconServSite.Filters
 {
-    public class EnsureClientAttribute : ActionFilterAttribute
+    public class EnsureClientMVCAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
 
+            EnsureClientMVCAttribute.Logic(HttpContext.Current, filterContext.Controller as IEnsureClientController);
+            
+        }
+
+        internal static void Logic(HttpContext context, IEnsureClientController controller)
+        {
             Guid clientid = Guid.Empty;
-            var cookie = filterContext.HttpContext.Request.Cookies["ClientID"];
+            var cookie = context.Request.Cookies["ClientID"];
 
             if (cookie != null)
             {
@@ -27,10 +33,10 @@ namespace BeaconServSite.Filters
             }
 
             cookie = new HttpCookie("ClientID", clientid.ToString());
-            cookie.Domain = filterContext.RequestContext.HttpContext.Request.Url.Host;
+            cookie.Domain = context.Request.Url.Host;
             cookie.Expires = DateTime.Now.AddYears(1);
             cookie.HttpOnly = true;
-            filterContext.HttpContext.Response.SetCookie(cookie);
+            context.Response.SetCookie(cookie);
             
 
             using (var db = new Context())
@@ -50,12 +56,22 @@ namespace BeaconServSite.Filters
             }
 
             
-            var controller = filterContext.Controller as IEnsureClientController;
             if (controller != null)
             {
                 controller.ClientID = clientid;
             }
+        }
+    
+    }
+
+    public class EnsureClientWebApiAttribute : System.Web.Http.Filters.ActionFilterAttribute
+    {
+        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
+        {
             
+            EnsureClientMVCAttribute.Logic(HttpContext.Current, actionContext.ControllerContext.Controller as IEnsureClientController);
+            
+
         }
     }
 

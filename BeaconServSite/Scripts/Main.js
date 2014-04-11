@@ -1,9 +1,7 @@
 ﻿function MainViewModel() {
     var self = this;
 
-    self.cards = ko.observableArray([
-
-    ]);
+    self.cards = ko.observableArray([]);
 
     var isMobile = navigator.userAgent.indexOf("Mobile") != -1;
 
@@ -96,41 +94,68 @@
         })
         */
 
-        jQuery.getJSON("/beacon/" + beacon_id + "/" + major + "/" + minor, { device_id: device_id }, function (data, textStatus) {
+        jQuery.ajax({
+            type: "POST",
+            url: "/state/ping/" + beacon_id + "/" + major + "/" + minor,
+            data: { device_id: device_id },
+            dataType: "json",
+            complete: function (datar, textStatus) {
+                var data = datar.responseJSON;
 
-            self.previousBeacon({
-                beacon_id: data.uuid,
-                major: data.major,
-                minor: data.minor,
-                maxProximity: data.maxProximity,
-                proximity: proximity
-            });
-
-            if (data.maxProximity == 0 || proximity <= data.maxProximity) {
-
-                self.cards.unshift({
-                    title: data.title,
-                    body: data.bodyText,
-                    url: data.url,
-                    image: data.image,
-                    video: data.video,
+                self.previousBeacon({
+                    beacon_id: data.uuid,
+                    major: data.major,
+                    minor: data.minor,
+                    maxProximity: data.maxProximity,
                     proximity: proximity
                 });
 
+                if (data.maxProximity == 0 || proximity <= data.maxProximity) {
+
+                    self.cards.unshift({
+                        title: data.title,
+                        body: data.bodyText,
+                        url: data.url,
+                        image: data.image,
+                        video: data.video,
+                        proximity: proximity
+                    });
+
+                }
+
+
+                /*
+                self.cards.push({
+                    title: "Beacon",
+                    uuid: beacon_id,
+                    major: major,
+                    minor: minor,
+                    device_id: device_id
+                })*/
             }
-
-
-            /*
-            self.cards.push({
-                title: "Beacon",
-                uuid: beacon_id,
-                major: major,
-                minor: minor,
-                device_id: device_id
-            })*/
         });
-
     };
+
+    window.clearBeacons = function () {
+        jQuery.ajax({
+            url: "/state/clear",
+            type: "POST",
+            complete: function () {
+                self.cards.removeAll();
+            }
+        })
+    }
+
+    //load existing pings
+    jQuery.ajax({
+        url: "/state",
+        type: "GET",
+        dataType: "json",
+        complete: function (datar) {
+            var data = datar.responseJSON;
+            self.cards(data);
+        }
+    });
 }
 
 ko.applyBindings(new MainViewModel());

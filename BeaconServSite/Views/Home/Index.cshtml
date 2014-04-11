@@ -1,4 +1,4 @@
-﻿
+﻿@model HomeIndexViewModel
 @{
     Layout = null;
     ViewBag.Title = "iBeacon Demo";
@@ -36,8 +36,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/hook")
-
-    @Scripts.Render("~/Scripts/Main.js")
 
     <script type="text/html" id="card_no_image">
         <h1 data-bind="text: title">Beacon hit!</h1>
@@ -79,6 +77,8 @@
         <p data-bind="if: url, text:url"></p>
         <p data-bind="text: proximity"></p>
     </script>
+
+    @Scripts.Render("~/Scripts/Main.js")
 </body>
 </html>
 

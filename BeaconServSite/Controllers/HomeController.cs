@@ -4,20 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BeaconServSite.Models;
+using BeaconServSite.ViewModel;
 
 namespace BeaconServSite.Controllers
 {
-    [EnsureClient]
+    [EnsureClientMVC]
     public class HomeController : Controller, IEnsureClientController
     {
         public ActionResult Index()
         {
-            using (var db = new Context())
-            {
-                var c = db.Beacons.Count();
-            }
+            var model = new HomeIndexViewModel();
 
-            return View();
+            return View(model);
         }
 
         public Guid ClientID
