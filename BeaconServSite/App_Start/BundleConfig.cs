@@ -47,6 +47,12 @@ namespace BeaconServSite
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/Site.css",
                  "~/Content/hook.css"));
+
+            bundles.Add(new StyleBundle("~/Content/cssanim").Include(
+                 "~/Content/Site.css",
+                 "~/Content/hook.css",
+                 "~/Content/animations.css"));
+
         }
     }
 }

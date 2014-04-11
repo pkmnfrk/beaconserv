@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Title = "iBeacon Demo";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    @Styles.Render("~/Content/cssanim")
+</head>
+
+<body>
+    <div id="pt-main" class="pt-perspective">
+        <div id="page1" class="pt-page pt-page-1">Card 1</div>
+        <div id="page2" class="pt-page pt-page-2">Card 2</div>
+    </div>
+    <button id="transitionButton" data-bind="click: doTransition">Transition</button>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+
+    @Scripts.Render("~/Scripts/Single.js")
+</body>
+</html>

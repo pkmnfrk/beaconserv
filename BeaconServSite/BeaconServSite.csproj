@@ -206,6 +206,7 @@
     <Compile Include="Code\TypeResolver.cs" />
     <Compile Include="Code\XmlBeaconProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\SingleCardController.cs" />
     <Compile Include="Controllers\StateController.cs" />
     <Compile Include="Filters\EnsureClientAttribute.cs" />
     <Compile Include="Formatters\BrowserJsonFormatter.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="ViewModel\HomeViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\animations.css" />
     <Content Include="Content\hook-bg.png" />
     <Content Include="Content\hook-bgs.png" />
     <Content Include="Content\hook-spinner%402x.png" />
@@ -252,6 +254,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Single.js" />
+    <Content Include="Views\SingleCard\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
