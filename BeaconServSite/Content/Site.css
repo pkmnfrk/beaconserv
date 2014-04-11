@@ -7,43 +7,6 @@
     min-height:100%;
 }
 
-.header {
-    text-align:center;
-    position:fixed;
-    height:30px;
-    left:0px;
-    right:0px;
-    background:#FFF;
-    padding:25px 0px 5px 0px;
-    border-bottom:5px solid #CCC;
-    font-size:20px;
-    font-weight:bold;
-}
-
-.content {  
-    position:fixed;
-    top:62px;
-    bottom:0px;
-    left:0px;
-    right:0px;
-    overflow:scroll;
-    -webkit-overflow-scrolling:touch;
-    margin-bottom:30px;
-}
-
-.footer {
-    position:fixed;
-    height:22px;
-    left:0px;
-    right:0px;
-    bottom:0px;
-    background:#FFF;
-    color:#888;
-    text-align:center;
-    padding:5px 0px 0px 0px;
-    border-top:5px solid #CCC;
-    font-size:12px;
-}
 
 .float-left .card {
     float:left;
@@ -233,6 +196,13 @@
 
 .ping {
     display: none;
+}
+
+.header { 
+    display:none;
+}
+.footer {
+    display:none;
 }
 
 @media  (min-width: 321px) {

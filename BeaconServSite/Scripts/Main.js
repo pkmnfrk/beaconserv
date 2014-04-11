@@ -19,7 +19,7 @@
         return "card_no_image";
     }
 
-    self.addTest = function () {
+    window.addTest = function () {
         var major = prompt("Major", "4");
         if (major != null) {
             var minor = prompt("Minor", "1");
@@ -34,7 +34,7 @@
 
     self.previousBeacon = ko.observable();
 
-    self.refresh = function () {
+    window.refresh = function () {
         window.location.href = window.location.href;
     }
 
@@ -153,7 +153,20 @@
         dataType: "json",
         complete: function (datar) {
             var data = datar.responseJSON;
-            self.cards(data);
+            for (var i = 0; i < data.length; i++) {
+                self.cards.push(data[i]);
+            }
+
+            if (data.length > 0) {
+                self.previousBeacon({
+                    beacon_id: data[0].uuid,
+                    major: data[0].major,
+                    minor: data[0].minor,
+                    maxProximity: data[0].maxProximity,
+                    proximity: 0
+                });
+            }
+
         }
     });
 }

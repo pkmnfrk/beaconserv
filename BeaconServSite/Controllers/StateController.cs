@@ -69,6 +69,7 @@ namespace BeaconServSite.Controllers
                 return db.BeaconPings
                 .Where(c => c.Client.ClientID == ClientID)
                 .OrderByDescending(c => c.Date)
+                .Take(10)
                 .ToList()
                 .Select(p => new
                 {
