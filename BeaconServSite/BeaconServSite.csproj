@@ -250,6 +250,9 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\images\transparent.gif" />
+    <Content Include="Content\searching.gif" />
+    <Content Include="Content\searching.png" />
+    <Content Include="Content\Single.css" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

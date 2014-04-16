@@ -69,17 +69,22 @@
 
         if (!proximity) proximity = 4;
 
+        if (beacon_id == "00000000-0000-0000-0000-000000000000" || beacon_id == "(null)") {
+            return;
+        }
+
         if (self.previousBeacon()) {
             if(
                 self.previousBeacon().beacon_id == beacon_id
                 && self.previousBeacon().major == major
                 && self.previousBeacon().minor == minor)
             {
-                if (proximity >= self.previousBeacon().proximity) {
+              //  if (self.previousBeacon().proximity <= self.previousBeacon().maxProximity
+              //     || proximity >= self.previousBeacon().proximity) {
                     // if (self.previousBeacon().maxProximity != 0 && proximity > self.previousBeacon().maxProximity) {
                     return;
                     //}
-                }
+              //  }
             }
         }
 
@@ -102,15 +107,15 @@
             complete: function (datar, textStatus) {
                 var data = datar.responseJSON;
 
-                self.previousBeacon({
-                    beacon_id: data.uuid,
-                    major: data.major,
-                    minor: data.minor,
-                    maxProximity: data.maxProximity,
-                    proximity: proximity
-                });
-
                 if (data.maxProximity == 0 || proximity <= data.maxProximity) {
+
+                    self.previousBeacon({
+                        beacon_id: data.uuid,
+                        major: data.major,
+                        minor: data.minor,
+                        maxProximity: data.maxProximity,
+                        proximity: proximity
+                    });
 
                     self.cards.unshift({
                         title: data.title,

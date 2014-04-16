@@ -11,15 +11,39 @@
     <title>@ViewBag.Title</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
-    @Styles.Render("~/Content/cssanim")
+    @Styles.Render("~/Content/single")
 </head>
 
-<body>
+<body class="single-page">
     <div id="pt-main" class="pt-perspective">
-        <div id="page1" class="pt-page pt-page-1">Card 1</div>
-        <div id="page2" class="pt-page pt-page-2">Card 2</div>
+        <div id="page1" class="pt-page pt-page-1">
+            <h1>
+                <span data-bind="if: isSearching">Searching for Beacons...</span>
+                <span data-bind="ifnot: isSearching">Loading a beacon...</span>
+                <br/>
+                <br />
+                <img src="~/Content/searching.gif" class="searching-icona" alt="" />
+            </h1>
+            
+
+        </div>
+        <div id="page2" class="pt-page pt-page-2" data-bind="with: currentCard">
+            <h2 data-bind="text: title"></h2>
+            <!-- ko if: video-->
+            <video controls="controls"
+                   poster="/Content/images/transparent.gif"
+                   data-bind="attr: { poster: image }, event: { play:$root.onPlay, ended: $root.onEnded }">
+                <source data-bind="attr: { src: video }" type="video/mp4" />
+            </video>
+            <!-- /ko -->
+            <!-- ko if: !video && image -->
+            <div class="img-wrap" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
+            </div>
+            <!-- /ko -->
+
+            <p data-bind="text: body"></p>
+        </div>
     </div>
-    <button id="transitionButton" data-bind="click: doTransition">Transition</button>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")

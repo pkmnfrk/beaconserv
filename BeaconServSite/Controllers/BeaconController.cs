@@ -33,6 +33,13 @@ namespace BeaconServSite.Controllers
         }
 
         [HttpGet]
+        [Route("uuid")]
+        public object GetUUID()
+        {
+            return new { uuid = KlickGuid };
+        }
+
+        [HttpGet]
         [Route("{id:int}")]
         public string Get(int id)
         {

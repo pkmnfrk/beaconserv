@@ -208,8 +208,3 @@
 @media  (min-width: 321px) {
     .ping { display: initial; }
 }
-
-#transitionButton {
-    position: fixed;
-    bottom: 10px;
-}

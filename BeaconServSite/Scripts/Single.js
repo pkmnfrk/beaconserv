@@ -40,38 +40,58 @@ function SinglePageModel() {
     var self = this;
 
     self.currentCard = ko.observable(null);
-    self.animating = false;
+    self.animating = ko.observable(false);
+    self.isSearching = ko.observable(true);
 
+    self.openPage = function (onComplete) {
+        self.doTransition(true, onComplete);
+    }
+
+    self.closePage = function (onComplete) {
+        self.doTransition(false, onComplete);
+    }
+
+    self.animationQueue = ko.observableArray([]);
     
-    self.doTransition = function (obj, evt) {
+    self.doTransition = function (trueIfOpen, onComplete) {
         var endCurrPage = false, endNextPage = false;
         
-        if (self.animating) return;
+        if (self.animating()) {
+            self.animationQueue.push({ trueIfOpen: trueIfOpen, onComplete: onComplete });
+            return;
+        }
 
-        self.animating = true;
+        self.animating(true);
+        self.isSearching(false);
 
         var inPage, outPage;
         var inClass, outClass;
         
-        if (self.currentCard()) {
+        if (!trueIfOpen) {
             outPage = $("#page2");
             inPage = $("#page1");
             outClass = "pt-page-moveToRight pt-page-ontop";
             inClass = "pt-page-scaleUp";
-            self.currentCard(null);
         } else {
             outPage = $("#page1");
             inPage = $("#page2");
             outClass = "pt-page-scaleDown";
             inClass = "pt-page-moveFromRight pt-page-ontop";
-            self.currentCard({});
         }
 
         var onEndAnimation = function onEndAnimation($outpage, $inpage) {
             endCurrPage = false;
             endNextPage = false;
             resetPage($outpage, $inpage);
-            self.animating = false;
+            self.animating(false);
+            if (onComplete) onComplete();
+
+            if (self.animationQueue.length) {
+                var aq = self.animationQueue.shift();
+                self.doTransition(aq.trueIfOpen, aq.onComplete);
+            } else {
+                self.isSearching(true);
+            }
         };
 
         var resetPage = function resetPage($outpage, $inpage) {
@@ -107,6 +127,69 @@ function SinglePageModel() {
 
     }
 
+    window.beacon = function (beacon_id, major, minor, device_id, proximity) {
+
+        beacon_id = beacon_id.toLowerCase();
+
+
+        proximity = parseInt(proximity, 10);
+
+        if (!proximity) proximity = 4;
+
+        if (beacon_id == "00000000-0000-0000-0000-000000000000" || beacon_id == "(null)") {
+
+            if (self.currentCard()) {
+                self.isSearching(true);
+                self.closePage(function () {
+                    self.currentCard(null);
+                });
+            }
+            return;
+
+        }
+
+        if (self.currentCard()) {
+           if (self.currentCard().beacon_id == beacon_id
+                && self.currentCard().major == major
+                && self.currentCard().minor == minor) {
+
+                return;
+            }
+        }
+
+        jQuery.ajax({
+            type: "POST",
+            url: "/state/ping/" + beacon_id + "/" + major + "/" + minor,
+            data: { device_id: device_id },
+            dataType: "json",
+            complete: function (datar, textStatus) {
+                var data = datar.responseJSON;
+
+                var newCard = {
+                    beacon_id: beacon_id,
+                    major: major,
+                    minor: minor,
+                    title: data.title,
+                    body: data.bodyText,
+                    url: data.url,
+                    image: data.image,
+                    video: data.video,
+                    proximity: proximity
+                };
+
+                if (self.currentCard()) {
+                    self.closePage(function () {
+                        self.currentCard(newCard);
+                        self.openPage();
+                    })
+                } else {
+                    self.currentCard(newCard);
+                    self.openPage();
+                }
+
+            }
+        });
+    };
 }
 
 

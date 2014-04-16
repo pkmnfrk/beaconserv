@@ -8,6 +8,8 @@ using BeaconServSite.Filters;
 using System.Threading.Tasks;
 using EntityFramework.Extensions;
 using System.Web.Http;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace BeaconServSite.Controllers
 {
@@ -49,12 +51,12 @@ namespace BeaconServSite.Controllers
         {
             using (var db = new Context())
             {
-                var client = await db.Clients.FindAsync(ClientID);
-
-                await db.BeaconPings.UpdateAsync(
+                /*db.BeaconPings.Update(
                     b => b.Client.ClientID == ClientID && !b.Cleared,
                     b => new BeaconPing { Cleared = true }
-                );
+                );*/
+
+                db.Database.ExecuteSqlCommand(@"UPDATE [BeaconPings] SET Cleared = 1 WHERE Client_ClientID = @p0 AND Cleared = 0", ClientID);
             }
         }
 
@@ -67,7 +69,7 @@ namespace BeaconServSite.Controllers
             using (var db = new Context())
             {
                 return db.BeaconPings
-                .Where(c => c.Client.ClientID == ClientID)
+                .Where(b => b.Client.ClientID == ClientID && !b.Cleared)
                 .OrderByDescending(c => c.Date)
                 .Take(10)
                 .ToList()
