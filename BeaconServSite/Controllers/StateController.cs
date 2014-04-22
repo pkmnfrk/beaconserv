@@ -72,27 +72,8 @@ namespace BeaconServSite.Controllers
                 .Where(b => b.Client.ClientID == ClientID && !b.Cleared)
                 .OrderByDescending(c => c.Date)
                 .Take(10)
-                .ToList()
-                .Select(p => new
-                {
-                    Ping = p,
-                    Beacon = beacons.FindBeacon(p.UUID, p.Major, p.Minor)
-                })
-                .Where(q => q.Beacon.MaxProximity == 0 || q.Ping.Proximity < q.Beacon.MaxProximity)
-                .Select(q => new
-                {
-
-                    title = q.Beacon.Title,
-                    body = q.Beacon.BodyText,
-                    url = q.Beacon.Url,
-                    uuid = q.Beacon.UUID,
-                    major = q.Beacon.Major,
-                    minor = q.Beacon.Minor,
-                    image = q.Beacon.Image,
-                    video = q.Beacon.Video,
-                    proximity = 0,
-
-                });
+                .Where(q => q.Beacon.MaxProximity == 0 || q.Proximity < q.Beacon.MaxProximity)
+                .Select(q => q.Beacon);
             }
         }
 
