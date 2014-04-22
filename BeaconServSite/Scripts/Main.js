@@ -122,6 +122,8 @@
         })
     }
 
+    B.getName();
+
     //load existing pings
     jQuery.ajax({
         url: "/state",

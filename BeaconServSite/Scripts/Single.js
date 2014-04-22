@@ -193,6 +193,10 @@ function SinglePageModel() {
             }
         });
     };
+
+
+    B.getName();
+
 }
 
 

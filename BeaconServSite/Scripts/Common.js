@@ -19,3 +19,35 @@ window.didEnterForeground = function () {
         window.didEnterForeground_func();
     }
 }
+
+B = (function () {
+    return {
+        name: null,
+        getName: function () {
+            jQuery.ajax({
+                type: "GET",
+                url: "/client/my/name",
+                dataType: "json",
+                complete: function (data) {
+                    if (data) {
+                        B.name = data;
+                    } else {
+                        var name = prompt("What is your name?");
+
+                        if (name) {
+                            B.name = name;
+
+                            jQuery.ajax({
+                                type: "PUT",
+                                url: "/client/my/name",
+                                data: { name: name }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+    };
+
+})();

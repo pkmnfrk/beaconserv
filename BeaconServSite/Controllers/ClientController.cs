@@ -25,9 +25,10 @@ namespace BeaconServSite.Controllers
                 return db.Clients
                     .OrderBy(c => c.Name)
                     .Select(c => new {
-                        c.Name,
-                        LatestPing = c.BeaconPings.OrderByDescending(b => b.Date).First()
+                        Name = c.Name ?? "Unknown",
+                        LatestPing = c.BeaconPings.OrderByDescending(b => b.Date).FirstOrDefault()
                     })
+                    .ToList()
                     .Select(c => new
                     {
                         c.Name,
@@ -39,12 +40,12 @@ namespace BeaconServSite.Controllers
 
         public class SetNameModel
         {
-            public string Name;
+            public string Name { get; set; }
         }
 
         [HttpPut]
         [Route("my/name")]
-        public void SetName(SetNameModel model)
+        public void PutName(SetNameModel model)
         {
             using (var db = new Context())
             {
