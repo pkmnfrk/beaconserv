@@ -19,7 +19,7 @@ namespace BeaconServSite.Controllers
     {
         [HttpPost]
         [Route("ping/{uuid}/{major}/{minor}")]
-        public async Task<Beacon> Ping(Guid uuid, int major, int minor)
+        public async Task<Beacon> Ping(Guid uuid, int major, int minor, int proximity = 0)
         {
             var beaconProvider = TypeResolver.IBeaconProvider;
 
@@ -35,6 +35,7 @@ namespace BeaconServSite.Controllers
                     Client = client,
                     Date = DateTime.Now,
                     Beacon = ret,
+                    Proximity = proximity
                 };
 
                 db.BeaconPings.Add(ping);
@@ -68,11 +69,12 @@ namespace BeaconServSite.Controllers
             using (var db = new Context())
             {
                 return db.BeaconPings
+                    .Include("Beacon")
                 .Where(b => b.Client.ClientID == ClientID && !b.Cleared)
                 .OrderByDescending(c => c.Date)
                 .Take(10)
                 .Where(q => q.Beacon.MaxProximity == 0 || q.Proximity < q.Beacon.MaxProximity)
-                .Select(q => q.Beacon)
+                
                 .ToList();
             }
         }

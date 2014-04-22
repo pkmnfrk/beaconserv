@@ -81,7 +81,7 @@
 
         jQuery.ajax({
             type: "POST",
-            url: "/state/ping/" + beacon_id + "/" + major + "/" + minor,
+            url: "/state/ping/" + beacon_id + "/" + major + "/" + minor + "?proximity=" + proximity,
             data: { device_id: device_id },
             dataType: "json",
             complete: function (datar, textStatus) {
@@ -107,6 +107,7 @@
             type: "POST",
             complete: function () {
                 self.cards.removeAll();
+                self.previousBeacon(null);
             }
         })
     }
@@ -121,12 +122,12 @@
         complete: function (datar) {
             var data = datar.responseJSON;
             for (var i = 0; i < data.length; i++) {
-                data[i].proximity = 0;
-                self.cards.push(data[i]);
+                data[i].beacon.proximity = data[i].proximity;
+                self.cards.push(data[i].beacon);
             }
 
             if (data.length > 0) {
-                self.previousBeacon(data[0]);
+                self.previousBeacon(data[0].beacon);
             }
 
         }
