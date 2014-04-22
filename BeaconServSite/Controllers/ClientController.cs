@@ -24,18 +24,13 @@ namespace BeaconServSite.Controllers
             {
                 var thirtyMinutesAgo = DateTime.Now.AddMinutes(-30);
                 return db.Clients
-                    //.Where(c => c.BeaconPings.Any(q => q.Date >= thirtyMinutesAgo))
+                    .Where(c => c.BeaconPings.Any(q => q.Date >= thirtyMinutesAgo))
                     .OrderBy(c => c.Name)
                     .Select(c => new {
                         Name = c.Name ?? "Unknown",
                         LatestPing = c.BeaconPings.OrderByDescending(b => b.Date).FirstOrDefault()
                     })
-                    .ToList()
-                    .Select(c => new
-                    {
-                        c.Name,
-                        LatestPing = c.LatestPing != null ? beacons.FindExactBeacon(c.LatestPing.UUID, c.LatestPing.Major, c.LatestPing.Minor) : null
-                    })
+                    
                     .ToList();
             }
         }

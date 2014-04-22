@@ -71,7 +71,7 @@
 
         if (self.previousBeacon()) {
             if(
-                self.previousBeacon().beacon_id == beacon_id
+                self.previousBeacon().uuid == beacon_id
                 && self.previousBeacon().major == major
                 && self.previousBeacon().minor == minor)
             {
@@ -89,22 +89,11 @@
 
                 if (data.maxProximity == 0 || proximity <= data.maxProximity) {
 
-                    self.previousBeacon({
-                        beacon_id: data.uuid,
-                        major: data.major,
-                        minor: data.minor,
-                        maxProximity: data.maxProximity,
-                        proximity: proximity
-                    });
+                    data.proximity = proximity;
 
-                    self.cards.unshift({
-                        title: data.title,
-                        body: data.bodyText,
-                        url: data.url,
-                        image: data.image,
-                        video: data.video,
-                        proximity: proximity
-                    });
+                    self.previousBeacon(data);
+
+                    self.cards.unshift(data);
 
                 }
 
@@ -132,17 +121,12 @@
         complete: function (datar) {
             var data = datar.responseJSON;
             for (var i = 0; i < data.length; i++) {
+                data[i].proximity = 0;
                 self.cards.push(data[i]);
             }
 
             if (data.length > 0) {
-                self.previousBeacon({
-                    beacon_id: data[0].uuid,
-                    major: data[0].major,
-                    minor: data[0].minor,
-                    maxProximity: data[0].maxProximity,
-                    proximity: 0
-                });
+                self.previousBeacon(data[0]);
             }
 
         }

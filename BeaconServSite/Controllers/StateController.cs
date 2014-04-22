@@ -28,14 +28,13 @@ namespace BeaconServSite.Controllers
             using (var db = new Context())
             {
                 var client = await db.Clients.FindAsync(ClientID);
+                db.Beacons.Attach(ret);
 
                 var ping = new BeaconPing
                 {
                     Client = client,
                     Date = DateTime.Now,
-                    UUID = uuid,
-                    Major = major,
-                    Minor = minor,
+                    Beacon = ret,
                 };
 
                 db.BeaconPings.Add(ping);
@@ -73,7 +72,8 @@ namespace BeaconServSite.Controllers
                 .OrderByDescending(c => c.Date)
                 .Take(10)
                 .Where(q => q.Beacon.MaxProximity == 0 || q.Proximity < q.Beacon.MaxProximity)
-                .Select(q => q.Beacon);
+                .Select(q => q.Beacon)
+                .ToList();
             }
         }
 

@@ -29,7 +29,7 @@
 
     <script type="text/html" id="card_no_image">
         <h1 data-bind="text: title">Beacon hit!</h1>
-        <p data-bind="text: body">Body!</p>
+        <p data-bind="text: bodyText">Body!</p>
         <p data-bind="if: url, text:url"></p>
         <p data-bind="text: proximity"></p>
     </script>
@@ -37,9 +37,9 @@
         <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
             <h1 data-bind="text: title">Beacon hit!</h1>
         </div>
-        <p data-bind="text: body">Body!</p>
+        <p data-bind="text: bodyText">Body!</p>
         <p data-bind="if: url, text:url"></p>
-        <p data-bind="text: proximity"></p>
+        <p data-bind="if: proximity, text: proximity"></p>
     </script>
     <script type="text/html" id="desktop_card_video">
         <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
@@ -50,7 +50,7 @@
             </video>
         </div>
         <h1 data-bind="text: title">Beacon hit!</h1>
-        <p data-bind="text: body">Body!</p>
+        <p data-bind="text: bodyText">Body!</p>
         <p data-bind="if: url, text:url"></p>
         <p data-bind="text: proximity"></p>
     </script>
@@ -63,7 +63,7 @@
             </video>
         </div>
         <h1 data-bind="text: title">Beacon hit!</h1>
-        <p data-bind="text: body">Body!</p>
+        <p data-bind="text: bodyText">Body!</p>
         <p data-bind="if: url, text:url"></p>
         <p data-bind="text: proximity"></p>
     </script>
