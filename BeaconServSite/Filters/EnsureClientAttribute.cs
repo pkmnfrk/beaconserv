@@ -37,11 +37,10 @@ namespace BeaconServSite.Filters
             cookie.Expires = DateTime.Now.AddYears(1);
             cookie.HttpOnly = true;
             context.Response.SetCookie(cookie);
-            
 
             using (var db = new Context())
             {
-                var client = db.Clients.Where(c => c.ClientID == clientid).FirstOrDefault();
+                var client = db.Clients.Find(clientid);
 
                 if (client == null)
                 {
@@ -49,8 +48,9 @@ namespace BeaconServSite.Filters
                     {
                         ClientID = clientid
                     };
-
+                    
                     db.Clients.Add(client);
+
                     db.SaveChanges();
                 }
             }

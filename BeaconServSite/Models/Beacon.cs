@@ -43,8 +43,12 @@ namespace BeaconServSite.Models
             if (beacon.Element("url") != null)
                 Url = beacon.Element("url").Value;
 
-            Title = beacon.Element("title").Value;
-            BodyText = beacon.Element("body").Value;
+            if (beacon.Element("title") != null)
+                Title = beacon.Element("title").Value;
+
+            if(beacon.Element("body") != null)
+                BodyText = beacon.Element("body").Value;
+
             if (beacon.Element("image") != null)
                 Image = beacon.Element("image").Value;
 

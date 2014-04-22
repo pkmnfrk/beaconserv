@@ -150,6 +150,11 @@
 	}
 }
 
+.pt-quick {
+    animation-duration: 0.1s;
+    -moz-animation-duration: 0.1s;
+    -webkit-animation-duration: 0.1s;
+}
 /* animation sets */
 
 /* move from / to  */

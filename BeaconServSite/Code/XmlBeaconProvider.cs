@@ -18,31 +18,36 @@ namespace BeaconServSite.Code
         public Beacon FindBeacon(Guid uuid, int major, int minor)
         {
             loadBeacons();
-
-            if (beacons.ContainsKey(uuid))
+            try
             {
-                if (beacons[uuid].ContainsKey(major))
+                if (beacons.ContainsKey(uuid))
                 {
-                    if (beacons[uuid][major].ContainsKey(minor))
+                    if (beacons[uuid].ContainsKey(major))
                     {
-                        return beacons[uuid][major][minor];
+                        if (beacons[uuid][major].ContainsKey(minor))
+                        {
+                            return beacons[uuid][major][minor];
+                        }
+                        else if (/*returnDefault && */beacons[uuid][major].ContainsKey(-1))
+                        {
+                            return beacons[uuid][major][-1];
+                        }
                     }
-                    else if (/*returnDefault && */beacons[uuid][major].ContainsKey(-1))
+                    else if (/*returnDefault && */beacons[uuid].ContainsKey(-1))
                     {
-                        return beacons[uuid][major][-1];
+                        return beacons[uuid][-1][-1];
                     }
-                }
-                else if (/*returnDefault && */beacons[uuid].ContainsKey(-1))
-                {
-                    return beacons[uuid][-1][-1];
-                }
-                
-            }
-            else if (/*returnDefault && */beacons.ContainsKey(Guid.Empty))
-            {
-                return beacons[Guid.Empty][-1][-1];
-            }
 
+                }
+                else if (/*returnDefault && */beacons.ContainsKey(Guid.Empty))
+                {
+                    return beacons[Guid.Empty][-1][-1];
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Blowed up trying to load " + uuid + "/" + major + "/" + minor, ex);
+            }
             return null;
         }
 

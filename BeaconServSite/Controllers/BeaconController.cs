@@ -16,7 +16,7 @@ using BeaconServSite.Filters;
 namespace BeaconServSite.Controllers
 {
     [RoutePrefix("beacon")]
-    public class BeaconController : ApiController, IEnsureClientController
+    public class BeaconController : ApiController
     {
         public static readonly Guid KlickGuid;
 
@@ -50,11 +50,17 @@ namespace BeaconServSite.Controllers
         [Route("{uuid}/{major}/{minor}")]
         public Beacon Get(Guid uuid, int major, int minor)
         {
-            var response = new BeaconResponse();
-            var result = beaconProvider.FindBeacon(uuid, major, minor);
+            try
+            {
+                var response = new BeaconResponse();
+                var result = beaconProvider.FindBeacon(uuid, major, minor);
 
-            if (result != null) return result;
-
+                if (result != null) return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Wah", ex);
+            }
             throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
 
         }
@@ -204,13 +210,6 @@ namespace BeaconServSite.Controllers
             };
         }
 
-
-
-        public Guid ClientID
-        {
-            get;
-            set;
-        }
     }
 
 

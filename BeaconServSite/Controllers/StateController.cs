@@ -56,7 +56,7 @@ namespace BeaconServSite.Controllers
                     b => new BeaconPing { Cleared = true }
                 );*/
 
-                db.Database.ExecuteSqlCommand(@"UPDATE [BeaconPings] SET Cleared = 1 WHERE Client_ClientID = @p0 AND Cleared = 0", ClientID);
+                await db.Database.ExecuteSqlCommandAsync(@"UPDATE [BeaconPings] SET Cleared = 1 WHERE Client_ClientID = @p0 AND Cleared = 0", ClientID);
             }
         }
 
