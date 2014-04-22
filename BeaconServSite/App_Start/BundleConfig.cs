@@ -44,6 +44,14 @@ namespace BeaconServSite
                "~/Scripts/hook.min.js",
                "~/Scripts/mousewheel.js"));
 
+            bundles.Add(new ScriptBundle("~/Scripts/Main").Include(
+                "~/Scripts/Common.js",
+                "~/Scripts/Main.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/Single").Include(
+                "~/Scripts/Common.js",
+                "~/Scripts/Single.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/Site.css",
                  "~/Content/hook.css"));

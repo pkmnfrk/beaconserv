@@ -61,15 +61,11 @@
         });
     }
 
-    window.beacon = function (beacon_id, major, minor, device_id, proximity) {
-
-        beacon_id = beacon_id.toLowerCase();
-
-        proximity = parseInt(proximity, 10);
+    window.beacon_func = function (beacon_id, major, minor, device_id, proximity) {
 
         if (!proximity) proximity = 4;
 
-        if (beacon_id == "00000000-0000-0000-0000-000000000000" || beacon_id == "(null)") {
+        if (beacon_id == null) {
             return;
         }
 
@@ -79,25 +75,9 @@
                 && self.previousBeacon().major == major
                 && self.previousBeacon().minor == minor)
             {
-              //  if (self.previousBeacon().proximity <= self.previousBeacon().maxProximity
-              //     || proximity >= self.previousBeacon().proximity) {
-                    // if (self.previousBeacon().maxProximity != 0 && proximity > self.previousBeacon().maxProximity) {
-                    return;
-                    //}
-              //  }
+                return;
             }
         }
-
-        /*
-        self.cards.unshift({
-            title: "DEBUG",
-            body: "ID: " + major + "." + minor + "\nProximity:" + proximity,
-            url: null,
-            image: null,
-            video: null,
-            proximity: -1
-        })
-        */
 
         jQuery.ajax({
             type: "POST",
@@ -128,15 +108,6 @@
 
                 }
 
-
-                /*
-                self.cards.push({
-                    title: "Beacon",
-                    uuid: beacon_id,
-                    major: major,
-                    minor: minor,
-                    device_id: device_id
-                })*/
             }
         });
     };

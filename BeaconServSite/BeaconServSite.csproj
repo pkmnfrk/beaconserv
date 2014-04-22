@@ -206,6 +206,7 @@
     <Compile Include="Code\TypeResolver.cs" />
     <Compile Include="Code\XmlBeaconProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\SingleCardController.cs" />
     <Compile Include="Controllers\StateController.cs" />
     <Compile Include="Filters\EnsureClientAttribute.cs" />
@@ -221,6 +222,10 @@
     <Compile Include="Migrations\201404111248597_RemoveBeaconID.cs" />
     <Compile Include="Migrations\201404111248597_RemoveBeaconID.Designer.cs">
       <DependentUpon>201404111248597_RemoveBeaconID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404221431485_AddClientName.cs" />
+    <Compile Include="Migrations\201404221431485_AddClientName.Designer.cs">
+      <DependentUpon>201404221431485_AddClientName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Beacon.cs" />
@@ -257,6 +262,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\Single.js" />
     <Content Include="Views\SingleCard\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
@@ -321,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404111248597_RemoveBeaconID.resx">
       <DependentUpon>201404111248597_RemoveBeaconID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404221431485_AddClientName.resx">
+      <DependentUpon>201404221431485_AddClientName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

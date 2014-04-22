@@ -43,21 +43,21 @@ function SinglePageModel() {
     self.animating = ko.observable(false);
     self.isSearching = ko.observable(true);
 
-    self.openPage = function (onComplete) {
-        self.doTransition(true, onComplete);
+    self.openPage = function (onComplete, quick) {
+        self.doTransition(true, onComplete, quick);
     }
 
-    self.closePage = function (onComplete) {
-        self.doTransition(false, onComplete);
+    self.closePage = function (onComplete, quick) {
+        self.doTransition(false, onComplete, quick);
     }
 
     self.animationQueue = ko.observableArray([]);
     
-    self.doTransition = function (trueIfOpen, onComplete) {
+    self.doTransition = function (trueIfOpen, onComplete, quick) {
         var endCurrPage = false, endNextPage = false;
         
         if (self.animating()) {
-            self.animationQueue.push({ trueIfOpen: trueIfOpen, onComplete: onComplete });
+            self.animationQueue.push({ trueIfOpen: trueIfOpen, onComplete: onComplete, quick: quick });
             return;
         }
 
@@ -70,13 +70,13 @@ function SinglePageModel() {
         if (!trueIfOpen) {
             outPage = $("#page2");
             inPage = $("#page1");
-            outClass = "pt-page-moveToRight pt-page-ontop";
+            outClass = "pt-page-moveToRight pt-page-ontop" + (quick ? " pt-quick" : "");
             inClass = "pt-page-scaleUp";
         } else {
             outPage = $("#page1");
             inPage = $("#page2");
             outClass = "pt-page-scaleDown";
-            inClass = "pt-page-moveFromRight pt-page-ontop";
+            inClass = "pt-page-moveFromRight pt-page-ontop" + (quick ? " pt-quick" : "");
         }
 
         var onEndAnimation = function onEndAnimation($outpage, $inpage) {
@@ -88,7 +88,7 @@ function SinglePageModel() {
 
             if (self.animationQueue.length) {
                 var aq = self.animationQueue.shift();
-                self.doTransition(aq.trueIfOpen, aq.onComplete);
+                self.doTransition(aq.trueIfOpen, aq.onComplete, aq.quick);
             } else {
                 self.isSearching(true);
             }
@@ -127,16 +127,17 @@ function SinglePageModel() {
 
     }
 
-    window.beacon = function (beacon_id, major, minor, device_id, proximity) {
+    self.nextIsQuick = false;
 
-        beacon_id = beacon_id.toLowerCase();
+    window.didEnterForeground_func = function () {
+        self.nextIsQuick = true;
+    };
 
-
-        proximity = parseInt(proximity, 10);
-
+    window.beacon_func = function (beacon_id, major, minor, device_id, proximity) {
+       
         if (!proximity) proximity = 4;
 
-        if (beacon_id == "00000000-0000-0000-0000-000000000000" || beacon_id == "(null)") {
+        if (beacon_id == null) {
 
             if (self.currentCard()) {
                 self.isSearching(true);
@@ -180,13 +181,15 @@ function SinglePageModel() {
                 if (self.currentCard()) {
                     self.closePage(function () {
                         self.currentCard(newCard);
-                        self.openPage();
-                    })
+                        self.openPage(null, self.nextIsQuick);
+                    }, self.nextIsQuick)
                 } else {
                     self.currentCard(newCard);
-                    self.openPage();
+                    self.openPage(null, self.nextIsQuick);
                 }
-
+                if (self.nextIsQuick) {
+                    self.nextIsQuick = false;
+                }
             }
         });
     };
