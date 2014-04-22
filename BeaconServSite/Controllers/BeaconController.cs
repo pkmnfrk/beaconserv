@@ -126,20 +126,20 @@ namespace BeaconServSite.Controllers
 
         [HttpPost]
         [Route("image")]
-        public Task<object> UploadImage([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
+        public Task<object> UploadImage([FromUri]Guid uuid, [FromUri]int major, [FromUri]int minor)
         {
             return uploadToFolder(uuid, major, minor, "Content/photos/");
         }
 
         [HttpPost]
         [Route("video")]
-        public Task<object> UploadVideo([FromUri]Guid? uuid, [FromUri]int? major, [FromUri]int? minor)
+        public Task<object> UploadVideo([FromUri]Guid uuid, [FromUri]int major, [FromUri]int minor)
         {
             return uploadToFolder(uuid, major, minor, "Content/videos/");
         }
 
 
-        private async Task<object> uploadToFolder(Guid? uuid, int? major, int? minor, string folder)
+        private async Task<object> uploadToFolder(Guid uuid, int major, int minor, string folder)
         {
 
             MultipartFileData file = null;
@@ -174,9 +174,9 @@ namespace BeaconServSite.Controllers
 
             var prefix = string.Format(
                 "{0}.{1}.{2}"
-                , uuid ?? Guid.Empty
-                , major ?? -1
-                , minor ?? -1
+                , uuid
+                , major
+                , minor
             );
 
             var destFilename = string.Format(

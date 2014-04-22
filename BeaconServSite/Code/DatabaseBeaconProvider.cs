@@ -20,17 +20,13 @@ namespace BeaconServSite.Code
         {
             using (var db = new Context())
             {
-                var query = db
-                    .Beacons
-                    .Where(b => b.UUID == uuid && b.Major == major && b.Minor == minor)
-                    .Union(db.Beacons.Where(b => b.UUID == uuid && b.Major == major && b.Minor == 0))
-                    .Union(db.Beacons.Where(b => b.UUID == uuid && b.Major == 0))
-                    .Union(db.Beacons.Where(b => b.UUID == Guid.Empty));
+                var ret = db.Beacons.Find(uuid, major, minor);
 
+                if(ret == null) ret = db.Beacons.Find(uuid, major, 0);
+                if(ret == null) ret = db.Beacons.Find(uuid, 0, 0);
+                if(ret == null) ret = db.Beacons.Find(Guid.Empty, 0, 0);
 
-
-
-                return query.FirstOrDefault();
+                return ret;
             }
         }
 
