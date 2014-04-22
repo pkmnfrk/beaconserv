@@ -12,6 +12,8 @@ namespace BeaconServSite.Models
         public DbSet<Beacon> Beacons { get; set; }
         public DbSet<BeaconPing> BeaconPings { get; set; }
 
-        public Context() : base("DefaultConnection") { }
+        public Context() : base("DefaultConnection") {
+            this.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+        }
     }
 }

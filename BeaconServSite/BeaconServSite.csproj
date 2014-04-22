@@ -200,6 +200,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Code\DatabaseBeaconProvider.cs" />
     <Compile Include="Code\EnumHelper.cs" />
     <Compile Include="Code\IBeaconProvider.cs" />
     <Compile Include="Code\NullableDictionary.cs" />

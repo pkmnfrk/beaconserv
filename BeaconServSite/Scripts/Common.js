@@ -1,4 +1,4 @@
-﻿window.beacon = function (uuid, major, minor, device_id, proximity) {
+﻿window.beacon = function (beacon_id, major, minor, device_id, proximity) {
 
     beacon_id = beacon_id.toLowerCase();
     
@@ -9,7 +9,7 @@
     proximity = parseInt(proximity, 10);
 
     if (window.beacon_func) {
-        window.beacon_func(uuid, major, minor, device_id, proximity);
+        window.beacon_func(beacon_id, major, minor, device_id, proximity);
     }
 
 };

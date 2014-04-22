@@ -28,20 +28,20 @@ namespace BeaconServSite.Code
                         {
                             return beacons[uuid][major][minor];
                         }
-                        else if (/*returnDefault && */beacons[uuid][major].ContainsKey(-1))
+                        else if (/*returnDefault && */beacons[uuid][major].ContainsKey(0))
                         {
-                            return beacons[uuid][major][-1];
+                            return beacons[uuid][major][0];
                         }
                     }
-                    else if (/*returnDefault && */beacons[uuid].ContainsKey(-1))
+                    else if (/*returnDefault && */beacons[uuid].ContainsKey(0))
                     {
-                        return beacons[uuid][-1][-1];
+                        return beacons[uuid][0][0];
                     }
 
                 }
                 else if (/*returnDefault && */beacons.ContainsKey(Guid.Empty))
                 {
-                    return beacons[Guid.Empty][-1][-1];
+                    return beacons[Guid.Empty][0][0];
                 }
             }
             catch (Exception ex)
@@ -51,13 +51,13 @@ namespace BeaconServSite.Code
             return null;
         }
 
-        public Beacon FindExactBeacon(Guid? uuid_, int? major_, int? minor_)
+        public Beacon FindExactBeacon(Guid uuid_, int major_, int minor_)
         {
             loadBeacons();
 
-            var uuid = uuid_ ?? Guid.Empty;
-            var major = major_ ?? -1;
-            var minor = minor_ ?? -1;
+            var uuid = uuid_;
+            var major = major_;
+            var minor = minor_;
 
             if (beacons.ContainsKey(uuid))
             {
@@ -77,20 +77,20 @@ namespace BeaconServSite.Code
         {
             loadBeacons();
 
-            if (!beacons.ContainsKey(beacon.UUID ?? Guid.Empty))
-                beacons[beacon.UUID ?? Guid.Empty] = new Dictionary<int, Dictionary<int, Beacon>>();
+            if (!beacons.ContainsKey(beacon.UUID))
+                beacons[beacon.UUID] = new Dictionary<int, Dictionary<int, Beacon>>();
 
-            if (!beacons[beacon.UUID ?? Guid.Empty].ContainsKey(beacon.Major ?? -1))
-                beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1] = new Dictionary<int, Beacon>();
+            if (!beacons[beacon.UUID].ContainsKey(beacon.Major))
+                beacons[beacon.UUID][beacon.Major] = new Dictionary<int, Beacon>();
 
             Beacon ret = null;
 
-            if (beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1].ContainsKey(beacon.Minor ?? -1))
+            if (beacons[beacon.UUID][beacon.Major].ContainsKey(beacon.Minor))
             {
-                ret = beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1][beacon.Minor ?? -1];
+                ret = beacons[beacon.UUID][beacon.Major][beacon.Minor];
             }
 
-            beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1][beacon.Minor ?? -1] = beacon;
+            beacons[beacon.UUID][beacon.Major][beacon.Minor] = beacon;
 
             return ret;
         }
@@ -185,15 +185,15 @@ namespace BeaconServSite.Code
 
         private void deleteBeacon(Beacon beacon)
         {
-            beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1].Remove(beacon.Minor ?? -1);
+            beacons[beacon.UUID][beacon.Major].Remove(beacon.Minor);
 
-            if (beacons[beacon.UUID ?? Guid.Empty][beacon.Major ?? -1].Count == 0)
+            if (beacons[beacon.UUID][beacon.Major].Count == 0)
             {
-                beacons[beacon.UUID ?? Guid.Empty].Remove(beacon.Major ?? -1);
+                beacons[beacon.UUID].Remove(beacon.Major);
 
-                if (beacons[beacon.UUID ?? Guid.Empty].Count == 0)
+                if (beacons[beacon.UUID].Count == 0)
                 {
-                    beacons.Remove(beacon.UUID ?? Guid.Empty);
+                    beacons.Remove(beacon.UUID);
                 }
             }
         }

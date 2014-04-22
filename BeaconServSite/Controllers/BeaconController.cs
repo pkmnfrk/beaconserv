@@ -210,6 +210,25 @@ namespace BeaconServSite.Controllers
             };
         }
 
+        [HttpGet]
+        [Route("migrate")]
+        public void Migrate()
+        {
+            var xml = new XmlBeaconProvider();
+            var db = new DatabaseBeaconProvider();
+
+            foreach (var uuid in xml.GetAllBeacons().Values)
+            {
+                foreach (var major in uuid.Values)
+                {
+                    foreach (var minor in major.Values)
+                    {
+                        db.StoreBeacon(minor);
+                    }
+                }
+            }
+        }
+
     }
 
 

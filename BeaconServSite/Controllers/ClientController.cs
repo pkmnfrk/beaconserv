@@ -22,7 +22,9 @@ namespace BeaconServSite.Controllers
 
             using (var db = new Context())
             {
+                var thirtyMinutesAgo = DateTime.Now.AddMinutes(-30);
                 return db.Clients
+                    //.Where(c => c.BeaconPings.Any(q => q.Date >= thirtyMinutesAgo))
                     .OrderBy(c => c.Name)
                     .Select(c => new {
                         Name = c.Name ?? "Unknown",
@@ -32,7 +34,7 @@ namespace BeaconServSite.Controllers
                     .Select(c => new
                     {
                         c.Name,
-                        LatestPing = beacons.FindExactBeacon(c.LatestPing.UUID, c.LatestPing.Major, c.LatestPing.Minor)
+                        LatestPing = c.LatestPing != null ? beacons.FindExactBeacon(c.LatestPing.UUID, c.LatestPing.Major, c.LatestPing.Minor) : null
                     })
                     .ToList();
             }

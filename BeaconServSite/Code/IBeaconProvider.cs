@@ -9,7 +9,7 @@ namespace BeaconServSite.Code
 {
     public interface IBeaconProvider
     {
-        Beacon FindExactBeacon(Guid? uuid, int? major, int? minor);
+        Beacon FindExactBeacon(Guid uuid, int major, int minor);
         Beacon FindBeacon(Guid uuid, int major, int minor);
         Beacon StoreBeacon(Beacon beacon);
         void Persist();

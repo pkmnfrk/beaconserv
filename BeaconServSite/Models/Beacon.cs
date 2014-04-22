@@ -13,11 +13,11 @@ namespace BeaconServSite.Models
     public class Beacon
     {
         [Key, Column(Order=1)]
-        public Guid? UUID { get; set; }
+        public Guid UUID { get; set; }
         [Key, Column(Order = 2)]
-        public int? Major { get; set; }
+        public int Major { get; set; }
         [Key, Column(Order = 3)]
-        public int? Minor { get; set; }
+        public int Minor { get; set; }
 
         public string BodyText { get; set; }
         public string Title { get; set; }
@@ -32,7 +32,7 @@ namespace BeaconServSite.Models
 
         }
 
-        public Beacon(Guid g, int? major, XElement beacon)
+        public Beacon(Guid g, int major, XElement beacon)
         {
             UUID = g;
             Major = major;
@@ -81,7 +81,8 @@ namespace BeaconServSite.Models
 
             foreach (var uuid in doc.Root.Elements("uuid"))
             {
-                Guid g = new Guid(uuid.Attribute("value").Value);
+                Guid g = uuid.Attribute("value") != null ? new Guid(uuid.Attribute("value").Value) : Guid.Empty;
+
                 if (ret.ContainsKey(g))
                     throw new InvalidOperationException("The same UUID is listed twice");
 
@@ -89,18 +90,18 @@ namespace BeaconServSite.Models
 
                 foreach (var maj in uuid.Elements("major"))
                 {
-                    int? major = maj.Attribute("value") != null ? (int?)int.Parse(maj.Attribute("value").Value) : null;
+                    int major = maj.Attribute("value") != null ? int.Parse(maj.Attribute("value").Value) : 0;
 
-                    if (ret[g].ContainsKey(major ?? -1))
+                    if (ret[g].ContainsKey(major))
                         throw new InvalidOperationException("The same Major is listed twice in " + g);
 
-                    ret[g][major ?? -1] = new Dictionary<int, Beacon>();
+                    ret[g][major] = new Dictionary<int, Beacon>();
 
                     foreach (var beacon in maj.Elements("beacon"))
                     {
                         Beacon b = new Beacon(g, major, beacon);
 
-                        ret[g][major??-1].Add(b.Minor ?? -1, b);
+                        ret[g][major].Add(b.Minor, b);
                     }
                 }
             }
@@ -141,7 +142,7 @@ namespace BeaconServSite.Models
         {
             var ret = new XElement("beacon");
 
-            if(Minor.HasValue)
+            if(Minor != 0)
                 ret.Add(new XAttribute("minor", Minor));
             if(!string.IsNullOrEmpty(Title))
                 ret.Add(new XElement("title", Title));
