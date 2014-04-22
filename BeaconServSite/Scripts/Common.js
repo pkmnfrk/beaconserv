@@ -29,8 +29,8 @@ B = (function () {
                 url: "/client/my/name",
                 dataType: "json",
                 complete: function (data) {
-                    if (data) {
-                        B.name = data;
+                    if (data.responseJSON) {
+                        B.name = data.responseJSON;
                     } else {
                         var name = prompt("What is your name?");
 
