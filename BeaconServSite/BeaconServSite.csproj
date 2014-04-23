@@ -233,6 +233,10 @@
     <Compile Include="Migrations\201404221919578_AddBeaconRelationship.Designer.cs">
       <DependentUpon>201404221919578_AddBeaconRelationship.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201404222114564_RemoveExplicitProperties.cs" />
+    <Compile Include="Migrations\201404222114564_RemoveExplicitProperties.Designer.cs">
+      <DependentUpon>201404222114564_RemoveExplicitProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Beacon.cs" />
     <Compile Include="Controllers\BeaconController.cs" />
@@ -339,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404221919578_AddBeaconRelationship.resx">
       <DependentUpon>201404221919578_AddBeaconRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404222114564_RemoveExplicitProperties.resx">
+      <DependentUpon>201404222114564_RemoveExplicitProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

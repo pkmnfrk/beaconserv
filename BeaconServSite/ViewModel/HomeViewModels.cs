@@ -12,14 +12,14 @@ namespace BeaconServSite.ViewModel
     {
         public List<BeaconPing> Pings { get; set; }
 
-        public HtmlString ToCardJS()
+        /*public HtmlString ToCardJS()
         {
             var beacons = TypeResolver.IBeaconProvider;
 
             var data = Pings.Select(p => new
             {
                 Ping = p,
-                Beacon = beacons.FindBeacon(p.UUID, p.Major, p.Minor)
+                Beacon = p.Beacon
             })
             .Where(q => q.Beacon.MaxProximity == 0 || q.Ping.Proximity < q.Beacon.MaxProximity)
             .Select(q => new {
@@ -37,6 +37,6 @@ namespace BeaconServSite.ViewModel
             });
 
             return new HtmlString(JsonConvert.SerializeObject(data));
-        }
+        }*/
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Data.Entity.Core.Query;
+
 using BeaconServSite.Filters;
 using BeaconServSite.Models;
 using BeaconServSite.Code;
@@ -22,16 +24,22 @@ namespace BeaconServSite.Controllers
 
             using (var db = new Context())
             {
-                var thirtyMinutesAgo = DateTime.Now.AddMinutes(-30);
-                return db.Clients
+                db.Configuration.LazyLoadingEnabled = false;
+
+                var thirtyMinutesAgo = DateTime.Now.AddMinutes(-30.0);
+                var ret = db.Clients
                     .Where(c => c.BeaconPings.Any(q => q.Date >= thirtyMinutesAgo))
                     .OrderBy(c => c.Name)
-                    .Select(c => new {
+                    .ToList()
+                    .Select(c => new
+                    {
                         Name = c.Name ?? "Unknown",
-                        LatestPing = c.BeaconPings.OrderByDescending(b => b.Date).FirstOrDefault()
+                        LatestPing = db.BeaconPings.Include("Beacon").Where(b => b.Client.ClientID == c.ClientID).OrderByDescending(b => b.Date).FirstOrDefault()
                     })
                     
                     .ToList();
+
+                return ret;
             }
         }
 

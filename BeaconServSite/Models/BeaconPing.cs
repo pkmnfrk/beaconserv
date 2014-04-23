@@ -17,9 +17,6 @@ namespace BeaconServSite.Models
 
         public DateTime Date { get; set; }
         
-        public Guid UUID { get; set; }
-        public int Major { get; set; }
-        public int Minor { get; set; }
         public int Proximity { get; set; }
         public bool Cleared { get; set; }
     }
