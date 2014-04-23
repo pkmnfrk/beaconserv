@@ -2,7 +2,7 @@
 
 var map = L.map('map', {
     center: [-53.75 / 0x20000, 72.5 / 0x20000],
-    zoom: zoomOffset + 2,
+    zoom: zoomOffset + 3,
     crs: L.CRS.Simple,
     maxBounds: [
         [64/0x20000, -64/0x20000],
@@ -82,48 +82,13 @@ for (var i = 0; i < polys.length; i++) {
     p.bindPopup(poly.label);
 }
 
-/*
-var beacons = [
-    {
-        coords: [-71.9375, 125.45313],
-        label: "7.4"
-    },
-    {
-        coords: [-76.125, 49.46875],
-        label: "7.5"
-    },
-    {
-        coords: [-49.21875, 53.71875],
-        label: "7.6"
-    },
-    {
-        coords: [-54.44531, 25.99219],
-        label: "7.7"
-    },
-    {
-        coords: [-36.83594, 30.14063],
-        label: "7.8"
-    },
-    {
-        coords: [-73.77344, 109.73438],
-        label: "7.9"
-    },
-    {
-        coords: [-54.88281, 18.60938],
-        label: "7.10"
-    },
-    {
-        coords: [-70.0625, 61.49219],
-        label: "7.11"
-    },
-
-];
-*/
-
 B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function addBeacon(beacons) {
     
     if (beacons.length) {
-        var b = beacons.shift();
+        var b;
+        do {
+            b = beacons.shift();
+        } while (b.minor == 0);
 
         b.latitude /= 0x20000;
         b.longitude /= 0x20000;
@@ -142,7 +107,7 @@ B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function addBeacon(beaco
         }).addTo(map);
         */
 
-        setTimeout(function () { addBeacon(beacons); }, 200);
+        setTimeout(function () { addBeacon(beacons); }, 100);
     }
 
 });
