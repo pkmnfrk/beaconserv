@@ -61,6 +61,7 @@ namespace BeaconServSite
                  "~/Content/animations.css"));
 
             bundles.Add(new ScriptBundle("~/Scripts/display").Include(
+                "~/Scripts/bouncemarker.js",
                 "~/Scripts/Common.js",
                 "~/Scripts/Display.js"));
 

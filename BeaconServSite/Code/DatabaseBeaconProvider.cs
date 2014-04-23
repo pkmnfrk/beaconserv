@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BeaconServSite.Models;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 
 namespace BeaconServSite.Code
 {
@@ -38,10 +40,16 @@ namespace BeaconServSite.Code
 
                 if (oldBeacon != null)
                 {
-                    db.Beacons.Remove(oldBeacon);
+
+                    ((IObjectContextAdapter)db).ObjectContext.Detach(oldBeacon);
+                    db.Beacons.Attach(beacon);
+                    db.Entry(beacon).State = System.Data.Entity.EntityState.Modified;
+                }
+                else
+                {
+                    db.Beacons.Add(beacon);
                 }
 
-                db.Beacons.Add(beacon);
                 db.SaveChanges();
 
                 return oldBeacon;

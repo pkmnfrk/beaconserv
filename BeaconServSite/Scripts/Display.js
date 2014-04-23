@@ -129,7 +129,9 @@ B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function addBeacon(beaco
         b.longitude /= 0x20000;
 
 
-        var marker = L.marker([b.latitude, b.longitude]).addTo(map);
+        var marker = L.marker([b.latitude, b.longitude], {
+            bounceOnAdd: true
+        }).addTo(map);
         marker.bindPopup(b.title)
 
         /*
@@ -140,7 +142,7 @@ B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function addBeacon(beaco
         }).addTo(map);
         */
 
-        setTimeout(function () { addBeacon(beacons); }, 500);
+        setTimeout(function () { addBeacon(beacons); }, 200);
     }
 
 });
