@@ -237,6 +237,10 @@
     <Compile Include="Migrations\201404222114564_RemoveExplicitProperties.Designer.cs">
       <DependentUpon>201404222114564_RemoveExplicitProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201404231738431_BeaconPosition.cs" />
+    <Compile Include="Migrations\201404231738431_BeaconPosition.Designer.cs">
+      <DependentUpon>201404231738431_BeaconPosition.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Beacon.cs" />
     <Compile Include="Controllers\BeaconController.cs" />
@@ -349,6 +353,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404222114564_RemoveExplicitProperties.resx">
       <DependentUpon>201404222114564_RemoveExplicitProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404231738431_BeaconPosition.resx">
+      <DependentUpon>201404231738431_BeaconPosition.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
