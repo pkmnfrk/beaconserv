@@ -135,6 +135,8 @@
         newBeacon.image = ko.observable(null);
         newBeacon.video = ko.observable(null);
         newBeacon.maxProximity = ko.observable(0);
+        newBeacon.latitude = ko.observable(0.0);
+        newBeacon.longitude = ko.observable(0.0);
 
 
         var newMinor = {

@@ -11,7 +11,8 @@
 
 #debug {
     position:absolute;
-    display:inline-block;
+    /**/display:inline-block;/**/
+    /*display:none;*/
     background-color: #ff0;
 
     top: 30px;

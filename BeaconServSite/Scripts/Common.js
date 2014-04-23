@@ -23,6 +23,7 @@ window.didEnterForeground = function () {
 B = (function () {
     return {
         name: null,
+
         getName: function () {
             jQuery.ajax({
                 type: "GET",
@@ -46,6 +47,34 @@ B = (function () {
                     }
                 }
             });
+        },
+
+        getBeacons: function (uuid, major, whenLoaded) {
+            if (typeof (uuid) == "function") {
+                whenLoaded = uuid;
+                uuid = null;
+            }
+            if (!whenLoaded) return; //the whole point of this is to load data and call a callback!
+
+            var url = "/beacon/flat";
+
+            if (uuid) {
+                url += "/" + uuid;
+            }
+
+            if (major) {
+                url += "/" + major;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                complete: function (response) {
+                    whenLoaded(response.responseJSON);
+                }
+            })
+
         }
 
     };

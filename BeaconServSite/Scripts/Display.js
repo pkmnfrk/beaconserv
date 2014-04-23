@@ -1,19 +1,19 @@
 ﻿var zoomOffset = 17;
 
 var map = L.map('map', {
-    center: [0, 0],
+    center: [-53.75 / 0x20000, 72.5 / 0x20000],
     zoom: zoomOffset + 2,
-    crs: L.CRS.Simple/*,
+    crs: L.CRS.Simple,
     maxBounds: [
-        [64, -64],
-        [-196, 196]
+        [64/0x20000, -64/0x20000],
+        [-196/0x20000, 196/0x20000]
 
-    ]*/
+    ]
 
 }).on('mousemove', function (e) {
     
 }).on('click', function (e) {
-    $("#debugArea").val("[" + e.latlng.lat.toString() + ", " + e.latlng.lng.toString() + "]");
+    $("#debugArea").val("[" + (e.latlng.lat * 0x20000).toString() + ", " + (e.latlng.lng * 0x20000).toString() + "]");
     $("#debugArea")[0].focus();
     $("#debugArea")[0].select();
     
@@ -82,6 +82,7 @@ for (var i = 0; i < polys.length; i++) {
     p.bindPopup(poly.label);
 }
 
+/*
 var beacons = [
     {
         coords: [-71.9375, 125.45313],
@@ -117,21 +118,30 @@ var beacons = [
     },
 
 ];
+*/
 
-for (var i = 0; i < beacons.length; i++) {
-    var b = beacons[i];
-
+B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function addBeacon(beacons) {
     
-    b.coords[0] /= 0x20000;
-    b.coords[1] /= 0x20000;
-    
+    if (beacons.length) {
+        var b = beacons.shift();
 
-    var marker = L.marker(b.coords).addTo(map);
-    marker.bindPopup(b.label)
+        b.latitude /= 0x20000;
+        b.longitude /= 0x20000;
 
-    var circle = L.circle(b.coords, 25, {
-        color: '#00f',
-        fillColor: '#00f',
-        fillOpacity: 0.1
-    }).addTo(map);
-}
+
+        var marker = L.marker([b.latitude, b.longitude]).addTo(map);
+        marker.bindPopup(b.title)
+
+        /*
+        var circle = L.circle([b.latitude, b.longitude], 25, {
+            color: '#00f',
+            fillColor: '#00f',
+            fillOpacity: 0.1
+        }).addTo(map);
+        */
+
+        setTimeout(function () { addBeacon(beacons); }, 500);
+    }
+
+});
+

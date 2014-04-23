@@ -75,6 +75,42 @@ namespace BeaconServSite.Controllers
         }
 
         [HttpGet]
+        [Route("flat")]
+        public object GetFlatBeacons()
+        {
+            var ret = beaconProvider
+                        .GetAllBeacons()
+                        .SelectMany(q => q.Value.SelectMany(r => r.Value.Select(s => s.Value)));
+
+            return ret;
+
+        }
+
+        [HttpGet]
+        [Route("flat/{uuid}")]
+        public object GetFlatBeaconsByUuid(Guid uuid)
+        {
+            var ret = beaconProvider
+                        .GetBeaconsByUuid(uuid)
+                        .SelectMany(r => r.Value.Select(s => s.Value));
+
+            return ret;
+
+        }
+
+        [HttpGet]
+        [Route("flat/{uuid}/{major}")]
+        public object GetFlatBeaconsByUuid(Guid uuid, int major)
+        {
+            var ret = beaconProvider
+                        .GetBeaconsByUuidAndMajor(uuid, major)
+                        .Select(s => s.Value);
+
+            return ret;
+
+        }
+
+        [HttpGet]
         [Route("{uuid}")]
         public object GetBeaconsByUuid(Guid uuid)
         {
