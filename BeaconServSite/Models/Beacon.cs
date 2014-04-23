@@ -34,5 +34,15 @@ namespace BeaconServSite.Models
         {
 
         }
+
+        internal static Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> LoadFromXml(XDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static XDocument SerializeBeaconList(Dictionary<Guid, Dictionary<int, Dictionary<int, Beacon>>> beacons)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
