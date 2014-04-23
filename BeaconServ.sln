@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeaconServSite", "BeaconServSite\BeaconServSite.csproj", "{D5333EE8-CA3B-4AD1-BF4C-014906E21DB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapChop", "MapChop\MapChop.csproj", "{68C57082-048E-4F76-A377-6E6670971E6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D5333EE8-CA3B-4AD1-BF4C-014906E21DB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5333EE8-CA3B-4AD1-BF4C-014906E21DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5333EE8-CA3B-4AD1-BF4C-014906E21DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68C57082-048E-4F76-A377-6E6670971E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68C57082-048E-4F76-A377-6E6670971E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68C57082-048E-4F76-A377-6E6670971E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68C57082-048E-4F76-A377-6E6670971E6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

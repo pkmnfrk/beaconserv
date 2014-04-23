@@ -1,0 +1,28 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+    @Styles.Render("~/Content/display")
+</head>
+<body>
+    <div id="map"> 
+    </div>
+
+    <div id="debug">
+        <input id="debugArea" value="" />
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    @Scripts.Render("~/Scripts/display")
+</body>
+</html>

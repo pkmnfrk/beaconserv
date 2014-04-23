@@ -255,6 +255,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\animations.css" />
+    <Content Include="Content\Display.css" />
     <Content Include="Content\hook-bg.png" />
     <Content Include="Content\hook-bgs.png" />
     <Content Include="Content\hook-spinner%402x.png" />
@@ -273,8 +274,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Common.js" />
+    <Content Include="Scripts\Display.js" />
     <Content Include="Scripts\Single.js" />
     <Content Include="Views\SingleCard\Index.cshtml" />
+    <Content Include="Views\Display\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -359,7 +362,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Display\" />
     <Folder Include="Views\State\" />
   </ItemGroup>
   <PropertyGroup>

@@ -60,6 +60,13 @@ namespace BeaconServSite
                  "~/Content/Single.css",
                  "~/Content/animations.css"));
 
+            bundles.Add(new ScriptBundle("~/Scripts/display").Include(
+                "~/Scripts/Common.js",
+                "~/Scripts/Display.js"));
+
+            bundles.Add(new StyleBundle("~/Content/display").Include(
+                 "~/Content/Display.css"));
+
         }
     }
 }

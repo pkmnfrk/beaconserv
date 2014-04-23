@@ -1,0 +1,27 @@
+﻿
+#map {
+    position:absolute;
+    top: 0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color: white;
+    z-index: 0;
+}
+
+#debug {
+    position:absolute;
+    display:inline-block;
+    background-color: #ff0;
+
+    top: 30px;
+    left: 100px;
+    
+
+    z-index: 100;
+
+}
+
+#debugArea {
+    width: 400px;
+}
