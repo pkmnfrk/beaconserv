@@ -46,7 +46,8 @@ namespace BeaconServSite.Filters
                 {
                     client = new Client
                     {
-                        ClientID = clientid
+                        ClientID = clientid,
+                        Name = "Unnamed"
                     };
                     
                     db.Clients.Add(client);

@@ -40,6 +40,9 @@ namespace BeaconServSite.Controllers
 
                 db.BeaconPings.Add(ping);
                 await db.SaveChangesAsync();
+
+                await TypeResolver.IScreenManager.UpdateClient(ping);
+
             }
 
             return ret;

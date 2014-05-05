@@ -75,7 +75,97 @@ B = (function () {
                 }
             })
 
-        }
+        },
+
+        getBeaconsDict: function (uuid, major, whenLoaded) {
+            if (typeof (uuid) == "function") {
+                whenLoaded = uuid;
+                uuid = null;
+            }
+            if (!whenLoaded) return; //the whole point of this is to load data and call a callback!
+
+            var url = "/beacon";
+
+            if (uuid) {
+                url += "/" + uuid;
+            }
+
+            if (major) {
+                url += "/" + major;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                complete: function (response) {
+                    whenLoaded(response.responseJSON);
+                }
+            })
+        },
+
+        getActiveClients: function (major, whenLoaded) {
+            if (typeof major == "function") {
+                whenLoaded = major;
+                major = null;
+            }
+
+            if (!whenLoaded) return; //the whole point of this is to load data and call a callback!
+
+            var url = "/client/all";
+
+            if (major) {
+                url += "?major=" + major;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                complete: function (response) {
+                    whenLoaded(response.responseJSON);
+                }
+            })
+
+        },
+
+        getClient: function (clientid, major, whenLoaded) {
+            if (typeof major == "function") {
+                whenLoaded = major;
+                major = null;
+            }
+
+            if (!whenLoaded) return; //the whole point of this is to load data and call a callback!
+
+            var url = "/client/" + clientid;
+
+            if (major) {
+                url += "?major=" + major;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                complete: function (response) {
+                    whenLoaded(response.responseJSON);
+                }
+            })
+        },
+
+        redMarker: (function () {
+            if (typeof window["L"] != "undefined") {
+                return L.icon({
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41],
+                    labelAnchor: [0, 0],
+                    iconUrl: "/Content/images/red-marker.png",
+                    iconRetinaUrl: "/Content/images/red-marker-2x.png",
+                });
+            }
+        })(),
 
     };
 

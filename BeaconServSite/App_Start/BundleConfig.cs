@@ -62,10 +62,15 @@ namespace BeaconServSite
 
             bundles.Add(new ScriptBundle("~/Scripts/display").Include(
                 "~/Scripts/bouncemarker.js",
+                "~/Scripts/AnimatedMarker.js",
+                "~/Scripts/leaflet.label.js",
+                "~/Scripts/oms.min.js",
                 "~/Scripts/Common.js",
+                "~/Scripts/DisplayViews.js",
                 "~/Scripts/Display.js"));
 
             bundles.Add(new StyleBundle("~/Content/display").Include(
+                "~/Content/leaflet.label.css",
                  "~/Content/Display.css"));
 
         }

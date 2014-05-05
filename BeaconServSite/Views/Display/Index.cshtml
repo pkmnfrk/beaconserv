@@ -7,10 +7,12 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <meta name="viewport" content="minimal-ui, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>iBeacon Map</title>
 
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+    <link href='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.2/leaflet.fullscreen.css' rel='stylesheet' />
     @Styles.Render("~/Content/display")
 </head>
 <body>
@@ -21,8 +23,13 @@
         <input id="debugArea" value="" />
     </div>
 
+    <div id="clients">
+
+    </div>
+
     @Scripts.Render("~/bundles/jquery")
     <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.2/Leaflet.fullscreen.min.js'></script>
     @Scripts.Render("~/Scripts/display")
 </body>
 </html>

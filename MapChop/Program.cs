@@ -27,8 +27,8 @@ namespace MapChop
                 }
             }
 
-            int tileSize = 128;
-            int maxZoom = 5;
+            int tileSize = 256;
+            
 
             Size destSize = new Size(tileSize, tileSize);
             int sourceSize = tileSize;
@@ -40,8 +40,9 @@ namespace MapChop
             }
 
             int zoom = 0;
-            while (sourceSize >= tileSize / 2)
+            while (sourceSize >= tileSize)
             {
+                Console.WriteLine("{0} -> {1}", sourceSize, tileSize);
                 var chopper = new Chopper(new Size(sourceSize, sourceSize), destSize);
                 var path = Path.Combine(destFolder, zoom.ToString());
 

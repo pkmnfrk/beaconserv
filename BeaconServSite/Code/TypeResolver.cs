@@ -22,6 +22,20 @@ namespace BeaconServSite.Code
             }
         }
 
+        private static IScreenManager _iScreenManager;
+        public static IScreenManager IScreenManager
+        {
+            get
+            {
+                if (_iScreenManager == null)
+                {
+                    _iScreenManager = ResolveType<IScreenManager>(ConfigurationManager.AppSettings["Beacon.ScreenManager"]);
+                }
+
+                return _iScreenManager;
+            }
+        }
+
         private static T ResolveType<T>(string typeName) where T : class
         {
             var type = Assembly.GetCallingAssembly().GetType(typeName);
