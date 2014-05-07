@@ -1,0 +1,36 @@
+﻿body {
+    background-color:red;
+}
+#map {
+    position:absolute;
+    top: 0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color: white;
+    z-index: 0;
+}
+
+#debug {
+    position:absolute;
+    /**/display:inline-block;/**/
+    /*display:none;*/
+    background-color: #ff0;
+
+    top: 30px;
+    left: 100px;
+    
+
+    z-index: 100;
+
+}
+
+@media only screen and (max-width: 1024px) {
+    #debug {
+        display:none;
+    }
+}
+
+#debugArea {
+    width: 400px;
+}
