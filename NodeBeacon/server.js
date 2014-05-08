@@ -42,7 +42,11 @@ function start(route, handle) {
         
     });
     
-    server.listen(8888);
+    var port = process.env.PORT;
+    
+    if(!port) port = 8888;
+    
+    server.listen(port);
     
     
     console.log("Server started");
