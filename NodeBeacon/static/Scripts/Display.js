@@ -66,6 +66,15 @@ function loadBeacons() {
     });
 }
 
+function findBeacon(major, minor) {
+    for(var i = 0; i < beaconsList.length; i++) {
+        if(beaconsList[i].major == major && beaconsList[i].minor == minor)
+            return beaconsList[i];
+    }
+    
+    return null;
+}
+
 window.addEventListener("orientationchange", onOrientationChange);
 
 var map = L.map('map', {
@@ -251,7 +260,7 @@ var socketMessageHandler = function (msg) {
                     case "client":
                         console.log("adding client " + data.name);
                         var client = clients[data.clientid]
-                        var b = beaconsList[data.minor];
+                        var b = findBeacon(data.major, data.minor);
 
                         var pos = L.latLng(b.latitude, b.longitude);
 

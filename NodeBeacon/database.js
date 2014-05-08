@@ -45,7 +45,7 @@ function findBeacon (uuid, major, minor, onComplete) {
     
     var results = beacons
                     .find(query)
-                    .sort(["uuid", "major", "minor"])
+                    .sort({uuid: 1, major: 1, minor: 1})
                     .toArray(onComplete);
 }
 
