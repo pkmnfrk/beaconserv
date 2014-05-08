@@ -8,6 +8,10 @@ function route(handle, request, response) {
     
     var handler = null;
     
+    /*for(var h in handle) {
+        console.log("Handler: " + h + ", " + handle[h]);
+    }*/
+    
     for(var h in handle) {
        if(!handle[h].r) {
             handle[h].r = new RegExp(h, "i");
