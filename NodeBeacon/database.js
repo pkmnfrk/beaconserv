@@ -55,13 +55,60 @@ function storeBeacon(beacon) {
     beacons.save(beacon);
 }
 
-function storePing(ping) {
-    var beacons = db.collection('beacon');
-    
-    beacons.save(ping);
-}
-
 exports.start = start;
 exports.findBeacon = findBeacon;
 exports.storeBeacon = storeBeacon;
-exports.storePing = storePing;
+exports.findClient = function(clientid, callback) {
+    var clients = db.collection("client");
+    
+    clients.findOne({ clientid: clientid }, function(err, obj) {
+        if(err) throw err;
+        
+        if(!obj) {
+            obj = {
+                clientid: clientid,
+                name: "Unnamed",
+                pings: []
+            }
+            clients.save(obj, function(err) {
+                callback(obj);
+            });
+        } else {
+            callback(obj); 
+        }
+    });
+}
+
+exports.storeClient = function(client) {
+    var clients = db.collection("client");
+    
+    clients.save(client, function(err) { if(err) throw err; });
+}
+
+exports.findClients = function(query, callback) {
+    var clients = db.collection("client");
+    
+    if(typeof query == "function") {
+        callback = query;   
+        query = undefined;
+    }
+    
+    clients.find(query).toArray(function(err, objs) {
+        if(err) throw err;
+        
+        callback(objs);
+    });
+}
+
+exports.findBeaconById = function(id, callback) {
+    var beacons = db.collection("beacon");
+    var oid = new mongo.ObjectID(id);
+    
+    var query = {_id : oid};
+    
+    beacons.findOne(query, function(err, obj) {
+        if(err) throw err;
+        
+        callback(obj);
+    })
+}
