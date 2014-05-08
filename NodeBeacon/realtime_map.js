@@ -29,24 +29,34 @@ var onInitialMessage = function (msg) {
         }, function(clients) {
             console.log("Clients:");
             console.log(clients);
-            var client = clients.shift();
+            
+            var client;
+            
+            while(clients.length) {
+                client = clients.shift();
+                if(client.pings.length) break;
+            }
             database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
                 console.log("Loaded beacon for client");
-                
-                var msg = {
-                    msg: "client",
-                    uuid: beacon.uuid,
-                    major: beacon.major,
-                    minor: beacon.minor,
-                    clientid: client.clientid,
-                    name: client.name
-                }
+                if(beacon) {
+                    var msg = {
+                        msg: "client",
+                        uuid: beacon.uuid,
+                        major: beacon.major,
+                        minor: beacon.minor,
+                        clientid: client.clientid,
+                        name: client.name
+                    }
 
-                self.send(JSON.stringify(msg));
+                    self.send(JSON.stringify(msg));
+                }
                 
-                if(clients.length) {
+                while(clients.length) {
                     client = clients.shift();
-                    database.findBeaconById(client.beacon_id, receiveBeacon);
+                    if(client.pings.length) {
+                        database.findBeaconById(client.beacon_id, receiveBeacon);
+                        break;
+                    }
                 }
             });
             
