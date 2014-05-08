@@ -1,14 +1,14 @@
 var url = require("url"),
     querystring = require("querystring"),
-    static = require("node-static"),
+    statics = require("node-static"),
     database = require("./database"),
-    staticServer = new static.Server('./static'),
-    realtime_map = require("./realtime_map")
+    staticServer = new statics.Server('./static'),
+    realtime_map = require("./realtime_map");
 
-function staticHandler (request, response, file) {
+function staticHandler(request, response, file) {
     
     request.addListener("end", function () {
-        if(file) {
+        if (file) {
             staticServer.serveFile(file, 200, {}, request, response);
         } else {
             staticServer.serve(request, response);
@@ -17,7 +17,7 @@ function staticHandler (request, response, file) {
     
 }
 
-function beacons (request, response) {
+function beacons(request, response) {
     //console.log("beacons!");
     
     var path = url.parse(request.url).pathname.split('/');
@@ -29,7 +29,7 @@ function beacons (request, response) {
     path.shift();
     path.shift();
     
-    if(path.length >= 1) {
+    if (path.length >= 1) {
         uuid = path[0];
         if(path.length >= 2) {
             major = parseInt(path[1], 10);
@@ -117,5 +117,47 @@ exports.client = function client(request, response) {
         response.writeHead(200, {"Content-Type": "application/json"});
         response.write(JSON.stringify(client));
         response.end();
+    });
+};
+
+exports.state = function state(request, response) {
+    database.findClient(request.clientid, function (client) {
+        
+        var pings = client.pings.slice(0, 5);
+        var ret = [];
+        
+        var func = function () {
+            if(pings.length) {
+                var ping = pings.unshift();
+                
+                database.findBeaconById(ping.beacon_id, function(beacon) {
+                    ret.push(beacon);
+                    
+                    func();
+                });
+                    
+                    
+            } else {
+                response.writeHead(200, {"Content-Type": "application/json" });
+                response.write(JSON.stringify(ret));
+                response.end();
+            }
+        };
+        
+        func();
+        
+    });
+};
+
+
+exports.name = function name(request, response) {
+    database.findClient(request.clientid, function (client) {
+        
+        if (request.method == "GET")
+        {
+            
+            response.writeJson(client.name);
+        }
+        
     });
 };

@@ -1,4 +1,4 @@
-﻿window.beacon = function (beacon_id, major, minor, device_id, proximity) {
+window.beacon = function (beacon_id, major, minor, device_id, proximity) {
 
     beacon_id = beacon_id.toLowerCase();
     

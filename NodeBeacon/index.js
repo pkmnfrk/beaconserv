@@ -14,6 +14,8 @@ var handle = {
     "^/ping/[-a-fA-F0-9]+/\\d+/\\d+": requestHandlers.ping,
     //"^/socket$": realtime_map.handleSocket
     "^/client$": requestHandlers.client,
+    "^/state$": requestHandlers.state,
+    "^/client/my/name": requestHandlers.name
 };
 
 router.setStaticHandler(requestHandlers.static);

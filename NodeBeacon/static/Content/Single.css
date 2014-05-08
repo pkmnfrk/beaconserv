@@ -1,0 +1,51 @@
+﻿body {
+    font-family: Arial, Helvetica, sans-serif;   
+    background:black;
+    padding:0px;
+    margin:0px;
+    color:#333;
+    min-height:100%;
+}
+
+
+/* Text Styles, Colors, Backgrounds */
+
+.pt-page h1 {
+	font-size: 24px;
+	text-align: center;
+	text-transform: uppercase;	
+}
+
+.pt-page h2 {
+	font-size: 20px;
+	text-align: center;
+	text-transform: uppercase;	
+    margin-top: 10px;
+}
+
+.pt-page h1 strong {
+	color: rgba(0,0,0,0.1);
+}
+
+.pt-page-1 {
+	background: #0ac2d2;
+}
+
+.pt-page-2 {
+	background: white;
+}
+
+.pt-page-2 > * {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+    .pt-page-2 > .img-wrap {
+        height: 30%;
+        width: 100%;
+        margin: 0;
+        background-position:center;
+        background-repeat:no-repeat;
+        background-size: 100% auto;
+    }
+

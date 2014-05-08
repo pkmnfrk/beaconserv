@@ -9,6 +9,11 @@ var http = require("http"),
 
 var server = null, socketServer = null;
 
+http.ServerResponse.prototype.writeJson = function(obj) {
+    this.writeHead(200, { "Content-Type":"application/json" });
+    this.write(JSON.stringify(obj));
+    this.end();
+};
 
 function start(route, handle) {
     server = http.createServer(function (request, response) {
@@ -27,18 +32,6 @@ function start(route, handle) {
         
         route(handle, request, response);
         
-        /*
-        request.setEncoding("utf8");
-        
-        request.addListener("data", function(postDataChunk) {
-            postData += postDataChunk;
-            console.log("Received post data chunk '" + postDataChunk + "'");
-        });
-        
-        request.addListener("end", function() {
-            route(handle, pathname, response, postData);
-        });
-        */
         
     });
     
