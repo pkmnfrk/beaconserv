@@ -18,7 +18,7 @@ window.didEnterForeground = function () {
     if (window.didEnterForeground_func) {
         window.didEnterForeground_func();
     }
-}
+};
 
 B = (function () {
     return {
@@ -73,7 +73,7 @@ B = (function () {
                 complete: function (response) {
                     whenLoaded(response.responseJSON);
                 }
-            })
+            });
 
         },
 
@@ -101,7 +101,7 @@ B = (function () {
                 complete: function (response) {
                     whenLoaded(response.responseJSON);
                 }
-            })
+            });
         },
 
         getActiveClients: function (major, whenLoaded) {
@@ -125,7 +125,7 @@ B = (function () {
                 complete: function (response) {
                     whenLoaded(response.responseJSON);
                 }
-            })
+            });
 
         },
 
@@ -150,11 +150,11 @@ B = (function () {
                 complete: function (response) {
                     whenLoaded(response.responseJSON);
                 }
-            })
+            });
         },
 
         redMarker: (function () {
-            if (typeof window["L"] != "undefined") {
+            if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [25, 41],
                     iconAnchor: [12, 41],
@@ -166,6 +166,23 @@ B = (function () {
                 });
             }
         })(),
+        
+        getPrefs: function(withPrefs) {
+            if(this.prefs) {
+                withPrefs(this.prefs);
+                return;
+            }
+            
+            $.ajax({
+                type: "GET",
+                url: "/prefs",
+                dataType: "json",
+                complete: function(response) {
+                    this.prefs = response.responseJSON;
+                    withPrefs(this.prefs);
+                }   
+            });
+        }
 
     };
 

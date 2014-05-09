@@ -217,22 +217,32 @@ new_uri += "/socket";
 
 
 var socket = null;
-try {
-    
+var socket_connect_timeout = 100;
+var socket_connect_timer = null;
+
+var socket_onOpen = function () {
+    socket.onmessage = socketMessageHandler;
+    socket_connect_timeout = 100; //reset this limit
+};
+
+var reconnect = function() {
     socket = new WebSocket(new_uri);
-    socket.onopen = function () {
-        socket.onmessage = socketMessageHandler;
-    };
-    socket.onclose = function () {
-        //server died, let's refresh!
-        //window.location = window.location;
-    };
+    socket.onopen = socket_onOpen;
+    socket.onclose = socket_onClose;
     socket.phase = 0;
-    
-    
-} catch (ex) {
-    //must be in dev
-}
+    socket_connect_timeout = socket_connect_timeout * 1.1;
+};
+
+var socket_onClose = function () {
+    //server died, let's try to reconnect!
+    socket_connect_timer = setTimeout(reconnect, socket_connect_timeout);
+};
+
+B.getPrefs(function(prefs) {
+    if(prefs.supportsWebsockets) {
+        reconnect();
+    }
+});
 
 var myIdentifier;
 
@@ -265,20 +275,35 @@ var socketMessageHandler = function (msg) {
                         if (!client) {
                             clients[data.clientid] = {
                                 clientid: data.clientid,
-                                marker: L.marker(pos, {
-                                    icon: B.redMarker
-                                }).addTo(map),
+                                marker: null,
                                 zIndexOffset: 10000,
                             };
                             client = clients[data.clientid];
+                        } 
+                        
+                        if(client.marker === null) {
+                            client.marker = L.marker(pos, {
+                                    icon: B.redMarker
+                                }).addTo(map);
+                            
                             clientContainer.addMarker(client.marker);
-
-
-                        } else {
-                            client.marker.setLatLng(pos);
                         }
+                        
+                        client.marker.setLatLng(pos);
+                        
 
                         client.marker.bindPopup(data.name);
+                        
+                        if(client.removalTimer) {
+                            clearTimeout(client.removalTimer);
+                            client.removalTimer = null;
+                        }
+                        
+                        client.removalTimer = setTimeout(function() {
+                            map.removeMarker(client.marker);
+                            client.marker = null;
+                            client.removalTimer = null;
+                        }, 10 * 60 * 1000);
 
                         break;
                 }

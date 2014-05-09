@@ -77,17 +77,8 @@ var onMessage = function (msg) {
 function start() {
     
     //console.log(process.env);
-    if(process.env.IISNODE_VERSION) { //running under iisnode == restricted by IIS version
-        console.log("IIS detected, but what version?");
-        if(os.release() < "6.2") {
-            console.log("Detected IIS <= 7, so disabling websocket support");
-            return;
-        } else {
-            console.log("Detected IIS > 7, so enabling websocket support");
-        }
-    } else {
-        console.log("No IIS so enabling websocket support");
-    }
+    
+    if(!exports.supportsWebsockets) return;
     
     socketServer = new WebSocketServer({
         server: server.getServer(),
@@ -128,3 +119,19 @@ exports.notifyPing = function(uuid, major, minor, clientid, name) {
     
     socketServer.broadcast(JSON.stringify(msg));
 };
+
+exports.supportsWebsockets = (function() { 
+    if(process.env.IISNODE_VERSION) { //running under iisnode == restricted by IIS version
+        console.log("IIS detected, but what version?");
+        if(os.release() < "6.2") {
+            console.log("Detected IIS <= 7, so disabling websocket support");
+            return false;
+        } else {
+            console.log("Detected IIS > 7, so enabling websocket support");
+        }
+    } else {
+        console.log("No IIS so enabling websocket support");
+    }
+    
+    return true;
+})();
