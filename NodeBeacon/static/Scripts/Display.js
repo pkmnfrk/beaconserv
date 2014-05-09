@@ -1,4 +1,3 @@
-/*
 var zoomOffset = 15;
 var scalar = 0x4c10;
 
@@ -33,7 +32,7 @@ function loadBeacons() {
                 var b;
                 do {
                     b = beacons.shift();
-                } while (b.minor == 0);
+                } while (b.minor === 0);
 
                 b.latitude /= scalar;
                 b.longitude /= scalar;
@@ -44,7 +43,7 @@ function loadBeacons() {
                 })
                     .addTo(map)
                 ;
-                marker.bindPopup(b.title)
+                marker.bindPopup(b.title);
 
                 setTimeout(function () { addBeacon(beacons); }, 100);
             } else {
@@ -92,7 +91,7 @@ var map = L.map('map', {
     
 }).on('load', function (e) {
     
-})
+});
 
 
 L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', {
@@ -193,8 +192,8 @@ var runViews = function () {
 
     curView.start(function () {
         runViews();
-    })
-}
+    });
+};
 
 //runViews();
 
@@ -204,7 +203,6 @@ var clientContainer = new OverlappingMarkerSpiderfier(map, {
     keepSpiderfied: true
 });
 
-*/
 var loc = window.location, new_uri;
 if (loc.protocol === "https:") {
     new_uri = "wss:";
@@ -232,15 +230,15 @@ try {
 } catch (ex) {
     //must be in dev
 }
-/*
+
 var myIdentifier;
 
 var pendingUpdates = [];
 
 var socketMessageHandler = function (msg) {
+    var data = JSON.parse(msg.data);
     switch (socket.phase) {
         case 0: //waiting for identifier
-            var data = JSON.parse(msg.data);
             myIdentifier = data.identifier;
             socket.send(JSON.stringify({ ok: true }));
             socket.phase = 1;
@@ -251,11 +249,10 @@ var socketMessageHandler = function (msg) {
             if (!beaconsLoaded) {
                 pendingUpdates.push(msg);
             } else {
-                var data = JSON.parse(msg.data);
                 switch (data.msg) {
                     case "client":
                         console.log("adding client " + data.name);
-                        var client = clients[data.clientid]
+                        var client = clients[data.clientid];
                         var b = findBeacon(data.major, data.minor);
 
                         var pos = L.latLng(b.latitude, b.longitude);
@@ -293,7 +290,7 @@ var processUpdates = function () {
         var msg = pendingUpdates.shift();
         socketMessageHandler(msg);
     }
-}
+};
 
 loadBeacons();
 /*
