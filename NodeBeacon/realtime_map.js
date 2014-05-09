@@ -1,6 +1,7 @@
 var server = require("./server"),
     database = require("./database"),
     uuid = require("node-uuid"),
+    os = require("os"),
     WebSocketServer = require("ws").Server,
     socketServer = null;
 
@@ -46,7 +47,7 @@ var onInitialMessage = function (msg) {
                         minor: beacon.minor,
                         clientid: client.clientid,
                         name: client.name
-                    }
+                    };
 
                     self.send(JSON.stringify(msg));
                 }
@@ -60,21 +61,34 @@ var onInitialMessage = function (msg) {
                 }
             });
             
-        })
+        });
         
     } else {
         this.close();
     }
-}
+};
 
 
 
 var onMessage = function (msg) {
     
-}
+};
 
 function start() {
-
+    
+    //console.log(process.env);
+    if(process.env.IISNODE_VERSION) { //running under iisnode == restricted by IIS version
+        console.log("IIS detected, but what version?");
+        if(os.release() < "6.2") {
+            console.log("Detected IIS <= 7, so disabling websocket support");
+            return;
+        } else {
+            console.log("Detected IIS > 7, so enabling websocket support");
+        }
+    } else {
+        console.log("No IIS so enabling websocket support");
+    }
+    
     socketServer = new WebSocketServer({
         server: server.getServer(),
         path: "/socket"
@@ -113,4 +127,4 @@ exports.notifyPing = function(uuid, major, minor, clientid, name) {
     console.log("Broadcasting msg");
     
     socketServer.broadcast(JSON.stringify(msg));
-}
+};

@@ -1,4 +1,5 @@
-﻿var zoomOffset = 15;
+/*
+var zoomOffset = 15;
 var scalar = 0x4c10;
 
 var updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) &&
@@ -44,14 +45,6 @@ function loadBeacons() {
                     .addTo(map)
                 ;
                 marker.bindPopup(b.title)
-
-                /*
-                var circle = L.circle([b.latitude, b.longitude], 25, {
-                    color: '#00f',
-                    fillColor: '#00f',
-                    fillOpacity: 0.1
-                }).addTo(map);
-                */
 
                 setTimeout(function () { addBeacon(beacons); }, 100);
             } else {
@@ -205,6 +198,13 @@ var runViews = function () {
 
 //runViews();
 
+var clients = {};
+var clientContainer = new OverlappingMarkerSpiderfier(map, {
+    circleFootSeparation: 50,
+    keepSpiderfied: true
+});
+
+*/
 var loc = window.location, new_uri;
 if (loc.protocol === "https:") {
     new_uri = "wss:";
@@ -214,11 +214,6 @@ if (loc.protocol === "https:") {
 new_uri += "//" + loc.host;
 new_uri += "/socket";
 
-var clients = {};
-var clientContainer = new OverlappingMarkerSpiderfier(map, {
-    circleFootSeparation: 50,
-    keepSpiderfied: true
-});
 
 var socket = null;
 try {
@@ -226,17 +221,18 @@ try {
     socket = new WebSocket(new_uri);
     socket.onopen = function () {
         socket.onmessage = socketMessageHandler;
-    }
+    };
     socket.onclose = function () {
         //server died, let's refresh!
         //window.location = window.location;
-    }
+    };
     socket.phase = 0;
+    
     
 } catch (ex) {
     //must be in dev
 }
-
+/*
 var myIdentifier;
 
 var pendingUpdates = [];
