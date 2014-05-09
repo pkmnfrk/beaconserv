@@ -59,7 +59,10 @@ function loadBeacons() {
 }
 
 function findBeacon(major, minor) {
-    for(var i = 0; i < beaconsList.length; i++) {
+    var i;
+    for(i in beaconsList) {
+        if(!beaconsList.hasOwnProperty(i)) return;
+        
         if(beaconsList[i].major == major && beaconsList[i].minor == minor)
             return beaconsList[i];
     }
