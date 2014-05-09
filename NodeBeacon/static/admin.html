@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Index - My ASP.NET Application</title>
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    <link href="/Content/Site.css" rel="stylesheet"/>
+<link href="/Content/hook.css" rel="stylesheet"/>
+
+</head>
+<body>
+
+    <div class="content">
+        <!--ko foreach: {data: beacons, as: 'uuide'}-->
+        <div class="card">
+            <h1 data-bind="text:uuide.uuid"></h1>
+            <!--ko foreach: {data: uuide.values, as: 'majore'}-->
+            <div class="card">
+                <h1><img src="/Content/images/arrow.png" data-bind="click: $root.expandMajor, css: { open: majore.visible, closed: !majore.visible }" class="arrow"/> Major ID: <!--ko text: majore.major == -1 ? 'unmatched' : majore.major --><!-- /ko --></h1>
+
+                <div data-bind="visible: majore.visible, foreach: { data: majore.values, as: 'minore' }">
+                    <div class="card admin" data-bind="with: minore.value">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Minor ID:</td>
+                                    <td><input type="text" data-bind="value: minor" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Title:</td>
+                                    <td><input type="text" data-bind="value: title" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Url:</td>
+                                    <td><input type="text" data-bind="value: url" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Body:</td>
+                                    <td><textarea data-bind="value: bodyText"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td>Proximity:</td>
+                                    <td>
+                                        <select data-bind="value: maxProximity">
+                                            <option value="0">Any</option>
+                                            <option value="1">Immediate</option>
+                                            <option value="2">Near</option>
+                                            <option value="3">Far</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Location</td>
+                                    <td>
+                                        <input style="width: 200px" type="text" data-bind="value: latitude" />
+                                        <input style="width: 200px" type="text" data-bind="value: longitude" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Image:</td>
+                                    <td>
+                                        <span data-bind="if: image">
+                                            
+                                            <img data-bind="attr: { src: image }" />
+                                        </span>
+                                        <span data-bind="if: !image">
+                                            No image
+                                        </span>
+
+                                        <form data-name="image" style="display:inline-block; width: 400px;" enctype="multipart/form-data">
+                                            <input type="file" name="image" />
+                                            <br />
+                                            <button type="button" data-bind="visible: image, click: $parent.removeImage">Remove Image</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Video:</td>
+                                    <td>
+                                        <span data-bind="if: video">
+
+                                            <video controls="controls">
+                                                <source data-bind="attr: {src: video, poster: image }" type="video/mp4" />
+                                            </video>
+                                        </span>
+                                        <span data-bind="if: !video">
+                                            No image
+                                        </span>
+
+                                        <form data-name="video" style="display:inline-block; width: 400px;" enctype="multipart/form-data">
+                                            <input type="file" name="video" />
+                                            <br />
+                                            <button type="button" data-bind="visible: video, click: $parent.removeVideo">Remove Image</button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <button data-bind="click: $root.save">Save</button>
+                                        <span class="savingmessage">Saving</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <button data-bind="click: $root.addNewMinor">Add New</button>
+            </div>
+            <!-- /ko -->
+            <button data-bind="click: $root.addNewMajor">Add New Major</button>
+        </div>
+        <!-- /ko -->
+        <button data-bind="click: addNewUUID">Add New UUID</button>
+    </div>
+
+    <div class="header">
+        Beacon admin
+    </div>
+
+    <div class="footer">
+        &copy; 2014 Klick Inc.
+    </div>
+
+    <script src="/Scripts/jquery-1.10.2.js"></script>
+<script src="/Scripts/jquery.touchwipe.min.js"></script>
+
+    <script src="/Scripts/knockout-2.3.0.debug.js"></script>
+<script src="/Scripts/knockout.validation.debug.js"></script>
+
+
+    <script src="/Scripts/Admin.js"></script>
+
+    
+</body>
+</html>

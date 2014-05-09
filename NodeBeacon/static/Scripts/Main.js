@@ -1,4 +1,4 @@
-﻿function MainViewModel() {
+function MainViewModel() {
     var self = this;
 
     self.cards = ko.observableArray([]);
@@ -10,33 +10,33 @@
             if (isMobile) {
                 return "mobile_card_video";
             } else {
-                return "desktop_card_video"
+                return "desktop_card_video";
             }
         }
         if (item.image) {
             return "card_image";
         }
         return "card_no_image";
-    }
+    };
 
     window.addTest = function () {
         var major = prompt("Major", "4");
-        if (major != null) {
+        if (major !== null) {
             var minor = prompt("Minor", "1");
-            if (minor != null) {
+            if (minor !== null) {
                 var proximity = prompt("Proximity", "2");
-                if (proximity != null) {
+                if (proximity !== null) {
                     beacon("2F73D96D-F86E-4F95-B88D-694CEFE5837F", major, minor, "123456", proximity);
                 }
             }
         }
-    }
+    };
 
     self.previousBeacon = ko.observable();
 
     window.refresh = function () {
         window.location.href = window.location.href;
-    }
+    };
 
     self.onPlay = function (model, evt) {
         $(evt.currentTarget).addClass("fadeToDark").removeClass("fadeFromDark");
@@ -48,7 +48,7 @@
 
     self.addCardSwipe = function (elements, obj) {
         return;
-        var el = elements[0].parentElement;
+        /*var el = elements[0].parentElement;
         $(el).touchwipe({
             wipeRight: function (e) {
                 $(el).css("position", "relative").animate({
@@ -59,21 +59,22 @@
             },
             preventDefaultEvents: false,
         });
-    }
+        */
+    };
 
     window.beacon_func = function (beacon_id, major, minor, device_id, proximity) {
 
         if (!proximity) proximity = 4;
 
-        if (beacon_id == null) {
+        if (beacon_id === null) {
             return;
         }
 
         if (self.previousBeacon()) {
             if(
-                self.previousBeacon().uuid == beacon_id
-                && self.previousBeacon().major == major
-                && self.previousBeacon().minor == minor)
+                self.previousBeacon().uuid == beacon_id &&
+                self.previousBeacon().major == major    &&
+                self.previousBeacon().minor == minor)
             {
                 return;
             }
@@ -87,7 +88,7 @@
             complete: function (datar, textStatus) {
                 var data = datar.responseJSON;
 
-                if (data.maxProximity == 0 || proximity <= data.maxProximity) {
+                if (data.maxProximity === 0 || proximity <= data.maxProximity) {
 
                     data.proximity = proximity;
 
@@ -102,20 +103,20 @@
     };
 
     window.clearBeacons = function () {
-        jQuery.ajax({
+        $.ajax({
             url: "/state/clear",
             type: "POST",
             complete: function () {
                 self.cards.removeAll();
                 self.previousBeacon(null);
             }
-        })
-    }
+        });
+    };
 
     B.getName();
 
     //load existing pings
-    jQuery.ajax({
+    $.ajax({
         url: "/state",
         type: "GET",
         dataType: "json",

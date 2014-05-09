@@ -9,10 +9,6 @@ var
     database = require("./database");
 
 var handle = {
-    //"^/$": function(req, res) { requestHandlers.static(req, res, "/map.html"); },
-    "^/beacon(/.*)?": requestHandlers.beacons,
-    "^/ping/[-a-fA-F0-9]+/\\d+/\\d+": requestHandlers.ping,
-    //"^/socket$": realtime_map.handleSocket
     "^/client$": requestHandlers.client,
     "^/state$": requestHandlers.state,
     "^/client/my/name": requestHandlers.name
