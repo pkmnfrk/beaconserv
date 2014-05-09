@@ -106,6 +106,8 @@ function start() {
     
 exports.start = start;
 exports.notifyPing = function(uuid, major, minor, clientid, name) {
+    if(!exports.supportsWebsockets) return;
+    
     var msg = {
         msg: "client",
         uuid: uuid,
@@ -135,3 +137,12 @@ exports.supportsWebsockets = (function() {
     
     return true;
 })();
+
+exports.closeAllConnections = function () {
+    if(!exports.supportsWebsockets) return;
+    
+    for(var i = 0; i < socketServer.clients.length; i++) {
+        var c = socketServer.clients[i];
+        c.close();
+    }
+};
