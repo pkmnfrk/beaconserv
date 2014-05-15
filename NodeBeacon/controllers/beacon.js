@@ -3,7 +3,8 @@
 "use strict";
 
 var url = require("url"),
-    database = require("../database");
+    database = require("../database"),
+    realtime_map = require("../realtime_map");
 
 module.exports = {
     get: function(request, response) {
@@ -59,8 +60,8 @@ module.exports = {
                 for(var i = 0; i < docs.length; i++) {
                     var b = docs[i];
 
-                    if(!b.uuid) 
-                        b.uuid = "00000000-0000-0000-0000-000000000000";
+                    //if(!b.uuid) 
+                    //    b.uuid = "00000000-0000-0000-0000-000000000000";
 
                     if(!(b.uuid in ret)) {
                         ret[b.uuid] = {};
@@ -87,6 +88,22 @@ module.exports = {
 
             response.writeJson(docs);
 
+        });
+    },
+    
+    post: function (req, res) {
+        var data = "";
+        
+        req.on("data", function (d) {
+            data += d;
+        }).on("end", function() {
+            
+            data = JSON.parse(data);
+            
+            database.storeBeacon(data, function(saved) {
+                realtime_map.notifyBeaconChange(saved);
+                res.writeJson(saved);
+            });
         });
     }
 };

@@ -11,7 +11,17 @@ exports.static = function staticHandler(request, response, file) {
         if (file) {
             staticServer.serveFile(file, 200, {}, request, response);
         } else {
-            staticServer.serve(request, response);
+            staticServer.serve(request, response, function(e, res) {
+                if(e && (e.status === 404)) {
+                    //console.log(e);
+                    if(request.url.indexOf("/Content/maps/") === 0) {
+                        staticServer.serveFile("Content/maps/blank.png", 200, {"Content-Type":"image/png"}, request, response);
+                    } else {
+                        response.writeHead(e.status, e.headers);
+                        response.end();
+                    }
+                }
+            });
         }
     }).resume();
     

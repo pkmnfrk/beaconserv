@@ -18,7 +18,7 @@ function start(onReady) {
             
         });
         
-        if(onReady) onReady()
+        if(onReady) onReady();
     });
 }
 
@@ -38,9 +38,9 @@ function findBeacon (uuid, major, minor, onComplete) {
     
     var query = {};
     
-    if(typeof uuid !== "undefined") query["uuid"] = uuid;
-    if(typeof major !== "undefined") query["major"] = major;
-    if(typeof minor !== "undefined") query["minor"] = minor;
+    if(typeof uuid !== "undefined") query.uuid = uuid;
+    if(typeof major !== "undefined") query.major = major;
+    if(typeof minor !== "undefined") query.minor = minor;
         
     
     var results = beacons
@@ -49,10 +49,32 @@ function findBeacon (uuid, major, minor, onComplete) {
                     .toArray(onComplete);
 }
 
-function storeBeacon(beacon) {
+function storeBeacon(beacon, onComplete) {
     var beacons = db.collection('beacon');
     
-    beacons.save(beacon);
+    if(typeof beacon._id === "string") {
+        beacon._id = new mongo.ObjectID(beacon._id);   
+    }
+    
+    console.log(beacon);
+    
+    var query = { uuid: beacon.uuid, major: beacon.major, minor: beacon.minor};
+    
+    beacons.update(query, beacon, { upsert:true }, function(err, doc) {
+        if(err) throw err;
+        
+        console.log(doc);
+        
+        
+        
+        beacons.findOne(query, function(err, obj) {
+            if(err) throw err;
+            
+            console.log(obj);
+            
+            onComplete(obj);
+        });
+    });
 }
 
 exports.start = start;
@@ -69,7 +91,7 @@ exports.findClient = function(clientid, callback) {
                 clientid: clientid,
                 name: "Unnamed",
                 pings: []
-            }
+            };
             clients.save(obj, function(err) {
                 callback(obj);
             });
@@ -77,13 +99,13 @@ exports.findClient = function(clientid, callback) {
             callback(obj); 
         }
     });
-}
+};
 
 exports.storeClient = function(client) {
     var clients = db.collection("client");
     
     clients.save(client, function(err) { if(err) throw err; });
-}
+};
 
 exports.findClients = function(query, callback) {
     var clients = db.collection("client");
@@ -98,7 +120,7 @@ exports.findClients = function(query, callback) {
         
         callback(objs);
     });
-}
+};
 
 exports.findBeaconById = function(id, callback) {
     var beacons = db.collection("beacon");
@@ -110,5 +132,5 @@ exports.findBeaconById = function(id, callback) {
         if(err) throw err;
         
         callback(obj);
-    })
-}
+    });
+};

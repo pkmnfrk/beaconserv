@@ -182,6 +182,19 @@ B = (function () {
                     withPrefs(this.prefs);
                 }   
             });
+        },
+        
+        saveBeacon: function(beacon, onDone) {
+            $.ajax({
+                url: "/beacon",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(beacon),
+                dataType: "json",
+                complete: function(response) {
+                    if(onDone) onDone(response.responseJSON);
+                }
+            });
         }
 
     };

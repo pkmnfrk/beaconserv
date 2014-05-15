@@ -19,17 +19,17 @@ function route(handle, request, response) {
         //maybe we have a controller?
         var modName = parts[0].toLowerCase();
         
-        console.log("Trying to load " + modName);
+        //console.log("Trying to load " + modName);
         
         if(modName in modules) {
-            console.log("Found cached controller for " + modName);
+            //console.log("Found cached controller for " + modName);
             handler = modules[modName];
         } else {
-            console.log("No cached controller for " + modName);
+            //console.log("No cached controller for " + modName);
             //maybe try loading it?
             try {
                 handler = require("./controllers/" + modName);
-                console.log("Found controller file for " + modName);
+                //console.log("Found controller file for " + modName);
             } catch(e) {
                 console.log("Error loading controller file for " + modName);
                 console.log(e);

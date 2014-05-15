@@ -66,12 +66,14 @@ function AdminViewModel() {
         self.uploadImage(newBeacon, "image", evt, function () {
             self.uploadImage(newBeacon, "video", evt, function () {
 
-                var js = ko.toJS(newBeacon);
+                var js = ko.toJSON(newBeacon);
 
                 $.ajax({
                     type: "POST",
                     url: "/beacon/",
                     data: js,
+                    processData: false,
+                    contentType: "application/json",
                     success: function () {
                         $(evt.currentTarget).attr("disabled", null);
                         message.text("Saved!").fadeOut(2000);

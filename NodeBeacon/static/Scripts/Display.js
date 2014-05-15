@@ -39,12 +39,19 @@ function loadBeacons() {
 
 
                 marker = L.marker([b.latitude, b.longitude], {
-                    bounceOnAdd: true
+                    bounceOnAdd: true,
+                    draggable: true
                 })
                     .addTo(map)
                 ;
                 marker.bindPopup(b.title);
+                marker.beacon = b;
+                marker.on('drag', onMarkerDrag);
+                marker.on('dragend', onMarkerDragEnd);
 
+                var bx = findBeacon(b.major, b.minor);
+                bx.marker = marker;
+                
                 setTimeout(function () { addBeacon(beacons); }, 100);
             } else {
                 beaconsLoaded = true;
@@ -97,10 +104,10 @@ var map = L.map('map', {
 });
 
 
-L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', {
+var layerOpts = {
     minZoom: zoomOffset,
-    maxZoom: zoomOffset + 6,
-    maxNativeZoom: 5,
+    maxZoom: zoomOffset + 5,
+    maxNativeZoom: 4,
     tileSize: 256,
     continuousWorld: true,
     noWrap: true,
@@ -110,14 +117,17 @@ L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', {
         [-127.9, 127.9]
 
     ]
-})
-    
-    .addTo(map);
+};
+
+L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', layerOpts).addTo(map);
+
+L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
+
 
 L.control.scale().addTo(map);
 
 var polys = [
-    {
+    /*{
         coords: [
             [-1.8125, 33.4375],
             [-26.125, 33.3125],
@@ -138,7 +148,7 @@ var polys = [
         label: "K2",
         color: "#080",
         fillColor: "#080",
-    }
+    }*/
 ];
 
 for (var i = 0; i < polys.length; i++) {
@@ -306,10 +316,50 @@ var socketMessageHandler = function (msg) {
                         }, 10 * 60 * 1000);
 
                         break;
+                        
+                    case "beacon":
+                        console.log("Adding/updating beacon");
+                        
+                        //do we know about this beacon already?
+                        b = findBeacon(data.beacon.major, data.beacon.minor);
+                        
+                        if(b) {
+                            //we just need to update some incidentals
+                            map.removeLayer(b.marker);
+                            b.marker = null;
+                            
+                            for(var prop in data.beacon) {
+                                b[prop] = data.beacon[prop];
+                            }
+                            
+                            
+                            
+                            
+                        } else {
+                            b = data.beacon;
+                            beaconsList[b.minor] = b;
+                            
+                            
+                        }
+                        
+                        b.latitude /= scalar;
+                        b.longitude /= scalar;
+                        
+                        b.marker = L.marker([b.latitude, b.longitude], {
+                            draggable: true
+                        }).addTo(map);
+                        b.marker.bindPopup(b.title);
+                        b.marker.beacon = b;
+                        b.marker.on('drag', onMarkerDrag);
+                        b.marker.on('dragend', onMarkerDragEnd);
+                        
+                        break;
                 }
             }
 
             break;
+            
+            
     }
 };
 
@@ -318,6 +368,24 @@ var processUpdates = function () {
         var msg = pendingUpdates.shift();
         socketMessageHandler(msg);
     }
+};
+
+var onMarkerDragEnd = function(e) {
+    this.beacon.latitude = this.getLatLng().lat * scalar;
+    this.beacon.longitude = this.getLatLng().lng * scalar;
+    
+    this.beacon.marker = undefined;
+    
+    B.saveBeacon(this.beacon);
+    
+    this.beacon.marker = this;
+};
+
+var onMarkerDrag = function(e) {
+    //this.beacon.latitude = this.getLatLng().lat;
+    //this.beacon.longitude = this.getLatLng().lng;
+    
+    
 };
 
 loadBeacons();

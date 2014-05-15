@@ -37,29 +37,32 @@ var onInitialMessage = function (msg) {
                 client = clients.shift();
                 if(client.pings.length) break;
             }
-            database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
-                console.log("Loaded beacon for client");
-                if(beacon) {
-                    var msg = {
-                        msg: "client",
-                        uuid: beacon.uuid,
-                        major: beacon.major,
-                        minor: beacon.minor,
-                        clientid: client.clientid,
-                        name: client.name
-                    };
+            
+            if(client) {
+                database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
+                    console.log("Loaded beacon for client");
+                    if(beacon) {
+                        var msg = {
+                            msg: "client",
+                            uuid: beacon.uuid,
+                            major: beacon.major,
+                            minor: beacon.minor,
+                            clientid: client.clientid,
+                            name: client.name
+                        };
 
-                    self.send(JSON.stringify(msg));
-                }
-                
-                while(clients.length) {
-                    client = clients.shift();
-                    if(client.pings.length) {
-                        database.findBeaconById(client.beacon_id, receiveBeacon);
-                        break;
+                        self.send(JSON.stringify(msg));
                     }
-                }
-            });
+
+                    while(clients.length) {
+                        client = clients.shift();
+                        if(client.pings.length) {
+                            database.findBeaconById(client.beacon_id, receiveBeacon);
+                            break;
+                        }
+                    }
+                });
+            }
             
         });
         
@@ -118,6 +121,19 @@ exports.notifyPing = function(uuid, major, minor, clientid, name) {
     };
     
     console.log("Broadcasting msg");
+    
+    socketServer.broadcast(JSON.stringify(msg));
+};
+
+exports.notifyBeaconChange = function(beacon) {
+    if(!exports.supportsWebsockets) return;
+    
+    var msg = {
+        msg: "beacon",
+        beacon: beacon
+    };
+    
+    console.log("Broadcasting beacon change");
     
     socketServer.broadcast(JSON.stringify(msg));
 };
