@@ -71,11 +71,11 @@ function init() {
   } );
  */
   /*** OBJ Loading ***/
-  loader = new THREE.OBJLoader( manager );
+  loader = new THREE.OBJMTLLoader( manager );
  
   // As soon as the OBJ has been loaded this function looks for a mesh
   // inside the data and applies the texture to it.
-  loader.load( 'DRAFT2_ForOBJ_Export.obj', /*'DRAFT2_ForOBJ_Export.mtl',*/ function ( event ) {
+  loader.load( 'DRAFT2_ForOBJ_Export_D2.obj', 'DRAFT2_ForOBJ_Export_D2.mtl', function ( event ) {
     var object = event;
     /*object.traverse( function ( child ) {
       if ( child instanceof THREE.Mesh ) {
