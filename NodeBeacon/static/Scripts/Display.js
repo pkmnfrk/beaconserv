@@ -4,8 +4,12 @@ var show_markers = false;
 
 var in_device = false;
 
-if(location.query == "ios") {
+if(location.search == "?ios") {
     in_device = true;
+}
+
+if(in_device) {
+    $("#debugArea").remove();
 }
 
 var updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) &&
@@ -129,14 +133,16 @@ var map = L.map('map', {
         [-196/scalar, 196/scalar]
 
     ],
-    fullscreenControl: !in_device
+    zoomControl: !in_device,
+    fullscreenControl: !in_device,
+    attributionControl: !in_device
 
 }).on('mousemove', function (e) {
     
 }).on('click', function (e) {
     $("#debugArea").val("[" + (e.latlng.lat * scalar).toString() + ", " + (e.latlng.lng * scalar).toString() + "]");
-    $("#debugArea")[0].focus();
-    $("#debugArea")[0].select();
+    $("#debugArea").focus();
+    $("#debugArea").select();
     
     return false;
     
