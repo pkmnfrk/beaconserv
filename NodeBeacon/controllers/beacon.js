@@ -43,7 +43,7 @@ module.exports = {
 
 
 
-        console.log(uuid + " " + major + " " + minor);
+        //console.log(uuid + " " + major + " " + minor);
 
         database.findBeacon(uuid, major, minor, function(err, docs) {
 

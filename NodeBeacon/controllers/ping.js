@@ -41,7 +41,7 @@ module.exports = {
                     beacon_id: beacon._id
                 };
 
-                console.log(client);
+                //console.log(client);
 
                 client.pings.unshift(ping);
 

@@ -9,6 +9,7 @@ if (updateStatusBar) {
 }
 
 function showMarkers(force) {
+    var b;
     
     if(show_markers && !force) return;
     
@@ -19,7 +20,8 @@ function showMarkers(force) {
     for (var minor in beaconsList) {
 
         if (beaconsList.hasOwnProperty(minor)) {
-            newList.push(beaconsList[minor]);
+            b = beaconsList[minor];
+            newList.push(b);
         }
 
 
@@ -30,14 +32,9 @@ function showMarkers(force) {
     var anim = function addBeacon(beacons) {
 
         if (beacons.length) {
-            var b;
             do {
                 b = beacons.shift();
             } while (b.minor === 0);
-
-            b.latitude /= scalar;
-            b.longitude /= scalar;
-
 
             marker = L.marker([b.latitude, b.longitude], {
                 bounceOnAdd: true,
@@ -83,9 +80,22 @@ function loadBeacons() {
     B.getBeaconsDict("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function (beacons) {
         beaconsList = beacons;
         
+        for (var minor in beaconsList) {
+
+            if (beaconsList.hasOwnProperty(minor)) {
+                b = beaconsList[minor];
+
+                b.latitude /= scalar;
+                b.longitude /= scalar;
+            }
+        }
+        
         if(show_markers) {
             show_markers = false;
             showMarkers();
+        } else {
+            beaconsLoaded = true;
+            processUpdates();
         }
     });
 }

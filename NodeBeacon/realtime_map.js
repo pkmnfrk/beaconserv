@@ -28,8 +28,8 @@ var onInitialMessage = function (msg) {
                 }
             }
         }, function(clients) {
-            console.log("Clients:");
-            console.log(clients);
+            //console.log("Clients:");
+            //console.log(clients);
             
             var client;
             
@@ -40,7 +40,7 @@ var onInitialMessage = function (msg) {
             
             if(client) {
                 database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
-                    console.log("Loaded beacon for client");
+                    console.log("Loaded beacon for client " + client.clientid);
                     if(beacon) {
                         var msg = {
                             msg: "client",
@@ -120,7 +120,7 @@ exports.notifyPing = function(uuid, major, minor, clientid, name) {
         name: name
     };
     
-    console.log("Broadcasting msg");
+    console.log("Broadcasting msg abount client " + clientid);
     
     socketServer.broadcast(JSON.stringify(msg));
 };
@@ -133,7 +133,7 @@ exports.notifyBeaconChange = function(beacon) {
         beacon: beacon
     };
     
-    console.log("Broadcasting beacon change");
+    console.log("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
     
     socketServer.broadcast(JSON.stringify(msg));
 };
