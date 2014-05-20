@@ -48,7 +48,7 @@ function showMarkers(force) {
 
             marker = L.marker([b.latitude, b.longitude], {
                 bounceOnAdd: true,
-                draggable: true
+                draggable: !in_device
             })
                 .addTo(map)
             ;
@@ -342,7 +342,17 @@ var socketMessageHandler = function (msg) {
                         if(client.marker === null) {
                             client.marker = L.marker(pos, {
                                     icon: B.redMarker
-                                }).addTo(map);
+                                }).addTo(map).on("click", function(e) {
+                                
+                                
+                                if(in_device) {
+                                    sendMessageToOverlord("click", {
+                                        major: b.major,
+                                        minor: b.minor
+                                    });
+                                }
+                                
+                            });
                             
                             clientContainer.addMarker(client.marker);
                         }
@@ -398,7 +408,7 @@ var socketMessageHandler = function (msg) {
                         
                         if(show_markers) {
                             b.marker = L.marker([b.latitude, b.longitude], {
-                                draggable: true
+                                draggable: !in_device
                             }).addTo(map);
                             b.marker.bindPopup(b.title);
                             b.marker.beacon = b;
@@ -438,6 +448,44 @@ var onMarkerDrag = function(e) {
     //this.beacon.longitude = this.getLatLng().lng;
     
     
+};
+
+var callbackCounter = 1;
+var sendMessageToOverlord = function(action, params, callback) {
+    if(!in_device) return;
+    
+    if(typeof params === "function") {
+        callback = params;
+        params = null;
+    }
+    
+    if(callback && typeof callback === "function") {
+        var cbid = "myapp_callback_" + callbackCounter;
+        window[cbid] = callback;
+        if(!params) {
+            params = {
+                callback: cbid
+            };
+        }
+    }
+    
+    var url = "myApp://" + action;
+    
+    if(params) {
+        url += "?";
+        var args = [];
+        
+        for(var key in params) {
+            
+            if(params.hasOwnProperty(key)) {
+                args.push(encodeURIComponent(key) + "=" + encodeURIComponent(params[key]));
+            }
+        }
+        
+        url += args.join("&");
+    }
+    
+    window.location = url; //this won't actually navigate, hopefully
 };
 
 loadBeacons();
