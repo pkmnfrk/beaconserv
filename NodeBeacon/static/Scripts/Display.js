@@ -1,10 +1,76 @@
 var zoomOffset = 15;
 var scalar = 0x4c10;
+var show_markers = true;
 
 var updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) &&
         parseInt(navigator.appVersion.match(/OS (\d)/)[1], 10) >= 7;
 if (updateStatusBar) {
     document.body.style.marginTop = '20px';
+}
+
+function showMarkers(force) {
+    
+    if(show_markers && !force) return;
+    
+    show_markers = true;
+    
+    for (var minor in beaconsList) {
+
+        if (beaconsList.hasOwnProperty(minor)) {
+            newList.push(beaconsList[minor]);
+        }
+
+
+    }
+
+
+
+    var anim = function addBeacon(beacons) {
+
+        if (beacons.length) {
+            var b;
+            do {
+                b = beacons.shift();
+            } while (b.minor === 0);
+
+            b.latitude /= scalar;
+            b.longitude /= scalar;
+
+
+            marker = L.marker([b.latitude, b.longitude], {
+                bounceOnAdd: true,
+                draggable: true
+            })
+                .addTo(map)
+            ;
+            marker.bindPopup(b.title);
+            marker.beacon = b;
+            marker.on('drag', onMarkerDrag);
+            marker.on('dragend', onMarkerDragEnd);
+
+            var bx = findBeacon(b.major, b.minor);
+            bx.marker = marker;
+
+            setTimeout(function () { addBeacon(beacons); }, 100);
+        } else {
+            beaconsLoaded = true;
+            processUpdates();
+        }
+
+    };
+
+    anim(newList);
+}
+
+function hideMarkers() {
+    show_markers = false;
+    
+    for (var minor in beaconsList) {
+        if(beaconsList[minor].marker) {
+            map.removeLayer(beaconsList[minor].marker);
+            beaconsList[minor].marker = null;
+        }
+    }
 }
 
 function onOrientationChange() {
@@ -17,51 +83,10 @@ function loadBeacons() {
 
         var newList = [];
 
-        for (var minor in beaconsList) {
-
-            if (beaconsList.hasOwnProperty(minor)) {
-                newList.push(beaconsList[minor]);
-            }
-
-
+        if(show_markers) {
+            show_markers = false;
+            showMarkers();
         }
-
-        var anim = function addBeacon(beacons) {
-
-            if (beacons.length) {
-                var b;
-                do {
-                    b = beacons.shift();
-                } while (b.minor === 0);
-
-                b.latitude /= scalar;
-                b.longitude /= scalar;
-
-
-                marker = L.marker([b.latitude, b.longitude], {
-                    bounceOnAdd: true,
-                    draggable: true
-                })
-                    .addTo(map)
-                ;
-                marker.bindPopup(b.title);
-                marker.beacon = b;
-                marker.on('drag', onMarkerDrag);
-                marker.on('dragend', onMarkerDragEnd);
-
-                var bx = findBeacon(b.major, b.minor);
-                bx.marker = marker;
-                
-                setTimeout(function () { addBeacon(beacons); }, 100);
-            } else {
-                beaconsLoaded = true;
-                processUpdates();
-            }
-
-        };
-
-        anim(newList);
-
     });
 }
 

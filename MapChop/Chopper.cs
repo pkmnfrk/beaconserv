@@ -25,7 +25,7 @@ namespace MapChop
         {
             Rectangle source = new Rectangle(Point.Empty, SourceSize);
             Rectangle dest = new Rectangle(Point.Empty, DestSize);
-            Bitmap temp = new Bitmap(DestSize.Width, DestSize.Height);
+            Bitmap temp = new Bitmap(DestSize.Width, DestSize.Height, PixelFormat.Format32bppArgb);
 
             using (var g = Graphics.FromImage(temp))
             {
@@ -46,7 +46,7 @@ namespace MapChop
                     while (source.Y < image.Height)
                     {
                         var yPath = Path.Combine(xPath, (y != 0 ? "" : "") + y.ToString() + ".png");
-                        g.Clear(Color.White);
+                        g.Clear(Color.Transparent);
                         g.DrawImage(image, dest, source, GraphicsUnit.Pixel);
 
                         //if (!IsEmpty(temp))
