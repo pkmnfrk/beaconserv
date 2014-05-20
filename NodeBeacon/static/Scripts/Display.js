@@ -1,6 +1,6 @@
 var zoomOffset = 15;
 var scalar = 0x4c10;
-var show_markers = true;
+var show_markers = false;
 
 var updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) &&
         parseInt(navigator.appVersion.match(/OS (\d)/)[1], 10) >= 7;
@@ -350,8 +350,10 @@ var socketMessageHandler = function (msg) {
                         
                         if(b) {
                             //we just need to update some incidentals
-                            map.removeLayer(b.marker);
-                            b.marker = null;
+                            if(b.marker) {
+                                map.removeLayer(b.marker);
+                                b.marker = null;
+                            }
                             
                             for(var prop in data.beacon) {
                                 b[prop] = data.beacon[prop];
@@ -361,6 +363,7 @@ var socketMessageHandler = function (msg) {
                             
                             
                         } else {
+                            //we need to add it new
                             b = data.beacon;
                             beaconsList[b.minor] = b;
                             
@@ -370,14 +373,15 @@ var socketMessageHandler = function (msg) {
                         b.latitude /= scalar;
                         b.longitude /= scalar;
                         
-                        b.marker = L.marker([b.latitude, b.longitude], {
-                            draggable: true
-                        }).addTo(map);
-                        b.marker.bindPopup(b.title);
-                        b.marker.beacon = b;
-                        b.marker.on('drag', onMarkerDrag);
-                        b.marker.on('dragend', onMarkerDragEnd);
-                        
+                        if(show_markers) {
+                            b.marker = L.marker([b.latitude, b.longitude], {
+                                draggable: true
+                            }).addTo(map);
+                            b.marker.bindPopup(b.title);
+                            b.marker.beacon = b;
+                            b.marker.on('drag', onMarkerDrag);
+                            b.marker.on('dragend', onMarkerDragEnd);
+                        }
                         break;
                 }
             }
