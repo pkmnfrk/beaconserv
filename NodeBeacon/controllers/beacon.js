@@ -81,11 +81,19 @@ module.exports = {
                 //explicit uuid, unwrap it
                 docs = docs[uuid];
             }
+            
+            if(!docs) {
+                docs = {};
+            }
 
             if(major !== undefined) {
                 docs = docs[major];
             }
-
+            
+            if(!docs) {
+                docs = null;
+            }
+            
             response.writeJson(docs);
 
         });
