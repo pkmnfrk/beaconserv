@@ -77,21 +77,24 @@ module.exports = {
                 docs = ret;
             }
 
-            if(uuid !== undefined) {
-                //explicit uuid, unwrap it
-                docs = docs[uuid];
-            }
             
-            if(!docs) {
-                docs = {};
-            }
+            if(!flatMode) {
+                if(uuid !== undefined) {
+                    //explicit uuid, unwrap it
+                    docs = docs[uuid];
+                }
 
-            if(major !== undefined) {
-                docs = docs[major];
-            }
-            
-            if(!docs) {
-                docs = null;
+                if(!docs) {
+                    docs = {};
+                }
+
+                if(major !== undefined) {
+                    docs = docs[major];
+                }
+
+                if(!docs) {
+                    docs = null;
+                }
             }
             
             response.writeJson(docs);
