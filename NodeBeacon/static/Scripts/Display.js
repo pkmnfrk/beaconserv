@@ -350,6 +350,8 @@ var socketMessageHandler = function (msg) {
                                         major: b.major,
                                         minor: b.minor
                                     });
+                                    
+                                    return false;
                                 }
                                 
                             });
@@ -469,7 +471,7 @@ var sendMessageToOverlord = function(action, params, callback) {
         }
     }
     
-    var url = "myApp://" + action;
+    var url = "myapp://" + action;
     
     if(params) {
         url += "?";
