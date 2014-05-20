@@ -362,19 +362,20 @@ var socketMessageHandler = function (msg) {
                         client.marker.setLatLng(pos);
                         
 
-                        client.marker.bindPopup(data.name);
+                        if(!in_device) {
+                            client.marker.bindPopup(data.name);
                         
-                        if(client.removalTimer) {
-                            clearTimeout(client.removalTimer);
-                            client.removalTimer = null;
-                        }
-                        
-                        client.removalTimer = setTimeout(function() {
-                            map.removeMarker(client.marker);
-                            client.marker = null;
-                            client.removalTimer = null;
-                        }, 10 * 60 * 1000);
+                            if(client.removalTimer) {
+                                clearTimeout(client.removalTimer);
+                                client.removalTimer = null;
+                            }
 
+                            client.removalTimer = setTimeout(function() {
+                                map.removeMarker(client.marker);
+                                client.marker = null;
+                                client.removalTimer = null;
+                            }, 10 * 60 * 1000);
+                        }
                         break;
                         
                     case "beacon":
