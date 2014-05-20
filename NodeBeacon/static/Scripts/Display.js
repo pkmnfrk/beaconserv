@@ -2,6 +2,12 @@ var zoomOffset = 15;
 var scalar = 0x4c10;
 var show_markers = false;
 
+var in_device = false;
+
+if(location.query == "ios") {
+    in_device = true;
+}
+
 var updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) &&
         parseInt(navigator.appVersion.match(/OS (\d)/)[1], 10) >= 7;
 if (updateStatusBar) {
@@ -123,7 +129,7 @@ var map = L.map('map', {
         [-196/scalar, 196/scalar]
 
     ],
-    fullscreenControl: true
+    fullscreenControl: !in_device
 
 }).on('mousemove', function (e) {
     
@@ -158,8 +164,9 @@ L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
 L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
-
-L.control.scale().addTo(map);
+if(!in_device) {
+    L.control.scale().addTo(map);
+}
 
 var polys = [
     /*{
