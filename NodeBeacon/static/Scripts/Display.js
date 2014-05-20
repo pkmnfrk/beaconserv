@@ -14,6 +14,8 @@ function showMarkers(force) {
     
     show_markers = true;
     
+    var newList = [];
+    
     for (var minor in beaconsList) {
 
         if (beaconsList.hasOwnProperty(minor)) {
@@ -80,9 +82,7 @@ function onOrientationChange() {
 function loadBeacons() {
     B.getBeaconsDict("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function (beacons) {
         beaconsList = beacons;
-
-        var newList = [];
-
+        
         if(show_markers) {
             show_markers = false;
             showMarkers();
