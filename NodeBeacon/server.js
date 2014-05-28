@@ -17,7 +17,7 @@ http.ServerResponse.prototype.writeJson = function(obj) {
 
 function start(route, handle) {
     server = http.createServer(function (request, response) {
-        var postData = ""
+        var postData = "";
         //var pathname = url.parse(request.url).pathname;
         //console.log("Request received for " + pathname);
         

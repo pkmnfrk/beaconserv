@@ -4,7 +4,9 @@
 
 var url = require("url"),
     database = require("../database"),
-    realtime_map = require("../realtime_map");
+    realtime_map = require("../realtime_map"),
+    multiparty = require("multiparty"),
+    fs = require("fs");
 
 module.exports = {
     get: function(request, response) {
@@ -46,7 +48,7 @@ module.exports = {
         //console.log(uuid + " " + major + " " + minor);
 
         database.findBeacon(uuid, major, minor, function(err, docs) {
-
+            var i, b;
             if(err) {
                 response.writeHead("500 Internal Server Error");
                 response.write(JSON.stringify(err));
@@ -54,15 +56,50 @@ module.exports = {
                 return;
             }
 
+            for(i = 0; i < docs.length; i++) {
+                b = docs[i];
+
+                if(!b.uuid) 
+                    b.uuid = "00000000-0000-0000-0000-000000000000";
+
+                if(!b.major)
+                    b.major = 0;
+
+                if(!b.minor)
+                    b.minor = 0;
+                
+                if(!b.title)
+                    b.title = "";
+                
+                if(!b.bodyText)
+                    b.bodyText = "";
+                
+                if(!b.url)
+                    b.url = null;
+                
+                if(!b.image)
+                    b.image = null;
+                if(!b.video)
+                    b.video = null;
+                    
+                if(!b.maxProximity)
+                    b.maxProximity = 0;
+                
+                if(!b.latitude)
+                    b.latitude = null;
+                if(!b.longitude)
+                    b.longitude = null;
+                    
+            }
+            
             if(!flatMode) {
                 var ret = {};
 
-                for(var i = 0; i < docs.length; i++) {
-                    var b = docs[i];
+                for(i = 0; i < docs.length; i++) {
+                    b = docs[i];
 
-                    //if(!b.uuid) 
-                    //    b.uuid = "00000000-0000-0000-0000-000000000000";
-
+                    
+                    
                     if(!(b.uuid in ret)) {
                         ret[b.uuid] = {};
                     }
@@ -104,6 +141,65 @@ module.exports = {
     
     post: function (req, res) {
         var data = "";
+        var urlparts = url.parse(req.url, true);
+        
+        var parts = urlparts.pathname.split("/").slice(2);
+        
+        if(parts.length && parts[0]) {
+            
+            var form = new multiparty.Form();
+            
+            form.parse(req, function(err, fields, files) {
+                var file;
+                
+                var path = "/Content";
+                var uuid = urlparts.query.uuid;
+                var major = urlparts.query.major;
+                var minor = urlparts.query.minor;
+                
+                if(parts[0] === "image") {
+                    file = files.image[0];
+                    path += "/photos/";
+                    
+                } else if(parts[0] === "video") {
+                
+                    file = files.video[0];
+                    path += "/videos/";
+                }
+                
+                if(!file) {
+                    res.writeHeader(400, "Bad Request");
+                    res.end();
+                    return;
+                }
+                
+                if(!fs.existsSync("./static" + path)) {
+                    fs.mkdirSync("./static/" + path);
+                }
+                
+                path += uuid + "." + major + "." + minor;
+                
+                path += file.originalFilename.substring(file.originalFilename.lastIndexOf("."));
+                
+                fs.rename(file.path, "./static/" + path, function(err) {
+                    if(err) {
+                        res.writeHeader(500, "Internal Server Error", {"Content-Type": "application/json"});
+                        res.write(JSON.stringify(err));
+                        res.end();
+                        return;
+                        
+                    }
+                    var ret = {
+                        path: path
+                    };
+
+                    res.writeJson(ret);
+                });
+                
+            });
+            
+            return;
+        }
         
         req.on("data", function (d) {
             data += d;
