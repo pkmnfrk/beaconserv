@@ -38,7 +38,7 @@ function findBeacon (uuid, major, minor, onComplete) {
     
     var query = {};
     
-    if(typeof uuid !== "undefined") query.uuid = uuid;
+    if(typeof uuid !== "undefined") query.uuid = uuid.toString().toLowerCase();
     if(typeof major !== "undefined") query.major = major;
     if(typeof minor !== "undefined") query.minor = minor;
         
