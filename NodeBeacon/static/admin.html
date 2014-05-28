@@ -77,7 +77,7 @@
                                         <form data-name="image" style="display:inline-block; width: 400px;" enctype="multipart/form-data">
                                             <input type="file" name="image" />
                                             <br />
-                                            <button type="button" data-bind="visible: image, click: $parent.removeImage">Remove Image</button>
+                                            <button type="button" data-bind="visible: image, click: $root.removeImage">Remove Image</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -97,7 +97,7 @@
                                         <form data-name="video" style="display:inline-block; width: 400px;" enctype="multipart/form-data">
                                             <input type="file" name="video" />
                                             <br />
-                                            <button type="button" data-bind="visible: video, click: $parent.removeVideo">Remove Image</button>
+                                            <a href="#" data-bind="visible: video, click: $root.removeVideo">Remove Video</a>
                                         </form>
                                     </td>
                                 </tr>
