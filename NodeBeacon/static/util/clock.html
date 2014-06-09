@@ -51,14 +51,22 @@
                     var minutes = Math.floor(seconds / 60);
                     var hours = Math.floor(minutes / 60);
 
-                    seconds = seconds % 60;
-                    minutes = minutes % 60;
+                    if(!data.showSeconds && minutes > 30) {
+                        seconds = 0;
+                        minutes = minutes % 60;
+                        var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes);
+                    } else {
+                        seconds = seconds % 60;
+                        minutes = minutes % 60;
+                        var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                    }
 
-                    var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                    
 
                     $("#timeLabel").text(text);
                 }, 500);
 
+            var refresh = null;
             
             var loaderFunc = function() {
                 
@@ -69,6 +77,14 @@
                     success: function(data2) {
                         data = data2;
                         data.date = Date.parse(data.date);
+                        
+                        if(refresh === null) {
+                            refresh = data.refresh;
+                        } else {
+                            if(refresh !== data.refresh) {
+                                window.location = window.location;
+                            }
+                        }
                     },
                     complete: function() {
                         setTimeout(loaderFunc, 10000);
