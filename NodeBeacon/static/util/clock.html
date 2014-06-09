@@ -16,27 +16,45 @@
         
         <script src="scripts/jquery.min.js"></script>
         <script>
-        
+            
+            var triggered = false;
+            var data = {
+                
+            }
+            
             $.ajax({
                 url: "clock.json",
                 dataType: "json",
-                success: function(data) {
+                success: function(evtdata) {
 
+                    data = evtdata
+                    data.date = Date.parse(data.date);
+                    
                 $("#eventLabel").text(data.name);
                 
                 $("#clock").show();
                 
 
-                var destTime = Date.parse(data.date);
+                //var destTime = Date.parse(data.date);
 
                 var interval = setInterval(function() {
+                    if(!data.date) return;
+                    
+                    $("#eventLabel").text(data.name);
+                    
                     var now = new Date();
 
-                    var diff = destTime - now;
+                    var diff = data.date - now;
+                    if(triggered && diff > 0) {
+                        triggered = false;
+                    }
                     
                     if(diff < 0) {
-                        $("#timeLabel").text("Now!");
-                        clearInterval(interval);
+                        if(!triggered) {
+                            triggered = true;
+                            $("#timeLabel").text("Now!");
+                        }
+                        //clearInterval(interval);
                         return;
                     }
 
@@ -54,6 +72,20 @@
 
             }
             });
+            
+            setInterval(function() {
+                
+                $.ajax({
+                    url: "clock.json",
+                    dataType: "json",
+                    cache: false,
+                    success: function(data2) {
+                        data = data2;
+                        data.date = Date.parse(data.date);
+                    }
+                })
+                
+            }, 10000)
             
         </script>
     </body>
