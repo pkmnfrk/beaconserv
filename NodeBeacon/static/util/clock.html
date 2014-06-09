@@ -22,21 +22,7 @@
                 
             }
             
-            $.ajax({
-                url: "clock.json",
-                dataType: "json",
-                success: function(evtdata) {
-
-                    data = evtdata
-                    data.date = Date.parse(data.date);
-                    
-                $("#eventLabel").text(data.name);
-                
-                $("#clock").show();
-                
-
                 //var destTime = Date.parse(data.date);
-
                 var interval = setInterval(function() {
                     if(!data.date) return;
                     
@@ -70,10 +56,8 @@
                     $("#timeLabel").text(text);
                 }, 500);
 
-            }
-            });
             
-            setInterval(function() {
+            var loaderFunc = function() {
                 
                 $.ajax({
                     url: "clock.json",
@@ -82,10 +66,15 @@
                     success: function(data2) {
                         data = data2;
                         data.date = Date.parse(data.date);
+                    },
+                    complete: function() {
+                        setTimeout(loaderFunc, 10000);
                     }
                 })
                 
-            }, 10000)
+            };
+            
+            loaderFunc();
             
         </script>
     </body>
