@@ -36,12 +36,14 @@
                     var diff = data.date - now;
                     if(triggered && diff > 0) {
                         triggered = false;
+                        $("#untilLabel").show();
                     }
                     
                     if(diff < 0) {
                         if(!triggered) {
                             triggered = true;
                             $("#timeLabel").text("Now!");
+                            $("#untilLabel").hide();
                         }
                         //clearInterval(interval);
                         return;
@@ -67,6 +69,7 @@
                 }, 500);
 
             var refresh = null;
+            var refreshRate = 10000;
             
             var loaderFunc = function() {
                 
@@ -77,6 +80,7 @@
                     success: function(data2) {
                         data = data2;
                         data.date = Date.parse(data.date);
+                        refreshRate = data.refreshRate || 10000;
                         
                         if(refresh === null) {
                             refresh = data.refresh;
@@ -87,7 +91,7 @@
                         }
                     },
                     complete: function() {
-                        setTimeout(loaderFunc, 10000);
+                        setTimeout(loaderFunc, refreshRate);
                     }
                 })
                 
