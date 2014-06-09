@@ -6,7 +6,7 @@
     </head>
     <body>
         
-        <div id="clock" style="display:none;">
+        <div id="clock">
         
             <div id="timeLabel"></div>
             <div id="untilLabel">until</div>
@@ -17,7 +17,10 @@
         <script src="scripts/jquery.min.js"></script>
         <script>
         
-            $.getJSON("clock.json", function(data) {
+            $.ajax({
+                url: "clock.json",
+                dataType: "json",
+                success: function(data) {
 
                 $("#eventLabel").text(data.name);
                 
@@ -26,10 +29,16 @@
 
                 var destTime = Date.parse(data.date);
 
-                setInterval(function() {
+                var interval = setInterval(function() {
                     var now = new Date();
 
                     var diff = destTime - now;
+                    
+                    if(diff < 0) {
+                        $("#timeLabel").text("Now!");
+                        clearInterval(interval);
+                        return;
+                    }
 
                     var seconds = Math.floor(diff / 1000);
                     var minutes = Math.floor(seconds / 60);
@@ -41,9 +50,10 @@
                     var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 
                     $("#timeLabel").text(text);
-                }, 200);
+                }, 500);
 
-            })
+            }
+            });
             
         </script>
     </body>
