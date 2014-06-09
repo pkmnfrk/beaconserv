@@ -26,6 +26,9 @@
                 var interval = setInterval(function() {
                     if(!data.date) return;
                     
+                    $("body").css("background-color", data.bgcolor).css("color", data.fgcolor);
+                    
+                    
                     $("#eventLabel").text(data.name);
                     
                     var now = new Date();

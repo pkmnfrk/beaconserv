@@ -10,4 +10,5 @@ BeaconServSite/Content/maps/7th
 
 node_modules
 iisnode
-*.debugNodeBeacon/static/util/clock.json
+*.debug
+NodeBeacon/static/util/clock.json
