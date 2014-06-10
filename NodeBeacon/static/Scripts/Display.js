@@ -290,6 +290,7 @@ var reconnect = function() {
     socket = new WebSocket(new_uri);
     socket.onopen = socket_onOpen;
     socket.onclose = socket_onClose;
+    socket.onerror = socket_onClose;
     socket.phase = 0;
     socket_connect_timeout = socket_connect_timeout * 1.1;
 };
