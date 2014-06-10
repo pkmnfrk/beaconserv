@@ -167,7 +167,11 @@ function MainViewModel() {
         }
     });
 
-    self.callBeacon.apply(this, self.beaconCycles[1]);
+    setTimeout(function() {
+        self.callBeacon.apply(this, self.beaconCycles[0]);
+    }, 1000);
+
+    
 }
 
 ko.applyBindings(new MainViewModel());
