@@ -108,15 +108,26 @@ function MainViewModel() {
     ];
     
     var currentBeacon = -1;
+        var faking = false;
         
     window.onFake = function() {
-        currentBeacon++;
+        if(faking) return;
+        faking = true;
         
+        setTimeout(function() {
+            self.callBeacon.apply(this, self.beaconCycles[1]);
+            setTimeout(function() {
+                self.callBeacon.apply(this, self.beaconCycles[0]);
+            }, 10000);
+        }, 10000);
+/*        currentBeacon++;
+        
+
         if(currentBeacon >= self.beaconCycles.length) {
             currentBeacon = 0;
         }
         
-        self.callBeacon.apply(this, self.beaconCycles[currentBeacon]);
+        self.callBeacon.apply(this, self.beaconCycles[currentBeacon]);*/
     };
         
     window.beacon_func = function (beacon_id, major, minor, device_id, proximity) {
@@ -155,6 +166,8 @@ function MainViewModel() {
 
         }
     });
+
+    self.callBeacon.apply(this, self.beaconCycles[1]);
 }
 
 ko.applyBindings(new MainViewModel());
