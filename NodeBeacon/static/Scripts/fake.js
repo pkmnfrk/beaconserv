@@ -160,6 +160,7 @@ function MainViewModel() {
 ko.applyBindings(new MainViewModel());
 
 $("html").click(window.onFake);
+$("html").on("touchstart", window.onFake);
 
 /*$("#hook").hook({
     swipeDistance: 150
