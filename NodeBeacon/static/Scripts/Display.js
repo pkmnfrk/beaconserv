@@ -3,12 +3,15 @@ var scalar = 0x4c10;
 var show_markers = false;
 
 var in_device = false;
+var in_tv = false;
 
 if(location.search == "?ios") {
     in_device = true;
+} else if(location.search == "?tv") {
+    in_tv = true;
 }
 
-if(in_device) {
+if(in_device || in_tv) {
     $("#debugArea").remove();
 }
 
@@ -48,7 +51,7 @@ function showMarkers(force) {
 
             marker = L.marker([b.latitude, b.longitude], {
                 bounceOnAdd: true,
-                draggable: !in_device
+                draggable: !(in_device || in_tv)
             })
                 .addTo(map)
             ;
@@ -133,9 +136,9 @@ var map = L.map('map', {
         [-196/scalar, 196/scalar]
 
     ],
-    zoomControl: !in_device,
-    fullscreenControl: !in_device,
-    attributionControl: !in_device
+    zoomControl: !(in_device || in_tv),
+    fullscreenControl: !(in_device || in_tv),
+    attributionControl: !(in_device || in_tv)
 
 }).on('mousemove', function (e) {
     
@@ -170,7 +173,7 @@ L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
 L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
-if(!in_device) {
+if(!(in_device || in_tv)) {
     L.control.scale().addTo(map);
 }
 
@@ -411,7 +414,7 @@ var socketMessageHandler = function (msg) {
                         
                         if(show_markers) {
                             b.marker = L.marker([b.latitude, b.longitude], {
-                                draggable: !in_device
+                                draggable: !(in_device || in_tv)
                             }).addTo(map);
                             b.marker.bindPopup(b.title);
                             b.marker.beacon = b;
