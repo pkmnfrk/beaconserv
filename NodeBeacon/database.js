@@ -93,10 +93,14 @@ exports.findClient = function(clientid, callback) {
                 pings: []
             };
             clients.save(obj, function(err) {
+                console.log("Saving new client");
                 callback(obj);
             });
         } else {
-            callback(obj); 
+            setTimeout(function() {
+                console.log("Returning old client");
+                callback(obj); 
+            }, 0);
         }
     });
 };
