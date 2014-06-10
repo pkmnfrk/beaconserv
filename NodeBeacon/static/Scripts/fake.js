@@ -115,9 +115,9 @@ function MainViewModel() {
         faking = true;
         
         setTimeout(function() {
-            self.callBeacon.apply(this, self.beaconCycles[1]);
+            self.callBeacon.apply(this, self.beaconCycles[0]);
             setTimeout(function() {
-                self.callBeacon.apply(this, self.beaconCycles[0]);
+                self.callBeacon.apply(this, self.beaconCycles[1]);
             }, 10000);
         }, 10000);
 /*        currentBeacon++;
@@ -168,7 +168,7 @@ function MainViewModel() {
     });
 
     setTimeout(function() {
-        self.callBeacon.apply(this, self.beaconCycles[0]);
+        self.callBeacon.apply(this, self.beaconCycles[1]);
     }, 1000);
 
     
