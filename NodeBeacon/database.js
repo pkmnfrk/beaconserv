@@ -101,10 +101,13 @@ exports.findClient = function(clientid, callback) {
     });
 };
 
-exports.storeClient = function(client) {
+exports.storeClient = function(client, callback) {
     var clients = db.collection("client");
     
-    clients.save(client, function(err) { if(err) throw err; });
+    clients.save(client, function(err) { 
+        if(err) throw err; 
+        if(callback) callback();
+    });
 };
 
 exports.findClients = function(query, callback) {

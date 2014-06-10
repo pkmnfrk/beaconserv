@@ -120,7 +120,7 @@ exports.notifyPing = function(uuid, major, minor, clientid, name) {
         name: name
     };
     
-    console.log("Broadcasting msg abount client " + clientid);
+    //console.log("Broadcasting msg abount client " + clientid);
     
     socketServer.broadcast(JSON.stringify(msg));
 };
@@ -133,7 +133,7 @@ exports.notifyBeaconChange = function(beacon) {
         beacon: beacon
     };
     
-    console.log("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
+    //console.log("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
     
     socketServer.broadcast(JSON.stringify(msg));
 };

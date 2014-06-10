@@ -45,15 +45,13 @@ module.exports = {
 
                 client.pings.unshift(ping);
 
-                database.storeClient(client);
+                database.storeClient(client, function() {
 
-                realtime_map.notifyPing(uuid, major, minor, request.clientid, "insert name here");
+                    realtime_map.notifyPing(uuid, major, minor, request.clientid, client.name);
 
-                response.writeHead(200, {"Content-Type": "application/json"});
-
-                response.write(JSON.stringify(beacon));
-                response.end();
-
+                    response.writeJson(beacon);
+                });
+                
             });
         });
     }
