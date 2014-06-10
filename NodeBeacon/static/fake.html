@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>iBeacon Demo</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    <link href="Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="hook" id="hook"></div>
+
+    <div class="content" data-bind="foreach: cards">
+        <div class="card" data-bind="template: { name: $root.displayMode, data: $data, afterRender: $root.addCardSwipe }">
+
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-1.10.2.js"></script>
+    <script src="/Scripts/knockout-2.3.0.js"></script>
+
+    <script type="text/html" id="card_no_image">
+        <h1 data-bind="text: title">Beacon hit!</h1>
+        <p data-bind="text: bodyText">Body!</p>
+        <p data-bind="if: url, text:url"></p>
+        <p data-bind="text: proximity"></p>
+    </script>
+    <script type="text/html" id="card_image">
+        <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
+            <h1 data-bind="text: title">Beacon hit!</h1>
+        </div>
+        <p data-bind="text: bodyText">Body!</p>
+        <p data-bind="if: url, text:url"></p>
+        <p data-bind="if: proximity, text: proximity"></p>
+    </script>
+    <script type="text/html" id="desktop_card_video">
+        <div class="card-image" data-bind="style: { backgroundImage: 'url(' + image + ')' }">
+            <video controls="controls"
+                   poster="/Content/images/transparent.gif"
+                   data-bind="event: { play:$root.onPlay, ended: $root.onEnded }">
+                <source data-bind="attr: { src: video }" type="video/mp4" />
+            </video>
+        </div>
+        <h1 data-bind="text: title">Beacon hit!</h1>
+        <p data-bind="text: bodyText">Body!</p>
+        <p data-bind="if: url, text:url"></p>
+        <p data-bind="text: proximity"></p>
+    </script>
+
+    <script type="text/html" id="mobile_card_video">
+        <div class="card-image">
+            <video controls="controls"
+                    data-bind="attr: { poster: image }">
+                <source data-bind="attr: { src: video }" type="video/mp4" />
+            </video>
+        </div>
+        <h1 data-bind="text: title">Beacon hit!</h1>
+        <p data-bind="text: bodyText">Body!</p>
+        <p data-bind="if: url, text:url"></p>
+        <p data-bind="text: proximity"></p>
+    </script>
+
+    <script src="Scripts/Common.js"></script>
+    <script src="Scripts/fake.js"></script>
+</body>
+</html>
+

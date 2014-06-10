@@ -89,7 +89,7 @@ exports.findClient = function(clientid, callback) {
         if(!obj) {
             obj = {
                 clientid: clientid,
-                name: "Unnamed",
+                name: null,
                 pings: []
             };
             clients.save(obj, function(err) {
