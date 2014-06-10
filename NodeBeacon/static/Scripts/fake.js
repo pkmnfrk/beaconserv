@@ -104,7 +104,7 @@ function MainViewModel() {
     self.beaconCycles = [
         ["2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, 5, 4, 1],    
         ["2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, 6, 4, 1],
-        ["2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, 7, 4, 1]
+        //["2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, 7, 4, 1]
     ];
     
     var currentBeacon = -1;
