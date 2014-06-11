@@ -59,8 +59,26 @@ function showMarkers(force) {
             ;
             marker.bindPopup(b.title);
             marker.beacon = b;
-            marker.on('drag', onMarkerDrag);
-            marker.on('dragend', onMarkerDragEnd);
+            
+            
+            if(in_device) {
+                marker.on("click", function(e) {
+
+
+                    if(in_device) {
+                        sendMessageToOverlord("click", {
+                            major: b.major,
+                            minor: b.minor
+                        });
+
+                        return false;
+                    }
+
+                });
+            } else {
+                marker.on('drag', onMarkerDrag);
+                marker.on('dragend', onMarkerDragEnd);
+            }
 
             var bx = findBeacon(b.major, b.minor);
             bx.marker = marker;
