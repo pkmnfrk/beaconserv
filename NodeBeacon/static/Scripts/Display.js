@@ -62,7 +62,7 @@ function showMarkers(force) {
             
             
             if(in_device) {
-                marker.on("click", function(e) {
+                marker.on("click", (function(b) { return function(e) {
 
 
                     if(in_device) {
@@ -74,7 +74,7 @@ function showMarkers(force) {
                         return false;
                     }
 
-                });
+                }; })(b));
             } else {
                 marker.on('drag', onMarkerDrag);
                 marker.on('dragend', onMarkerDragEnd);
