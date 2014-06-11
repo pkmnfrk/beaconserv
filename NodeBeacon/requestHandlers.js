@@ -43,7 +43,7 @@ exports.state = function state(request, response) {
         
         var func = function () {
             if(pings.length) {
-                var ping = pings.unshift();
+                var ping = pings.shift();
                 
                 database.findBeaconById(ping.beacon_id, function(beacon) {
                     ret.push(beacon);
