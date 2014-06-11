@@ -56,6 +56,8 @@ function storeBeacon(beacon, onComplete) {
         beacon._id = new mongo.ObjectID(beacon._id);   
     }
     
+    if(beacon.uuid) beacon.uuid = beacon.uuid.toLowerCase();
+    
     console.log(beacon);
     
     var query = { uuid: beacon.uuid, major: beacon.major, minor: beacon.minor};

@@ -34,7 +34,7 @@ module.exports = {
         }
 
         if (path.length >= 1) {
-            uuid = path[0];
+            uuid = path[0].toLowerCase();
             if(path.length >= 2) {
                 major = parseInt(path[1], 10);
                 if(path.length >= 3) {
