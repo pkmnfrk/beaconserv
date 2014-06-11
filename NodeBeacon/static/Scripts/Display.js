@@ -57,7 +57,7 @@ function showMarkers(force) {
             })
                 .addTo(map)
             ;
-            marker.bindPopup(b.title);
+            
             marker.beacon = b;
             
             
@@ -78,6 +78,7 @@ function showMarkers(force) {
             } else {
                 marker.on('drag', onMarkerDrag);
                 marker.on('dragend', onMarkerDragEnd);
+                marker.bindPopup(b.title);
             }
 
             var bx = findBeacon(b.major, b.minor);
