@@ -1,6 +1,6 @@
 var zoomOffset = 15;
 var scalar = 0x4c10;
-var show_markers = false;
+
 
 var in_device = false;
 var in_tv = false;
@@ -10,6 +10,8 @@ if(location.search == "?ios") {
 } else if(location.search == "?tv") {
     in_tv = true;
 }
+
+var show_markers = in_device;
 
 if(in_device || in_tv) {
     $("#debugArea").remove();
@@ -50,7 +52,7 @@ function showMarkers(force) {
             } while (b.minor === 0);
 
             marker = L.marker([b.latitude, b.longitude], {
-                bounceOnAdd: true,
+                //bounceOnAdd: true,
                 draggable: !(in_device || in_tv)
             })
                 .addTo(map)
