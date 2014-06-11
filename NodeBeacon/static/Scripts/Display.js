@@ -65,7 +65,11 @@ function showMarkers(force) {
             var bx = findBeacon(b.major, b.minor);
             bx.marker = marker;
 
-            setTimeout(function () { addBeacon(beacons); }, 100);
+            if(in_device) {
+                addBeacon(beacons);
+            } else {
+                setTimeout(function () { addBeacon(beacons); }, 100);
+            }
         } else {
             beaconsLoaded = true;
             processUpdates();
