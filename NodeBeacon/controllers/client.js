@@ -62,7 +62,7 @@ module.exports = {
             return;
         }
         
-        if(path[0] === "my") {
+        if(path[0] === "me") {
             if(path[1] === "name") {
                 database.findClient(request.clientid, function(c) {
                     var body = "";
@@ -94,6 +94,10 @@ module.exports = {
                 
                 return;
             }
+            
+            response.writeHead(401, "Not Authorized");
+            response.end();
+            return;
         }
         
         response.writeHead(404, "Not Found");

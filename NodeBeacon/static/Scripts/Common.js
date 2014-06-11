@@ -22,25 +22,25 @@ window.didEnterForeground = function () {
 
 B = (function () {
     return {
-        name: null,
+        me: null,
 
         getName: function () {
             jQuery.ajax({
                 type: "GET",
-                url: "/client/my/name",
+                url: "/client/me",
                 dataType: "json",
                 complete: function (data) {
-                    if (data.responseJSON) {
-                        B.name = data.responseJSON;
-                    } else {
+                    B.me = data.responseJSON;
+                    
+                    if (!B.me.name) {
                         var name = prompt("What is your name?");
 
                         if (name) {
-                            B.name = name;
+                            B.me.name = name;
 
                             jQuery.ajax({
                                 type: "PUT",
-                                url: "/client/my/name",
+                                url: "/client/me/name",
                                 data: { name: name }
                             });
                         }
