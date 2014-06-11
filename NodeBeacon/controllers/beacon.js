@@ -130,7 +130,7 @@ module.exports = {
                 }
 
                 if(!docs) {
-                    docs = null;
+                    docs = {};
                 }
             }
             

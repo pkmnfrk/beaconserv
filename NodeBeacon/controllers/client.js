@@ -31,15 +31,14 @@ module.exports = {
             return;
         }
         
-        if(path[0] === "my") {
-            if(path[1] === "name") {
-                database.findClient(request.clientid, function(c) {
-                    response.writeJson(c.name);
-                    return;
-                });
-                
+        if(path[0] === "me") {
+            database.findClient(request.clientid, function(c) {
+                response.writeJson(c);
                 return;
-            }
+            });
+
+            return;
+            
         }
         
         response.writeHead(404, "Not Found?");

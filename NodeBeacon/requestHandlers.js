@@ -63,16 +63,3 @@ exports.state = function state(request, response) {
         
     });
 };
-
-
-exports.name = function name(request, response) {
-    database.findClient(request.clientid, function (client) {
-        
-        if (request.method == "GET")
-        {
-            
-            response.writeJson(client.name);
-        }
-        
-    });
-};

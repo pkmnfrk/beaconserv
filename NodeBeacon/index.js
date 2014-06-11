@@ -10,8 +10,7 @@ var
 
 var handle = {
     "^/client$": requestHandlers.client,
-    "^/state$": requestHandlers.state,
-    "^/client/my/name": requestHandlers.name
+    "^/state$": requestHandlers.state
 };
 
 router.setStaticHandler(requestHandlers.static);
