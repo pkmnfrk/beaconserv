@@ -39,6 +39,13 @@ module.exports = {
 
             return;
             
+        } else if (path[0] === "all") {
+            database.findClients(function(clients) {
+                response.writeJson(clients);
+                return;
+            });
+            
+            return;
         }
         
         response.writeHead(404, "Not Found?");
