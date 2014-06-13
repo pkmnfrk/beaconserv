@@ -12,3 +12,4 @@ node_modules
 iisnode
 *.debug
 NodeBeacon/static/util/clock.json
+NodeBeacon/static/util/football.json

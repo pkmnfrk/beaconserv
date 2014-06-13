@@ -8,15 +8,35 @@
                 color: white;
             }
             #score {
-                font-size: 600px;
+                font-size: 500px;
                 margin:0; padding: 0;
                 text-align: center;
                 
+            }
+            #left {
+                
+            }
+            #right {
+            }
+            
+            #vs {
+                color: #888;
+            }
+            
+            #teams {
+                text-align: center;
+                font-size: 100px;
             }
         </style>
     </head>
     <body>
         <h1 id="score"></h1>
+        <div id="teams">
+            <span id="left"></span>
+            <span id="vs">vs</span>
+            <span id="right"></span>
+        </div>
+        <script src="scripts/jquery.min.js"></script>
         <script>
         
             function LiveMatchesCallback(data) {
@@ -30,12 +50,31 @@
                 
                 setTimeout(update, data.polling_time);
             }
+            var refreshNum = null;
             
             var update = function() {
                 
                 var scr = document.createElement("script");
                 scr.src = "http://lup.fifa.com/live/common/competitions/worldcup/_feed/_listmachlive.js";
                 document.body.appendChild(scr);
+                
+                $.getJSON("football.json?" + new Date().getMilliseconds(), function(data) {
+                    
+                    if(refreshNum === null) {
+                        refreshNum = data.update;
+                    } else if(refreshNum !== data.update) {
+                        window.location = window.location;
+                    }
+                    
+                    $("#left").text(data.leftTeam);
+                    $("#right").text(data.rightTeam);
+                    if(data.leftColor)
+                        $("#left").css("color", data.leftColor);
+                    if(data.rightColor)
+                        $("#right").css("color", data.rightColor);
+                    
+                    
+                })
                 
             };
             
