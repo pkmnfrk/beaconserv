@@ -52,7 +52,10 @@
                     if(match.s == "live") {
                         document.getElementById("score").innerHTML = match.r;
                         if(match.min == "fifa.full-time") {
-                            $("#length").text("");
+                            $("#length").text("Full Time");
+                        } else if(match.min == "fifa.half-time") {
+                            
+                            $("#length").text("Half Time");
                         } else {
                             var l = match.min;
                             var t = /(\d+)'/.exec(l);
