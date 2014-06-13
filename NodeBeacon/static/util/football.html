@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Football</title>
+        <style>
+            body {
+                background-color: black;
+                color: white;
+            }
+            #score {
+                font-size: 600px;
+                margin:0; padding: 0;
+                text-align: center;
+                
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="score"></h1>
+        <script>
+        
+            function LiveMatchesCallback(data) {
+                
+                for(var m = 0; m < data.matches.length; m++) {
+                    var match = data.matches[m];
+                    if(match.s == "live") {
+                        document.getElementById("score").innerHTML = match.r;
+                    }
+                }
+                
+                setTimeout(update, data.polling_time);
+            }
+            
+            var update = function() {
+                
+                var scr = document.createElement("script");
+                scr.src = "http://lup.fifa.com/live/common/competitions/worldcup/_feed/_listmachlive.js";
+                document.body.appendChild(scr);
+                
+            };
+            
+            update();
+            
+        </script>
+    
+    </body>
+    
+</html>
