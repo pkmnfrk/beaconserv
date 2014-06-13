@@ -70,9 +70,13 @@ module.exports = {
             var id = path[1];
             
             database.findBeaconById(id, function(beacon) {
+                console.log(beacon);
+                
                 if(!beacon) {
                     beacon = {};
                 }
+                console.log(beacon);
+                
                 polyFillBeacon(beacon);
                 
                 response.writeJson(beacon);

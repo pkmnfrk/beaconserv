@@ -126,8 +126,27 @@ exports.findClients = function(query, callback) {
     
     clients.find(query).toArray(function(err, objs) {
         if(err) throw err;
+        var now = new Date();
+        var toSave = [];
         
-        callback(objs);
+        for(var i = 0; i < objs.length; i++) {
+            
+            var c = objs[i];
+            if(c.pings.length) {
+                for(var j = 0; j < c.pings.length; j++) {
+                    if((now - Date.parse(c.pings[j].date)) > (1000 * 60 * 60 * 24)) {
+                        c.pings = c.pings.slice(0, j);
+                        toSave.push(c);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        (function saveFunc() {
+            if(!toSave.length) callback(objs);
+            else exports.storeClient(toSave.pop(), saveFunc);
+        })();
     });
 };
 
