@@ -56,6 +56,9 @@
                         } else if(match.min == "fifa.half-time") {
                             
                             $("#length").text("Half Time");
+                        } else if(match.min == "fifa.extra-time") {
+                            
+                            $("#length").text("Extra Time");
                         } else {
                             var l = match.min;
                             var t = /\d+'/.exec(l);
