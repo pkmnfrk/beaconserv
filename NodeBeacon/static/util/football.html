@@ -73,8 +73,11 @@
             var refreshNum = null;
             
             var update = function() {
+                var scr = document.getElementById("fifa");
+                if(scr) document.body.removeChild(scr);
                 
-                var scr = document.createElement("script");
+                scr = document.createElement("script");
+                scr.id = "fifa";
                 scr.src = "http://lup.fifa.com/live/common/competitions/worldcup/_feed/_listmachlive.js";
                 document.body.appendChild(scr);
                 
@@ -93,7 +96,9 @@
                     if(data.rightColor)
                         $("#right").css("color", data.rightColor);
                     
-                    
+                    if(data.font) {
+                        $("body").css("font-family", data.font);
+                    }
                 })
                 
             };
