@@ -8,6 +8,43 @@ var url = require("url"),
     multiparty = require("multiparty"),
     fs = require("fs");
 
+function polyFillBeacon(b) {
+    
+    if(!b._id)
+        b._id = null;
+    
+    if(!b.uuid) 
+        b.uuid = "00000000-0000-0000-0000-000000000000";
+
+    if(!b.major)
+        b.major = 0;
+
+    if(!b.minor)
+        b.minor = 0;
+
+    if(!b.title)
+        b.title = "";
+
+    if(!b.bodyText)
+        b.bodyText = "";
+
+    if(!b.url)
+        b.url = null;
+
+    if(!b.image)
+        b.image = null;
+    if(!b.video)
+        b.video = null;
+
+    if(!b.maxProximity)
+        b.maxProximity = 0;
+
+    if(!b.latitude)
+        b.latitude = null;
+    if(!b.longitude)
+        b.longitude = null;
+}
+
 module.exports = {
     get: function(request, response) {
     
@@ -27,116 +64,106 @@ module.exports = {
         path.shift();
 
         var flatMode = false;
+        
+        if(path[0] == "id") {
+            
+            var id = path[1];
+            
+            database.findBeaconById(id, function(beacon) {
+                if(!beacon) {
+                    beacon = {};
+                }
+                polyFillBeacon(beacon);
+                
+                response.writeJson(beacon);
+                return;
+            });
+            
+            return;
+            
+        } else {
+        
+            if(path.length && path[0] == "flat") {
+                flatMode = true;
+                path.shift();
+            }
 
-        if(path.length && path[0] == "flat") {
-            flatMode = true;
-            path.shift();
-        }
-
-        if (path.length >= 1) {
-            uuid = path[0].toLowerCase();
-            if(path.length >= 2) {
-                major = parseInt(path[1], 10);
-                if(path.length >= 3) {
-                    minor = parseInt(path[2], 10);
+            if (path.length >= 1) {
+                uuid = path[0].toLowerCase();
+                if(path.length >= 2) {
+                    major = parseInt(path[1], 10);
+                    if(path.length >= 3) {
+                        minor = parseInt(path[2], 10);
+                    }
                 }
             }
-        }
 
 
 
-        //console.log(uuid + " " + major + " " + minor);
+            //console.log(uuid + " " + major + " " + minor);
 
-        database.findBeacon(uuid, major, minor, function(err, docs) {
-            var i, b;
-            if(err) {
-                response.writeHead("500 Internal Server Error");
-                response.write(JSON.stringify(err));
-                response.end();
-                return;
-            }
-
-            for(i = 0; i < docs.length; i++) {
-                b = docs[i];
-
-                if(!b.uuid) 
-                    b.uuid = "00000000-0000-0000-0000-000000000000";
-
-                if(!b.major)
-                    b.major = 0;
-
-                if(!b.minor)
-                    b.minor = 0;
-                
-                if(!b.title)
-                    b.title = "";
-                
-                if(!b.bodyText)
-                    b.bodyText = "";
-                
-                if(!b.url)
-                    b.url = null;
-                
-                if(!b.image)
-                    b.image = null;
-                if(!b.video)
-                    b.video = null;
-                    
-                if(!b.maxProximity)
-                    b.maxProximity = 0;
-                
-                if(!b.latitude)
-                    b.latitude = null;
-                if(!b.longitude)
-                    b.longitude = null;
-                    
-            }
-            
-            if(!flatMode) {
-                var ret = {};
+            database.findBeacon(uuid, major, minor, function(err, docs) {
+                var i, b;
+                if(err) {
+                    response.writeHead("500 Internal Server Error");
+                    response.write(JSON.stringify(err));
+                    response.end();
+                    return;
+                }
 
                 for(i = 0; i < docs.length; i++) {
                     b = docs[i];
 
-                    
-                    
-                    if(!(b.uuid in ret)) {
-                        ret[b.uuid] = {};
+                    polyFillBeacon(b);
+
+                }
+
+                if(!flatMode) {
+                    var ret = {};
+
+                    for(i = 0; i < docs.length; i++) {
+                        b = docs[i];
+
+
+
+                        if(!(b.uuid in ret)) {
+                            ret[b.uuid] = {};
+                        }
+
+                        if(!(b.major in ret[b.uuid])) {
+                            ret[b.uuid][b.major] = {};
+                        }
+
+                        ret[b.uuid][b.major][b.minor] = b;
                     }
 
-                    if(!(b.major in ret[b.uuid])) {
-                        ret[b.uuid][b.major] = {};
+                    docs = ret;
+                }
+
+
+                if(!flatMode) {
+                    if(uuid !== undefined) {
+                        //explicit uuid, unwrap it
+                        docs = docs[uuid];
                     }
 
-                    ret[b.uuid][b.major][b.minor] = b;
+                    if(!docs) {
+                        docs = {};
+                    }
+
+                    if(major !== undefined) {
+                        docs = docs[major];
+                    }
+
+                    if(!docs) {
+                        docs = {};
+                    }
                 }
 
-                docs = ret;
-            }
+                response.writeJson(docs);
 
-            
-            if(!flatMode) {
-                if(uuid !== undefined) {
-                    //explicit uuid, unwrap it
-                    docs = docs[uuid];
-                }
-
-                if(!docs) {
-                    docs = {};
-                }
-
-                if(major !== undefined) {
-                    docs = docs[major];
-                }
-
-                if(!docs) {
-                    docs = {};
-                }
-            }
-            
-            response.writeJson(docs);
-
-        });
+            });
+        }
     },
     
     post: function (req, res) {
