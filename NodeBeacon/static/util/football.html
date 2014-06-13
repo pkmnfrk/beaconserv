@@ -63,11 +63,11 @@
                             $("#length").text("Extra Time");
                         } else {
                             var l = match.min;
-                            var t = /\d+'/.exec(l);
+                            //var t = /\d+'/.exec(l);
                             
-                            if(t) {
-                                l = l + " 00\"";
-                            }
+                            //if(t) {
+                            //    l = l + " 00\"";
+                            //}
                             $("#length").text("Game time - " + l);
                         }
                     }
