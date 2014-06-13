@@ -27,6 +27,11 @@
                 text-align: center;
                 font-size: 100px;
             }
+            
+            #length {
+                font-size: 50px;
+                text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -36,6 +41,7 @@
             <span id="vs">vs</span>
             <span id="right"></span>
         </div>
+        <div id="length"></div>
         <script src="scripts/jquery.min.js"></script>
         <script>
         
@@ -45,6 +51,17 @@
                     var match = data.matches[m];
                     if(match.s == "live") {
                         document.getElementById("score").innerHTML = match.r;
+                        if(match.min == "fifa.full-time") {
+                            $("#length").text("");
+                        } else {
+                            var l = match.min;
+                            var t = /(\d+)'/.exec(l);
+                            
+                            if(t) {
+                                l = t[1] + ":00";
+                            }
+                            $("#length").text("Game time - " + l);
+                        }
                     }
                 }
                 
@@ -80,6 +97,18 @@
             
             update();
             
+            function launchFullscreen(element) {
+              if(element.requestFullscreen) {
+                element.requestFullscreen();
+              } else if(element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+              } else if(element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+              } else if(element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+              }
+            }
+            launchFullscreen(document.documentElement);
         </script>
     
     </body>
