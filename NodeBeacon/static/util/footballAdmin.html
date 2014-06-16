@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Football</title>
+        <style>
+        .advanced {
+            display:none;
+        }
+        </style>
+    </head>
+    <body>
+        <form action="/utild/football" method="post">
+            <table>
+                <tr>
+                    <td>Left Team</td>
+                    <td><input name="leftTeam" id="leftTeam" /></td>
+                </tr>
+                <tr>
+                    <td>Right Team</td>
+                    <td><input name="rightTeam" id="rightTeam" /></td>
+                </tr>
+                <tr>
+                    <td>Left Colour</td>
+                    <td><input name="leftColor" id="leftColor" /></td>
+                </tr>
+                <tr>
+                    <td>Right Colour</td>
+                    <td><input name="rightColor" id="rightColor" /></td>
+                </tr>
+                <tr>
+                    <td>Font</td>
+                    <td><input name="font" id="font" /></td>
+                </tr>
+                <tr class="advancedButton">
+                    <td colspan="2">
+                        <a href="#">Advanced</a>
+                    </td>
+                </tr>
+                <tr class="advanced">
+                    <td>Refresh</td>
+                    <td><input name="refresh" id="refresh" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" value="Submit" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <script src="scripts/jquery.min.js"></script>
+        <script>
+        
+            $.getJSON("football.json", function(data) {
+                for(var key in data) {
+                    if(data.hasOwnProperty(key)) {
+                        $("#" + key).val(data[key]);
+                    }
+                }
+            });
+            
+            $(".advancedButton a").click(function(e){
+                e.preventDefault();
+                $(".advancedButton").hide();
+                $(".advanced").show();
+            })
+        </script>
+    </body>
+    
+</html>
