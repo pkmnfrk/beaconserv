@@ -50,12 +50,16 @@
         <script src="scripts/jquery.min.js"></script>
         <script>
         
-            $.getJSON("football.json", function(data) {
-                for(var key in data) {
-                    if(data.hasOwnProperty(key)) {
-                        $("#" + key).val(data[key]);
+            $.ajax( {
+                url: "football.json",
+                success: function(data) {
+                    for(var key in data) {
+                        if(data.hasOwnProperty(key)) {
+                            $("#" + key).val(data[key]);
+                        }
                     }
-                }
+                },
+                cache: false
             });
             
             $(".advancedButton a").click(function(e){

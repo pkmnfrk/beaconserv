@@ -89,24 +89,28 @@
                 scr.src = "http://lup.fifa.com/live/common/competitions/worldcup/_feed/_listmachlive.js";
                 document.body.appendChild(scr);
                 
-                $.getJSON("football.json?" + new Date().getMilliseconds(), function(data) {
+                $.ajax( {
+                    url: "football.json",
+                    success: function(data) {
                     
-                    if(refreshNum === null) {
-                        refreshNum = data.update;
-                    } else if(refreshNum !== data.update) {
-                        window.location = window.location;
-                    }
-                    
-                    $("#left").text(data.leftTeam);
-                    $("#right").text(data.rightTeam);
-                    if(data.leftColor)
-                        $("#left").css("color", data.leftColor);
-                    if(data.rightColor)
-                        $("#right").css("color", data.rightColor);
-                    
-                    if(data.font) {
-                        $("body").css("font-family", data.font);
-                    }
+                        if(refreshNum === null) {
+                            refreshNum = data.update;
+                        } else if(refreshNum !== data.update) {
+                            window.location = window.location;
+                        }
+
+                        $("#left").text(data.leftTeam);
+                        $("#right").text(data.rightTeam);
+                        if(data.leftColor)
+                            $("#left").css("color", data.leftColor);
+                        if(data.rightColor)
+                            $("#right").css("color", data.rightColor);
+
+                        if(data.font) {
+                            $("body").css("font-family", data.font);
+                        }
+                    },
+                    cache: false
                 })
                 
             };
