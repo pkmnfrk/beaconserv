@@ -118,6 +118,7 @@ function MainViewModel() {
             self.callBeacon.apply(this, self.beaconCycles[0]);
             setTimeout(function() {
                 self.callBeacon.apply(this, self.beaconCycles[1]);
+                faking = false;
             }, 10000);
         }, 10000);
 /*        currentBeacon++;
