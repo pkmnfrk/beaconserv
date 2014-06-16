@@ -15,6 +15,11 @@
                 text-align: center;
                 
             }
+            
+            #nogame {
+                font-size: 200px;
+                text-align: center;
+            }
             #left {
                 
             }
@@ -43,15 +48,18 @@
             <span id="vs">vs</span>
             <span id="right"></span>
         </div>
+        <h1 id="nogame">No game</h1>
         <div id="length"></div>
         <script src="scripts/jquery.min.js"></script>
         <script>
         
             function LiveMatchesCallback(data) {
+                var any = false;
                 
                 for(var m = 0; m < data.matches.length; m++) {
                     var match = data.matches[m];
                     if(match.s == "live") {
+                        any = true;
                         document.getElementById("score").innerHTML = match.r;
                         if(match.min == "fifa.full-time") {
                             $("#length").text("Full Time");
@@ -73,7 +81,17 @@
                             //}
                             $("#length").text("Game time - " + l);
                         }
+                        break;
                     }
+                }
+                
+                if(!any) {
+                    $("#score, #teams, #length").hide();
+                    $("nogame").show();
+                    
+                } else {
+                    $("#score, #teams, #length").show();
+                    $("nogame").hide();
                 }
                 
                 setTimeout(update, data.polling_time);
