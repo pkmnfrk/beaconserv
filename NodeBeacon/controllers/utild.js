@@ -83,18 +83,20 @@ module.exports = {
                 var rssUrl = "http://www.reddit.com/r/technology/.rss";
                 
                 feed(rssUrl, function(err, articles) {
-                    var item;
+                    var item = [];
                     
                     if(err) {
-                        item = {
+                        item.push({
                             title: "Error fetching feed",
                             date: new Date().toLocaleDateString()
-                        };
+                        });
                     } else {
-                        item = {
-                            title: articles[0].title,
-                            date: articles[0].published.toLocaleDateString()
-                        };
+                        for(var i = 0; i < Math.min(6, articles.length); i++) {
+                            item.push({
+                                title: articles[i].title,
+                                date: articles[i].published.toLocaleDateString()
+                            });
+                        }
                     }
                     
                     lastReddit = item;

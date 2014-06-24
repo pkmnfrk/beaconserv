@@ -62,3 +62,8 @@ footer {
     color: #7f7f7f;
     
 }
+
+section {
+    max-height: 800px;
+    overflow: hidden;
+}
