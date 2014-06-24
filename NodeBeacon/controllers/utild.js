@@ -4,8 +4,11 @@
 var realtime_map = require("../realtime_map");
 var url = require("url"),
     fs = require("fs"),
-    qs = require("querystring");
+    qs = require("querystring"),
+    feed = require("feed-read");
 
+var lastRedditFetch = null;
+var lastReddit = null;
 
 module.exports = {
     post: function (request, response) {
@@ -55,6 +58,52 @@ module.exports = {
             
             
             return;
+            
+        }
+    },
+    
+    get: function (request, response) {
+        
+        var path = url.parse(request.url).pathname.split('/');
+        var body = "";
+        
+        path.shift();
+        path.shift();
+        
+        if(path[0] == "reddit") {
+            
+            (function() {
+                
+                if(lastRedditFetch && lastRedditFetch >= new Date(new Date().getTime() + -15*60000)) {
+                    
+                    response.writeJson(lastReddit);
+                    return;
+                }
+                
+                var rssUrl = "http://www.reddit.com/r/technology/.rss";
+                
+                feed(rssUrl, function(err, articles) {
+                    var item;
+                    
+                    if(err) {
+                        item = {
+                            title: "Error fetching feed",
+                            date: new Date().toLocaleDateString()
+                        };
+                    } else {
+                        item = {
+                            title: articles[0].title,
+                            date: articles[0].published.toLocaleDateString()
+                        };
+                    }
+                    
+                    lastReddit = item;
+                    lastRedditFetch = new Date();
+                    
+                    response.writeJson(item);
+                    
+                });
+            })();
             
         }
     }

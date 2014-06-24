@@ -4,6 +4,8 @@
   "description": "A site for serving ibeacon content",
   "dependencies": {
     "cookies": "0.4.0",
+    "feed-read": "0.0.1",
+    "feedparser": "^0.18.1",
     "mongodb": "1.4.3",
     "multiparty": "^3.2.7",
     "node-static": "0.7.3",

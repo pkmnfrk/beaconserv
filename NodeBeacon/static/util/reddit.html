@@ -18,10 +18,29 @@
             </div>
             
         </header>
-        <p class="content">U.S. Conference of Mayors unanimously adopted a Net Neutrality resolution, calling on the FCC to enshrine principles of transparency and non-discrimination into future regulations on the Internet operations</p>
+        <p class="content" id="content">U.S. Conference of Mayors unanimously adopted a Net Neutrality resolution, calling on the FCC to enshrine principles of transparency and non-discrimination into future regulations on the Internet operations</p>
         
         <footer>
             Brought to you by Klick Labs
         </footer>
+        
+        <script src="scripts/jquery.min.js"></script>
+        <script>
+        
+            function update() {
+                $.ajax({
+                    url: "/utild/reddit",
+                    success: function(data) {
+                        $("#content").text(data.title);
+                        $("#dateline").text(data.date);
+                    }
+                })
+                
+                setTimeout(update, 15 * 60000);
+            }
+            
+            update();
+            
+        </script>
     </body>
 </html>
