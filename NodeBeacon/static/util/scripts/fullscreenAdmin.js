@@ -40,6 +40,8 @@ $.ajax({
                     url += "&fgcolor=" + encodeURIComponent($(".eventFG", src).val());
                     url += "&bgcolor=" + encodeURIComponent($(".eventBG", src).val());
                     url += "&showseconds=" + encodeURIComponent($(".eventSeconds", src)[0].checked);
+                } else if(src.data("kind") === "youtube") {
+                    url += "code=" + encodeURIComponent($(".code", src).val());
                 }
                 
                 $(".name", this).text(name);
