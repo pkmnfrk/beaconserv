@@ -27,3 +27,11 @@ body {
 .fsbutton:hover {
     opacity: 1;
 }
+
+#loader {
+    
+    position: absolute;
+    bottom: 50px;
+    left: 50px;
+    
+}
