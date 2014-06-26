@@ -175,15 +175,24 @@ var fullscreenConfig = {
 };
 
 exports.getFullscreenConfig = function(callback) {
-    setTimeout(function() {
-        callback(fullscreenConfig);
-    }, 0);
+    var fsconfig = db.collection("fsconfig");
+    fsconfig.findOne({}, function(err, obj) {
+        if(!obj) {
+            obj = fullscreenConfig;
+        }
+            
+        callback(obj);
+        
+    });
 };
 
 exports.putFullscreenConfig = function(data, callback) {
     
-    fullscreenConfig = data;
+    //fullscreenConfig = data;
     
-    setTimeout(callback, 0);
+    var fsconfig = db.collection("fsconfig");
+    fsconfig.save(data, callback);
+    
+    //setTimeout(callback, 0);
     
 };
