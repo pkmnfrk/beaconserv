@@ -8,7 +8,6 @@ body {
     margin: 110px 100px;
     
     font-family: 'Helvetica', sans-serif;
-    background-color: white;
     
 }
 
@@ -45,6 +44,8 @@ h1 span {
 p {
     color: #0d82b7;
     font-size: 66px;
+    line-height: 66px;
+    background-color: transparent;
 }
 
 div#dateline {
@@ -72,4 +73,5 @@ footer {
 section {
     max-height: 800px;
     overflow: hidden;
+    background-color: transparent;
 }
