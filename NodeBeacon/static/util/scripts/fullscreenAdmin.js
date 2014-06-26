@@ -47,8 +47,8 @@ $.ajax({
                     
                     url += "?leftTeam=" + encodeURIComponent($(".leftTeam", src).val());
                     url += "&rightTeam=" + encodeURIComponent($(".rightTeam", src).val());
-                    url += "&leftColor=" + encodeURIComponent($(".leftColor", src).val());
-                    url += "&rightColor=" + encodeURIComponent($(".rightColor", src).val());
+                    url += "&leftColor=" + encodeURIComponent($(".leftColour", src).val());
+                    url += "&rightColor=" + encodeURIComponent($(".rightColour", src).val());
                 } else if(src.data("kind") === "youtube") {
                     url += "?code=" + encodeURIComponent($(".code", src).val());
                     if($(".time", src).val()) {
