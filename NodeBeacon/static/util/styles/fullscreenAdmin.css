@@ -1,0 +1,21 @@
+.screen {
+    display:inline-block;
+    width: 288px;
+    height: 112px;
+    border: 12px solid black;
+    margin: 5px;
+    padding-top: 50px;
+}
+
+.screen .name, .screen .url {
+    text-align: center;
+    
+}
+.
+.screen.screenDrop {
+    background-color: #ccf;
+}
+
+#listOfScreens {
+    
+}

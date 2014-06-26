@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Lab</title>
+        <link href="styles/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+        <link rel="stylesheet" href="styles/fullscreenAdmin.css" />
+    </head>
+    <body>
+        <h1>Screen configuration</h1>
+        <ul id="listOfScreens">
+            <li>
+                <img class="draggable" src="images/hamburger.png" alt="Drag me" />
+                Name: <input class="name" type="hidden" value="Clock" /> Clock
+                <input class="url" type="hidden" value="/util/clock.html" />
+            </li>
+            <li>
+                <img class="draggable" src="images/hamburger.png" alt="Drag me" />
+                Name: <input class="name" type="hidden" value="World Cup" /> World Cup
+                <input class="url" type="hidden" value="/util/football.html" />
+            </li>
+            <li>
+                <img class="draggable" src="images/hamburger.png" alt="Drag me" />
+                Name: <input class="name" type="hidden" value="Technology News" /> Technology News
+                <input class="url" type="hidden" value="/util/reddit.html" />
+            </li>
+            <li>
+                <img class="draggable" src="images/hamburger.png" alt="Drag me" />
+                Name: <input class="name" type="hidden" value="Blank" /> Blank Screen
+                <input class="url" type="hidden" value="about:blank" />
+            </li>
+        </ul>
+        
+        <div class="screen" id="left">
+            <div class="name"></div>
+            <div class="url"></div>
+        </div>
+        <div class="screen" id="right">
+            <div class="name"></div>
+            <div class="url"></div>
+        </div>
+        
+        <script src="scripts/jquery.min.js"></script>
+        <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+        <script src="scripts/fullscreenAdmin.js"></script>
+    </body>
+</html>
