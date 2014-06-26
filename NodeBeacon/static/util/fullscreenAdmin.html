@@ -14,14 +14,30 @@
                 <input class="url" type="hidden" value="/util/clock.html" />
                 Event: <input class="eventName" />
                 Date: <input class="eventDate" placeholder="yyyy/mm/dd hh:mm:ss" />
-                FG: <input class="eventFG" value="white" />
-                BG: <input class="eventBG" value="black" />
-                Always show seconds: <input type="checkbox" class="eventSeconds" />
+                <span class="advanced">
+                    <a href="#">Advanced</a>
+                    <span>
+                        FG: <input class="eventFG" value="white" />
+                        BG: <input class="eventBG" value="black" />
+                        Always show seconds: <input type="checkbox" class="eventSeconds" />
+                    </span>
+                </span>
+                
             </li>
-            <li>
+            <li data-kind="worldcup">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
-                <input class="name" type="hidden" value="World Cup" /> World Cup
+                <input class="name" type="hidden" value="World Cup" /> World Cup - 
                 <input class="url" type="hidden" value="/util/football.html" />
+                Left Team: <input class="leftTeam" />
+                Right Team: <input class="rightTeam" />
+                <span class="advanced">
+                    <a href="#">Advanced</a>
+                    <span>
+                        Left Colour: <input class="leftColour" value="white" />
+                        Right Colour: <input class="rightColour" value="white" />
+                        
+                    </span>
+                </span>
             </li>
             <li>
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />

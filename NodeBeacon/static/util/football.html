@@ -54,6 +54,7 @@
         <h1 id="nogame">No game</h1>
         <div id="length"></div>
         <script src="scripts/jquery.min.js"></script>
+        <script src="scripts/common.js"></script>
         <script>
         
             function LiveMatchesCallback(data) {
@@ -110,7 +111,7 @@
                 scr.src = "http://lup.fifa.com/live/common/competitions/worldcup/_feed/_listmachlive.js";
                 document.body.appendChild(scr);
                 
-                $.ajax( {
+                /*$.ajax( {
                     url: "football.json",
                     success: function(data) {
                     
@@ -132,24 +133,19 @@
                         }
                     },
                     cache: false
-                })
+                })*/
                 
             };
             
             update();
             
-            function launchFullscreen(element) {
-              if(element.requestFullscreen) {
-                element.requestFullscreen();
-              } else if(element.mozRequestFullScreen) {
-                element.mozRequestFullScreen();
-              } else if(element.webkitRequestFullscreen) {
-                element.webkitRequestFullscreen();
-              } else if(element.msRequestFullscreen) {
-                element.msRequestFullscreen();
-              }
-            }
-            launchFullscreen(document.documentElement);
+            var qs = getQuerystring();
+            
+            $("#left").text(qs.leftTeam);
+            $("#right").text(qs.rightTeam);
+            if(qs.leftColor) $("#left").css("color", qs.leftColor);
+            if(qs.rightColor) $("#right").css("color", qs.rightColor);
+
         </script>
     
     </body>

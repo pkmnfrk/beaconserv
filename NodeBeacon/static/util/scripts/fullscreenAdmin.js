@@ -40,6 +40,15 @@ $.ajax({
                     url += "&fgcolor=" + encodeURIComponent($(".eventFG", src).val());
                     url += "&bgcolor=" + encodeURIComponent($(".eventBG", src).val());
                     url += "&showseconds=" + encodeURIComponent($(".eventSeconds", src)[0].checked);
+                } else if(src.data("kind") === "worldCup") {
+                    if(!$(".leftTeam", src).val() || !$(".rightTeam", src).val()) {
+                        return;
+                    }
+                    
+                    url += "?leftTeam=" + encodeURIComponent($(".leftTeam", src).val());
+                    url += "&rightTeam=" + encodeURIComponent($(".rightTeam", src).val());
+                    url += "&leftColor=" + encodeURIComponent($(".leftColor", src).val());
+                    url += "&rightColor=" + encodeURIComponent($(".rightColor", src).val());
                 } else if(src.data("kind") === "youtube") {
                     url += "?code=" + encodeURIComponent($(".code", src).val());
                     if($(".time", src).val()) {
@@ -72,4 +81,11 @@ $(".screen button").click(function(e) {
         url: "/fullscreen/refresh/" + id,
         method: "POST"
     });
+});
+
+$(".advanced span").hide();
+$(".advanced a").click(function(e) {
+    e.preventDefault();
+    $("span", $(this).parent()).show();
+    $(this).hide();
 });
