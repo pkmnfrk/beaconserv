@@ -40,7 +40,7 @@ $.ajax({
                     url += "&fgcolor=" + encodeURIComponent($(".eventFG", src).val());
                     url += "&bgcolor=" + encodeURIComponent($(".eventBG", src).val());
                     url += "&showseconds=" + encodeURIComponent($(".eventSeconds", src)[0].checked);
-                } else if(src.data("kind") === "worldCup") {
+                } else if(src.data("kind") === "worldcup") {
                     if(!$(".leftTeam", src).val() || !$(".rightTeam", src).val()) {
                         return;
                     }
@@ -53,6 +53,10 @@ $.ajax({
                     url += "?code=" + encodeURIComponent($(".code", src).val());
                     if($(".time", src).val()) {
                         url += "&time=" + encodeURIComponent($(".time", src).val());
+                    }
+                } else if(src.data("kind") === "url") {
+                    if(!$(".url", src).val()) {
+                        return;
                     }
                 }
                 
