@@ -92,6 +92,22 @@ exports.notifyChange = function(screen, data) {
     
 };
 
+exports.notifyRefresh = function(screen) {
+    
+    var msg = {
+        msg: "refresh"
+    };
+    
+    msg = JSON.stringify(msg);
+    
+    for(var i in socketServer.clients) {
+        var c = socketServer.clients[i];
+        if(!screen || screen === c.name) {
+            c.send(msg);
+        }
+    }
+};
+
 exports.closeAllConnections = function () {
     if(!server.supportsWebsockets) return;
     

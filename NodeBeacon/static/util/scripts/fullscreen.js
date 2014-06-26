@@ -25,6 +25,8 @@ websocket.onmessage = function(msg) {
             var data = msg.data;
             
             $("#main").attr("src", data.url);
+        } else if(msg.msg === "refresh") {
+            window.location = window.location;
         }
         
     }

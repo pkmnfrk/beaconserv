@@ -82,6 +82,29 @@ module.exports = {
             });
             
         });
+    },
+    
+    post: function(request, response) {
+        var path = url.parse(request.url).pathname;
+
+        if(path[path.length - 1] == "/") {
+            path = path.substring(0, path.length - 1);
+        }
+
+        path = path.split('/');
+        
+        path.shift();
+        path.shift();
+        
+        if(path[0] === "refresh") {
+            
+            fullscreen_display.notifyRefresh(path[1]);
+            
+            response.writeHead(204, "No Content");
+            response.end();
+            return;
+            
+        }
     }
     
 };

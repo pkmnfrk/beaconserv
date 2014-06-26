@@ -46,3 +46,13 @@ $.ajax({
 
     }
 });
+
+$(".screen button").click(function(e) {
+    
+    var id = $(this).parent().attr("id");
+    
+    $.ajax({
+        url: "/fullscreen/refresh/" + id,
+        method: "POST"
+    });
+});
