@@ -305,10 +305,14 @@ new_uri += "/socket";
 var socket = null;
 var socket_connect_timeout = 100;
 var socket_connect_timer = null;
+var socket_keepalive = null;
 
 var socket_onOpen = function () {
     socket.onmessage = socketMessageHandler;
     socket_connect_timeout = 100; //reset this limit
+    socket_keepalive = setInterval(function() {
+        socket.send(JSON.stringify({ping: true}));
+    }, 30000);
 };
 
 var reconnect = function() {
@@ -323,6 +327,9 @@ var reconnect = function() {
 var socket_onClose = function () {
     //server died, let's try to reconnect!
     socket_connect_timer = setTimeout(reconnect, socket_connect_timeout);
+    if(socket_keepalive)
+        clearInterval(socket_keepalive);
+        
 };
 
 B.getPrefs(function(prefs) {

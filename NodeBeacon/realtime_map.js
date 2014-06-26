@@ -13,9 +13,9 @@ var onInitialMessage = function (msg) {
     
     msg = JSON.parse(msg);
     if(msg.ok) {
-        this.removeListener("on", this.handler);
+        this.removeListener("message", this.handler);
         this.handler = onMessage.bind(this);
-        this.on("onMessage", onMessage);
+        this.on("message", onMessage);
         
         //now, let's update them on the current state
         database.findClients({

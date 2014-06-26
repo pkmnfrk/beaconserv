@@ -6,6 +6,10 @@ function onmessage(msg) {
     
     if(msg.hello) {
         websocket.send(JSON.stringify({ name: myname }));
+        
+        keepalive = setInterval(function() {
+            websocket.send(JSON.stringify({ping: true}));
+        }, 30000);
     } else {
         
         if(msg.msg === "change") {
@@ -59,6 +63,7 @@ function tryConnect() {
     
     var onfud = function() {
         $("#loader").show();
+        if(keepalive) clearInterval(keepalive);
         
         errorRetry = setTimeout(tryConnect, 1000);
     };
@@ -69,7 +74,7 @@ function tryConnect() {
 }
 
 var errorRetry = null;
-
+var keepalive = null;
 
 var myname = window.location.search.substring(1);
 

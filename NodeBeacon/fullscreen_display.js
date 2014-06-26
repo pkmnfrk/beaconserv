@@ -12,9 +12,9 @@ var onInitialMessage = function (msg) {
     
     msg = JSON.parse(msg);
     if(msg.name) {
-        this.removeListener("on", this.handler);
+        this.removeListener("message", this.handler);
         this.handler = onMessage.bind(this);
-        this.on("onMessage", onMessage);
+        this.on("message", onMessage);
         
         self.name = msg.name;
         
@@ -30,6 +30,8 @@ var onInitialMessage = function (msg) {
             }
         });
         
+    } else if(msg.ping) { 
+        //rock on
     } else {
         this.close();
     }
