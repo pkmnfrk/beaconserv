@@ -28,20 +28,20 @@ $.ajax({
                 var id = $(this).attr("id");
                 
                 var name = $(".name", src).val();
-                var url = $(".url", src).val() + "?";
+                var url = $(".url", src).val();
                 
                 if(src.data("kind") === "clock") {
                     if(!$(".eventName", src).val() || !$(".eventDate", src).val()) {
                         return;
                     }
                     
-                    url += "name=" + encodeURIComponent($(".eventName", src).val());
+                    url += "?name=" + encodeURIComponent($(".eventName", src).val());
                     url += "&date=" + encodeURIComponent($(".eventDate", src).val());
                     url += "&fgcolor=" + encodeURIComponent($(".eventFG", src).val());
                     url += "&bgcolor=" + encodeURIComponent($(".eventBG", src).val());
                     url += "&showseconds=" + encodeURIComponent($(".eventSeconds", src)[0].checked);
                 } else if(src.data("kind") === "youtube") {
-                    url += "code=" + encodeURIComponent($(".code", src).val());
+                    url += "?code=" + encodeURIComponent($(".code", src).val());
                     if($(".time", src).val()) {
                         url += "&time=" + encodeURIComponent($(".time", src).val());
                     }
