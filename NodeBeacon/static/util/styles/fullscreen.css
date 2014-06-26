@@ -9,3 +9,15 @@ body {
     height: 1080px;
     border: none;
 }
+
+.fsbutton {
+    opacity: 0;
+    top: 50px;
+    left: 10px;
+    font-size: 50px;
+    position: absolute;
+}
+
+.fsbutton:hover {
+    opacity: 1;
+}
