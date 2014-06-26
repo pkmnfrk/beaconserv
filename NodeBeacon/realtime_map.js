@@ -1,7 +1,6 @@
 var server = require("./server"),
     database = require("./database"),
     uuid = require("node-uuid"),
-    os = require("os"),
     WebSocketServer = require("ws").Server,
     socketServer = null;
 
@@ -81,7 +80,7 @@ function start() {
     
     //console.log(process.env);
     
-    if(!exports.supportsWebsockets) return;
+    if(!server.supportsWebsockets) return;
     
     socketServer = new WebSocketServer({
         server: server.getServer(),
@@ -109,7 +108,7 @@ function start() {
     
 exports.start = start;
 exports.notifyPing = function(uuid, major, minor, clientid, name) {
-    if(!exports.supportsWebsockets) return;
+    if(!server.supportsWebsockets) return;
     
     var msg = {
         msg: "client",
@@ -126,7 +125,7 @@ exports.notifyPing = function(uuid, major, minor, clientid, name) {
 };
 
 exports.notifyBeaconChange = function(beacon) {
-    if(!exports.supportsWebsockets) return;
+    if(!server.supportsWebsockets) return;
     
     var msg = {
         msg: "beacon",
@@ -138,24 +137,8 @@ exports.notifyBeaconChange = function(beacon) {
     socketServer.broadcast(JSON.stringify(msg));
 };
 
-exports.supportsWebsockets = (function() { 
-    if(process.env.IISNODE_VERSION) { //running under iisnode == restricted by IIS version
-        console.log("IIS detected, but what version?");
-        if(os.release() < "6.2") {
-            console.log("Detected IIS <= 7, so disabling websocket support");
-            return false;
-        } else {
-            console.log("Detected IIS > 7, so enabling websocket support");
-        }
-    } else {
-        console.log("No IIS so enabling websocket support");
-    }
-    
-    return true;
-})();
-
 exports.closeAllConnections = function () {
-    if(!exports.supportsWebsockets) return;
+    if(!server.supportsWebsockets) return;
     
     for(var i = 0; i < socketServer.clients.length; i++) {
         var c = socketServer.clients[i];

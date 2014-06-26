@@ -162,3 +162,28 @@ exports.findBeaconById = function(id, callback) {
         callback(obj);
     });
 };
+
+var fullscreenConfig = {
+    left: {
+        name: "Blank",
+        url: "about:blank"
+    },
+    right: {
+        name: "Blank",
+        url: "about:blank"
+    }
+};
+
+exports.getFullscreenConfig = function(callback) {
+    setTimeout(function() {
+        callback(fullscreenConfig);
+    }, 0);
+};
+
+exports.putFullscreenConfig = function(data, callback) {
+    
+    fullscreenConfig = data;
+    
+    setTimeout(callback, 0);
+    
+};

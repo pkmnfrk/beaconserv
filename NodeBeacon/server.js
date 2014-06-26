@@ -5,6 +5,7 @@ require("./polyfills");
 var http = require("http"),
     url = require("url"),
     uuid = require("node-uuid"),
+    os = require("os"),
     Cookies = require("cookies");
 
 var server = null, socketServer = null;
@@ -51,3 +52,19 @@ function getServer() {
 
 exports.start = start;
 exports.getServer = getServer;
+
+exports.supportsWebsockets = (function() { 
+    if(process.env.IISNODE_VERSION) { //running under iisnode == restricted by IIS version
+        console.log("IIS detected, but what version?");
+        if(os.release() < "6.2") {
+            console.log("Detected IIS <= 7, so disabling websocket support");
+            return false;
+        } else {
+            console.log("Detected IIS > 7, so enabling websocket support");
+        }
+    } else {
+        console.log("No IIS so enabling websocket support");
+    }
+    
+    return true;
+})();
