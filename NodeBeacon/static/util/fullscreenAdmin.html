@@ -8,24 +8,29 @@
     <body>
         <h1>Screen configuration</h1>
         <ul id="listOfScreens">
-            <li>
+            <li data-kind="clock">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
-                Name: <input class="name" type="hidden" value="Clock" /> Clock
+                <input class="name" type="hidden" value="Clock" /> Clock -
                 <input class="url" type="hidden" value="/util/clock.html" />
+                Event: <input class="eventName" />
+                Date: <input class="eventDate" placeholder="yyyy/mm/dd hh:mm:ss" />
+                FG: <input class="eventFG" value="white" />
+                BG: <input class="eventBG" value="black" />
+                Always show seconds: <input type="checkbox" class="eventSeconds" />
             </li>
             <li>
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
-                Name: <input class="name" type="hidden" value="World Cup" /> World Cup
+                <input class="name" type="hidden" value="World Cup" /> World Cup
                 <input class="url" type="hidden" value="/util/football.html" />
             </li>
             <li>
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
-                Name: <input class="name" type="hidden" value="Technology News" /> Technology News
+                <input class="name" type="hidden" value="Technology News" /> Technology News
                 <input class="url" type="hidden" value="/util/reddit.html" />
             </li>
             <li>
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
-                Name: <input class="name" type="hidden" value="Blank" /> Blank Screen
+                <input class="name" type="hidden" value="Blank" /> Blank Screen
                 <input class="url" type="hidden" value="about:blank" />
             </li>
         </ul>

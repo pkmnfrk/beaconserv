@@ -28,7 +28,19 @@ $.ajax({
                 var id = $(this).attr("id");
                 
                 var name = $(".name", src).val();
-                var url = $(".url", src).val();
+                var url = $(".url", src).val() + "?";
+                
+                if(src.data("kind") === "clock") {
+                    if(!$(".eventName", src).val() || !$(".eventDate", src).val()) {
+                        return;
+                    }
+                    
+                    url += "name=" + encodeURIComponent($(".eventName", src).val());
+                    url += "&date=" + encodeURIComponent($(".eventDate", src).val());
+                    url += "&fgcolor=" + encodeURIComponent($(".eventFG", src).val());
+                    url += "&bgcolor=" + encodeURIComponent($(".eventBG", src).val());
+                    url += "&showseconds=" + encodeURIComponent($(".eventSeconds", src)[0].checked);
+                }
                 
                 $(".name", this).text(name);
                 $(".url", this).text(url);

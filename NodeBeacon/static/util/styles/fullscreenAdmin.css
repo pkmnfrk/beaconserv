@@ -1,15 +1,15 @@
 .screen {
     display:inline-block;
-    width: 288px;
-    height: 112px;
+    width: 278px;
+    height: 107px;
     border: 12px solid black;
     margin: 5px;
+    padding: 5px;
     padding-top: 50px;
-}
 
-.screen {
     text-align: center;
     
+    overflow: hidden;
 }
 .
 .screen.screenDrop {
@@ -18,4 +18,8 @@
 
 #listOfScreens {
     
+}
+
+.screen .url {
+    word-break: break-all;
 }

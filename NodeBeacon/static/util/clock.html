@@ -15,6 +15,7 @@
         </div>
         
         <script src="scripts/jquery.min.js"></script>
+        <script src="scripts/common.js"></script>
         <script>
             
             var triggered = false;
@@ -22,79 +23,65 @@
                 
             }
             
-                //var destTime = Date.parse(data.date);
-                var interval = setInterval(function() {
-                    if(!data.date) return;
-                    
-                    $("body").css("background-color", data.bgcolor).css("color", data.fgcolor);
-                    
-                    
-                    $("#eventLabel").text(data.name);
-                    
-                    var now = new Date();
+            //var destTime = Date.parse(data.date);
+            var interval = setInterval(function() {
+                if(!data.date) return;
 
-                    var diff = data.date - now;
-                    if(triggered && diff > 0) {
-                        triggered = false;
-                        $("#untilLabel").show();
+                $("body").css("background-color", data.bgcolor).css("color", data.fgcolor);
+
+
+                $("#eventLabel").text(data.name);
+
+                var now = new Date();
+
+                var diff = data.date - now;
+                if(triggered && diff > 0) {
+                    triggered = false;
+                    $("#untilLabel").show();
+                }
+
+                if(diff < 0) {
+                    if(!triggered) {
+                        triggered = true;
+                        $("#timeLabel").text("Now!");
+                        $("#untilLabel").hide();
                     }
-                    
-                    if(diff < 0) {
-                        if(!triggered) {
-                            triggered = true;
-                            $("#timeLabel").text("Now!");
-                            $("#untilLabel").hide();
-                        }
-                        //clearInterval(interval);
-                        return;
-                    }
+                    //clearInterval(interval);
+                    return;
+                }
 
-                    var seconds = Math.floor(diff / 1000);
-                    var minutes = Math.floor(seconds / 60);
-                    var hours = Math.floor(minutes / 60);
+                var seconds = Math.floor(diff / 1000);
+                var minutes = Math.floor(seconds / 60);
+                var hours = Math.floor(minutes / 60);
 
-                    if(!data.showSeconds && minutes > 30) {
-                        seconds = 0;
-                        minutes = minutes % 60;
-                        var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes);
-                    } else {
-                        seconds = seconds % 60;
-                        minutes = minutes % 60;
-                        var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
-                    }
+                if(!data.showSeconds && minutes > 30) {
+                    seconds = 0;
+                    minutes = minutes % 60;
+                    var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes);
+                } else {
+                    seconds = seconds % 60;
+                    minutes = minutes % 60;
+                    var text = hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                }
 
-                    
 
-                    $("#timeLabel").text(text);
-                }, 500);
 
-            var refresh = null;
-            var refreshRate = 10000;
+                $("#timeLabel").text(text);
+            }, 500);
+
             
             var loaderFunc = function() {
                 
-                $.ajax({
-                    url: "clock.json",
-                    dataType: "json",
-                    cache: false,
-                    success: function(data2) {
-                        data = data2;
-                        data.date = Date.parse(data.date);
-                        refreshRate = data.refreshRate || 10000;
-                        
-                        if(refresh === null) {
-                            refresh = data.refresh;
-                        } else {
-                            if(refresh !== data.refresh) {
-                                window.location = window.location;
-                            }
-                        }
-                    },
-                    complete: function() {
-                        setTimeout(loaderFunc, refreshRate);
-                    }
-                })
+                var qs2 = getQuerystring();
                 
+                data = {
+                    name: qs2.name ? qs2.name : "No name set",
+                    date: qs2.date ? Date.parse(qs2.date) : Date.parse("2015/12/31 23:59:59"),
+                    bgcolor: qs2.bgcolor ? qs2.bgcolor : "black",
+                    fgcolor: qs2.fgcolor ? qs2.fgcolor : "white",
+                    showSeconds: qs2.showseconds ? "true"===qs2.showseconds : false
+                    
+                }
             };
             
             loaderFunc();
