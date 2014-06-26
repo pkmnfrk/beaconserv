@@ -3,6 +3,12 @@
     <head>
         <style>
             body { margin: 0; }
+            iframe { 
+                border: 0;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
         </style>
     </head>
     <body>
@@ -19,7 +25,25 @@ frameborder="0" allowFullScreen></iframe>
             
             url += qs.code;
             
-            url += "?autoplay=1";
+            
+            url += "?autoplay=1&iv_load_policy=3";
+            
+            if(qs.time) {
+                
+                var time = /(\d+m)?(\d+s)/.exec(qs.time);
+                
+                if(time) {
+                    
+                    time[1] = parseInt(time[1], 10);
+                    time[2] = parseInt(time[2], 10);
+                    
+                    time = time[1] * 60 + time[2];
+                    
+                    qs.time = time;
+                }
+                
+                url += "&start=" + qs.time;
+            }
             
             $("#youtube").attr("src", url);
             

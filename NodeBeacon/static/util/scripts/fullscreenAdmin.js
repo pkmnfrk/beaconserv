@@ -42,6 +42,9 @@ $.ajax({
                     url += "&showseconds=" + encodeURIComponent($(".eventSeconds", src)[0].checked);
                 } else if(src.data("kind") === "youtube") {
                     url += "code=" + encodeURIComponent($(".code", src).val());
+                    if($(".time", src).val()) {
+                        url += "&time=" + encodeURIComponent($(".time", src).val());
+                    }
                 }
                 
                 $(".name", this).text(name);
