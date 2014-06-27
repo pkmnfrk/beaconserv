@@ -43,11 +43,99 @@ var onMessage = function (msg) {
     
 };
 
+var parseTime = function parseTime(t) {
+    
+    var time = t.match(/(\d+)(?::(\d\d))?\s*(p?)/);
+    if(!time) return parseTime("00:00");
+    var d = new Date();
+    var h = parseInt(time[1], 10) + (time[3] ? 12 : 0);
+    var m = parseInt(time[2], 10) || 0;
+    
+    if(h == 24) h = 12;
+    
+    d.setDate(1);
+    d.setMonth(1);
+    d.setFullYear(2000);
+    d.setSeconds(0);
+    
+    d.setHours( h );
+    d.setMinutes( m );
+    
+    return d;
+};
+
+var beginningOfDay = parseTime("00:00");
+
+var checkSchedules = function() {
+    
+    database.getFullscreenConfig(function(config) {
+        
+        var now = new Date();
+        now.setDate(1);
+        now.setMonth(1);
+        now.setFullYear(2000);
+        now.setSeconds(0);
+        
+        var any = false;
+        
+        for(var id in config) {
+            if(config.hasOwnProperty(id)) {
+                
+                var screen = config[id];
+                
+                if(!screen.schedule) continue;
+                
+                if(!screen.lastScheduleUpdate || now < screen.lastScheduleUpdate) {
+                    screen.lastScheduleUpdate = beginningOfDay;
+                }
+                
+                var sche = null;
+                
+                for(var i = 0; i < screen.schedule.length; i++) {
+                    sche = screen.schedule[i];
+                    var t = parseTime(sche.time);
+                    
+                    if(t >= screen.lastScheduleUpdate && t <= now) {
+                        break;
+                    }
+                    sche = null;
+                }
+
+                screen.lastScheduleUpdate = now;
+                
+                if(sche && screen.name != sche.name && screen.url != sche.url) {
+                    screen.name = sche.name;
+                    screen.url = sche.url;
+                    
+                    exports.notifyChange(id, screen);
+                    
+                    any = true;
+                    
+                }
+                
+            }
+        }
+
+        if(any) {
+            database.putFullscreenConfig(config, function() {
+               //?? 
+
+            });
+        }
+        
+        setTimeout(checkSchedules, 60000);
+        
+    });
+    
+};
+
 function start() {
     
     //console.log(process.env);
     
     if(!server.supportsWebsockets) return;
+    
+    checkSchedules();
     
     socketServer = new WebSocketServer({
         server: server.getServer(),
