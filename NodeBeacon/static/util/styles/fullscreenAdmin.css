@@ -1,3 +1,10 @@
+.screenContainer {
+    display:inline-block;
+    width: 318px;
+    height: 500px;
+    vertical-align: top;
+}
+
 .screen {
     display:inline-block;
     width: 278px;
@@ -22,4 +29,23 @@
 
 .screen .url {
     word-break: break-all;
+}
+
+.addNew {
+    color: #fff;
+    border: 1px solid #99d;
+    width: 50%;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #bbf;
+}
+
+.schedule {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.time {
+    width: 50px;
 }

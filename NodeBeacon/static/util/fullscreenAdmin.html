@@ -8,7 +8,7 @@
     <body>
         <h1>Screen configuration</h1>
         <ul id="listOfScreens">
-            <li data-kind="clock">
+            <li class="s" data-kind="clock">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="Clock" /> Clock -
                 <input class="url" type="hidden" value="/util/clock.html" />
@@ -24,7 +24,7 @@
                 </span>
                 
             </li>
-            <li data-kind="worldcup">
+            <li class="s" data-kind="worldcup">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="World Cup" /> World Cup - 
                 <input class="url" type="hidden" value="/util/football.html" />
@@ -39,17 +39,17 @@
                     </span>
                 </span>
             </li>
-            <li>
+            <li class="s">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="Technology News" /> Technology News
                 <input class="url" type="hidden" value="/util/reddit.html" />
             </li>
-            <li>
+            <li class="s">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="Blank" /> Blank Screen
                 <input class="url" type="hidden" value="about:blank" />
             </li>
-            <li data-kind="youtube">
+            <li class="s" data-kind="youtube">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="Youtube Video" /> Youtube Video -
                 <input class="url" type="hidden" value="/util/youtube.html" />
@@ -57,32 +57,44 @@
                 Time: <input class="time" placeholder="2m30s" />
                 
             </li>
-            <li>
+            <li class="s">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="iBeacon Map" /> iBeacon Map
                 <input class="url" type="hidden" value="/?tv" />
             </li>
-            <li>
+            <li class="s">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="Whiteboard" /> Whiteboard
                 <input class="url" type="hidden" value="https://awwapp.com/draw.html" />
             </li>
-            <li data-kind="url">
+            <li class="s" data-kind="url">
                 <img class="draggable" src="images/hamburger.png" alt="Drag me" />
                 <input class="name" type="hidden" value="URL" /> Arbitrary URL
                 <input class="url" type="text" value="" />
             </li>
         </ul>
         
-        <div class="screen" id="left">
-            <div class="name"></div>
-            <div class="url"></div>
-            <button type="button">Refresh</button>
+        <div class="screenContainer" id="left">
+            <div class="screen">
+                <div class="name"></div>
+                <div class="url"></div>
+                <button type="button">Refresh</button>
+            </div>
+            <h2>Schedule</h2>
+            <ul class="schedule">
+                <li class="addNew">New item...</li>
+            </ul>
         </div>
-        <div class="screen" id="right">
-            <div class="name"></div>
-            <div class="url"></div>
-            <button type="button">Refresh</button>
+        <div class="screenContainer" id="right">
+            <div class="screen">
+                <div class="name"></div>
+                <div class="url"></div>
+                <button type="button">Refresh</button>
+            </div>
+            <h2>Schedule</h2>
+            <ul class="schedule">
+                <li class="addNew">New item...</li>
+            </ul>
         </div>
         
         <script src="scripts/jquery.min.js"></script>
