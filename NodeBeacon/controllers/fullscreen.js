@@ -82,7 +82,7 @@ module.exports = {
                 
                 database.putFullscreenConfig(config, function() {
                     //notify screens
-                    fullscreen_display.notifyChange(id, config);
+                    fullscreen_display.notifyChange(id, config[id]);
                     
                     response.writeHead(204, "No Content");
                     response.end();
