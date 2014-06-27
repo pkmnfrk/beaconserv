@@ -71,7 +71,15 @@ footer {
 }
 
 section {
-    max-height: 800px;
-    overflow: hidden;
     background-color: transparent;
+    position: relative;
+}
+
+section ul li {
+    font-size: 50px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
 }

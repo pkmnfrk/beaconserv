@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html>
+    <head>
+        <title>Technology</title>
+        
+        <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+        <link href="styles/ui-lightness/jquery-ui-1.10.4.custom.min.css" rel='stylesheet' />
+        <link rel="stylesheet" href="styles/reddit.css" />
+        
+    </head>
+    <body>
+        <video class="background-video" src="video/BG_Loop2.mp4" autoplay loop></video>
+        <header>
+            <h1>Today in <span>Chatter</span></h1>
+            
+            <div id="dateline">
+                Tuesday, June 24, 2014
+            </div>
+            
+        </header>
+        <section>
+            <ul></ul>
+        </section>
+        <footer>
+            Brought to you by Klick Labs
+        </footer>
+        
+        <script src="scripts/jquery.min.js"></script>
+        <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+        <script>
+            var currentPost = -1;
+            
+            function update() {
+                var whenDone = function() {
+                    $.ajax({
+                        url: "/utild/chatter",
+                        success: function(data) {
+                            var list = $("section ul"); 
+                            $("li", list).remove();
+
+                            currentPost = 0;
+
+
+                            for(var i = 0; i < data.length; i++) {
+                                var el = $("<li/>").html(data[i].title).prepend($("<h2/>").text(data[i].name));
+                                list.append(el);
+                                el.hide();
+                                if(i == currentPost) {
+                                    el.toggle("slide", { direction: "down"});
+                                }
+                            }                        
+                        }
+                    })
+
+                    setTimeout(update, 15 * 60000);
+                }
+                
+                if(currentPost != -1) {
+                    $("section ul li")
+                        .eq(currentPost)
+                        .hide("slide", {
+                            direction: "up",
+                            complete: whenDone
+                        }
+                     );
+                    
+                    currentPost = -1;
+                } else {
+                    whenDone();
+                }
+                
+                
+            }
+            
+            function doRotate() {
+                if(currentPost == -1) return;
+                
+                var list = $("section ul li");
+                
+                list.eq(currentPost).toggle("slide", { direction: "up"});
+                
+                currentPost += 1;
+                
+                if(currentPost >= list.length) {
+                    currentPost = 0;
+                }
+                
+                list.eq(currentPost).toggle("slide", { direction: "down"});
+                
+                
+            }
+            
+            setInterval(doRotate, 10000);
+            
+            update();
+            
+        </script>
+    </body>
+</html>

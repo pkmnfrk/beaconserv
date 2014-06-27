@@ -5,10 +5,15 @@ var realtime_map = require("../realtime_map");
 var url = require("url"),
     fs = require("fs"),
     qs = require("querystring"),
-    feed = require("feed-read");
+    feed = require("feed-read"),
+    http = require("http");
 
 var lastRedditFetch = null;
 var lastReddit = null;
+
+var lastChatterFetch = null;
+var lastChatter = null;
+
 
 module.exports = {
     post: function (request, response) {
@@ -105,6 +110,69 @@ module.exports = {
                     response.writeJson(item);
                     
                 });
+            })();
+            
+        } else if (path[0] == "chatter") {
+            
+            //http://genome.klick.com/api/Chatter?PageSize=5
+            
+            (function() {
+                
+                if(lastChatterFetch && lastChatterFetch >= new Date(new Date().getTime() + -15*60000)) {
+                    
+                    response.writeJson(lastChatter);
+                    return;
+                }
+                
+                var n = 10;
+                
+                var rssUrl = "http://genome.klick.com/api/Chatter?PageSize=" + n;
+                
+                
+                
+                var req = http.request({
+                    hostname: "genome.klick.com",
+                    path: "/api/Chatter?PageSize=" + n,
+                    headers: {
+                        "Cookie": "SessionState.SessionID=2dcc7e3f-b5ef-44e6-8a30-ded6d274e545; ss-id=UGNjos6hwFLQAXT1VM0/; ss-pid=i0zV6AZkIK3zFXHngnMu; SmartSiteVisitorID=b20b06fb34014f5f8928d9018b64b5d7",
+                        "Accept": "application/json"
+                    }
+                    
+                }, function(res) {
+                    res.on("data", function(d) {
+                        data += d;
+                        //console.log("Content");
+                    });
+                    res.on("end", function() {
+                        //console.log("end content!");
+                        data = JSON.parse(data);
+                        var ret = [];
+
+                        for(var i = 0; i < data.Entries.length; i++) {
+                            var entry = data.Entries[i];
+                            ret.push({
+                                title: entry.MassagedContent,
+                                date: new Date().toLocaleDateString(),
+                                name: entry.CreatedByFirstNameAndInitial
+                            });
+                        }
+
+                        lastChatter = ret;
+                        lastChatterFetch = new Date();
+                        
+                        response.writeJson(ret);
+
+                    });
+                });
+                var data = "";
+                
+                
+                
+                req.on("error", function() {
+                    response.writeJson({error: true}); 
+                });
+                
+                req.end();
             })();
             
         }
