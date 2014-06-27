@@ -68,11 +68,21 @@ module.exports = {
             
             database.getFullscreenConfig(function(config) {
             
-                config[id] = data;
+                if(path[1] === "current") {
+                    
+                    config[id].name = data.name;
+                    config[id].url = data.url;
+                    
+                } else if(path[1] === "schedule") {
+                    config[id].schedule = data;
+                    
+                } else if(!path[1]) {
+                    config[id] = data;
+                }
                 
                 database.putFullscreenConfig(config, function() {
                     //notify screens
-                    fullscreen_display.notifyChange(id, data);
+                    fullscreen_display.notifyChange(id, config);
                     
                     response.writeHead(204, "No Content");
                     response.end();

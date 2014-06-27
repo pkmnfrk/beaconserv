@@ -49,9 +49,66 @@ function createScheduleEntry(data) {
         .text(" - " + data.name)
         .prepend($("<input />")
                     .attr("name", "time")
+                    .attr("placeholder", "hh:mm pm")
                     .addClass("time")
-                    .val(data.time ? data.time : "13:00")
-                );
+                    .val(data.time)
+                    .blur(function(e) {
+                        saveSchedule($(this).closest(".screenContainer"));
+                    })
+        )
+        .append(
+            $("<button/>")
+            .attr("type", "button")
+            .text("X")
+            .click(removeEntry)
+        )
+        ;
+}
+
+function getScheduleData(el) {
+    return {
+        url: $(el).data("url"),
+        name: $(el).data("name"),
+        time: $("input[name=\"time\"]", el).val()
+    };
+}
+
+function getSchedule(el) {
+    var items = $(".schedule li", el);
+    var ret = [];
+    
+    for(var i = 0; i < items.length - 1; i++) {
+        ret.push(getScheduleData(items[i]));
+    }
+    
+    ret.sort(function(a, b) {
+        var at = parseTime(a.time);
+        var bt = parseTime(b.time);
+        return at - bt;
+    });
+    
+    return ret;
+}
+
+function saveSchedule(parent) {
+    var id = parent.attr("id");
+    
+    var schedule = getSchedule(parent);
+    
+    $.ajax({
+        url: "/fullscreen/" + id + "/schedule",
+        method: "PUT",
+        data: JSON.stringify(schedule),
+        contentType: "application/json"
+    });
+    //alert(JSON.stringify(schedule));
+}
+
+function removeEntry() {
+    var el = $(this).closest(".screenContainer");
+    
+    $(this).parent().remove();
+    saveSchedule(el);
 }
 
 $.ajax({
@@ -64,7 +121,17 @@ $.ajax({
             if(data.hasOwnProperty(id)) {
                 for(var p in data[id]) {
                     if(data[id].hasOwnProperty(p)) {
-                        $("." + p, el).text(data[id][p]);
+                        if(p === "schedule") {
+                            var sched = $(".addNew", $(el).parent());
+                            for(var q = 0; q < data[id][p].length; q++) {
+                                
+                                $(createScheduleEntry(data[id][p][q])).insertBefore(sched);
+        
+                            }
+                            
+                        } else {
+                            $("." + p, el).text(data[id][p]);
+                        }
                     }
                 }
                 
@@ -85,7 +152,7 @@ $.ajax({
                 $(".url", this).text(url);
                 
                 $.ajax({
-                    url: "/fullscreen/" + id,
+                    url: "/fullscreen/" + id + "/current",
                     method: "PUT",
                     data: JSON.stringify({
                         name: name, url: url
@@ -133,5 +200,12 @@ $(".addNew").droppable({
         
         $(newEl).insertBefore(this);
         
+        
+        $("input", newEl)[0].focus();
+        //$("input", newEl)[0].select();
+        
     }
-});
+})
+/*.click(function(e) {
+    alert(JSON.stringify(getSchedule($(this).closest(".screenContainer"))));
+})*/;
