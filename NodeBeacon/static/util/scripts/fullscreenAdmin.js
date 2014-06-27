@@ -148,14 +148,14 @@ $.ajax({
                 
                 if(!data) return;
                 
-                $(".name", this).text(name);
-                $(".url", this).text(url);
+                $(".name", this).text(data.name);
+                $(".url", this).text(data.url);
                 
                 $.ajax({
                     url: "/fullscreen/" + id + "/current",
                     method: "PUT",
                     data: JSON.stringify({
-                        name: name, url: url
+                        name: data.name, url: data.url
                     }),
                     contentType: "application/json"
                 });
