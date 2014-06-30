@@ -9,7 +9,7 @@ function onmessage(msg) {
         
         keepalive = setInterval(function() {
             websocket.send(JSON.stringify({ping: true}));
-        }, 30000);
+        }, 15000);
     } else {
         
         if(msg.msg === "change") {
