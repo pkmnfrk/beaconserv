@@ -31,11 +31,15 @@
         </footer>
         
         <script src="scripts/jquery.min.js"></script>
+        <script src="scripts/common.js"></script>
         <script>
         
+            var qs = getQuerystring();
+            var feed = qs.feed || "reddit";
+            
             function update() {
                 $.ajax({
-                    url: "/utild/reddit",
+                    url: "/utild/technews/" + feed,
                     success: function(data) {
                         var lines = 9;
                         

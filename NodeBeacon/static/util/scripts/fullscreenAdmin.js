@@ -37,6 +37,8 @@ function getData(src) {
         if(!$(".url", src).val()) {
             return null;
         }
+    } else if(src.data("kind") === "feed") {
+        url += "?feed=" + encodeURI($(".feed", src).val());
     }
     
     return { url: url, name: name };

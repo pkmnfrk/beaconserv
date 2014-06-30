@@ -8,8 +8,8 @@ var url = require("url"),
     feed = require("feed-read"),
     http = require("http");
 
-var lastRedditFetch = null;
-var lastReddit = null;
+var lastRedditFetch = {};
+var lastReddit = {};
 
 var lastChatterFetch = null;
 var lastChatter = null;
@@ -75,17 +75,30 @@ module.exports = {
         path.shift();
         path.shift();
         
-        if(path[0] == "reddit") {
+        if(path[0] == "technews") {
+            
+            var feedName = path[1] || 'reddit';
             
             (function() {
                 
-                if(lastRedditFetch && lastRedditFetch >= new Date(new Date().getTime() + -15*60000)) {
+                if(lastRedditFetch[feedName] && lastRedditFetch[feedName] >= new Date(new Date().getTime() + -15*60000)) {
                     
-                    response.writeJson(lastReddit);
+                    response.writeJson(lastReddit[feedName]);
                     return;
                 }
                 
-                var rssUrl = "http://www.reddit.com/r/technology/.rss";
+                var rssUrl;
+                
+                if(feedName == "reddit") {
+                    rssUrl = "http://www.reddit.com/r/technology/.rss";
+                } else if(feedName == "ars") {
+                    rssUrl = "http://feeds.arstechnica.com/arstechnica/technology-lab";
+                } else {
+                    response.writeHead(404, "Not Found");
+                    response.end();
+                    return;
+                    
+                }
                 
                 feed(rssUrl, function(err, articles) {
                     var item = [];
@@ -104,8 +117,8 @@ module.exports = {
                         }
                     }
                     
-                    lastReddit = item;
-                    lastRedditFetch = new Date();
+                    lastReddit[feedName] = item;
+                    lastRedditFetch[feedName] = new Date();
                     
                     response.writeJson(item);
                     
