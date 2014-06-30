@@ -90,4 +90,6 @@ section ul li {
     width: 200px;
     /*margin-right: 50px;*/
     margin: 50px 50px;
+    min-height: 100px;
+    background-color: #888;
 }
