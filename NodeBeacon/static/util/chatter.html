@@ -31,6 +31,7 @@
                 <img src="{photo}" class="photo" />
                 <h2>{name}</h2>
                 {title}
+                {image}
             </li>
         </script>
         
@@ -38,6 +39,11 @@
         <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
         <script>
             var currentPost = -1;
+            var attachmentMessages = [
+                "(Sorry, haven't implemented attachments yet!)",
+                "(Pretend there's a picture here)",
+                "(*insert 1000 words*)"
+            ];
             
             function update() {
                 var whenDone = function() {
@@ -58,6 +64,13 @@
                                             lHtml = lHtml.replace('{' + q + '}', data[i][q]);
                                         }
                                     }
+                                }
+                                
+                                if(data[i].attachments && data[i].attachments.length) {
+                                    var randMessage = attachmentMessages[Math.floor(Math.random() * attachmentMessages.length)];
+                                    lHtml = lHtml.replace("{image}", "<span class='apology'>" + randMessage + "</span>");
+                                } else {
+                                    lHtml = lHtml.replace("{image}", "");
                                 }
                                 
                                 //var el = $("<li/>").html(data[i].title).prepend($("<h2/>").text(data[i].name));

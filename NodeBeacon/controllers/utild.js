@@ -163,12 +163,23 @@ module.exports = {
 
                         for(var i = 0; i < data.Entries.length; i++) {
                             var entry = data.Entries[i];
-                            ret.push({
+                            var d = {
                                 title: entry.MassagedContent,
                                 date: new Date().toLocaleDateString(),
                                 name: entry.CreatedByFirstNameAndInitial,
                                 photo: url.resolve('http://genome.klick.com', entry.CreatedByPhotoPath)
-                            });
+                            };
+                            
+                            if(entry.Attachments.length) {
+                                d.attachments = [];
+                                for(var a = 0; a < entry.Attachments.length; a++) {
+                                    d.attachments.push({
+                                        url: url.resolve('http://genome.klick.com', entry.Attachments[a].Link)
+                                    });
+                                }
+                            }
+                            
+                            ret.push(d);
                         }
 
                         lastChatter = ret;

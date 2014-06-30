@@ -93,3 +93,10 @@ section ul li {
     min-height: 100px;
     background-color: #888;
 }
+
+.apology {
+    display:block;
+    
+    margin-top: 30px;
+    color: red;
+}
