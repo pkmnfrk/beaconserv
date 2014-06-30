@@ -1,3 +1,4 @@
+$(document).bind('touchmove', false);
 
 $(".draggable").draggable({
     revert: true,
