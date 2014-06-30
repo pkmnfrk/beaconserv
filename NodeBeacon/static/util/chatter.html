@@ -26,6 +26,14 @@
             Brought to you by Klick Labs
         </footer>
         
+        <script id="postTemplate" type="text/html">
+            <li>
+                <img src="{photo}" class="photo" />
+                <h2>{name}</h2>
+                {title}
+            </li>
+        </script>
+        
         <script src="scripts/jquery.min.js"></script>
         <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
         <script>
@@ -40,10 +48,20 @@
                             $("li", list).remove();
 
                             currentPost = 0;
-
+                            var template = $("#postTemplate").html();
 
                             for(var i = 0; i < data.length; i++) {
-                                var el = $("<li/>").html(data[i].title).prepend($("<h2/>").text(data[i].name));
+                                var lHtml = template;
+                                for(var q in data[i]) {
+                                    if(data[i].hasOwnProperty(q)) {
+                                        if(typeof data[i][q] === "string") {
+                                            lHtml = lHtml.replace('{' + q + '}', data[i][q]);
+                                        }
+                                    }
+                                }
+                                
+                                //var el = $("<li/>").html(data[i].title).prepend($("<h2/>").text(data[i].name));
+                                var el = $(lHtml);
                                 list.append(el);
                                 el.hide();
                                 if(i == currentPost) {

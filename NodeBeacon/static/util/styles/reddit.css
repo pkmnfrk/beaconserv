@@ -82,4 +82,12 @@ section ul li {
     padding: 0;
     position: absolute;
     top: 0;
+    width: 100%;
+}
+
+.photo {
+    float:right;
+    width: 200px;
+    /*margin-right: 50px;*/
+    margin: 50px 50px;
 }

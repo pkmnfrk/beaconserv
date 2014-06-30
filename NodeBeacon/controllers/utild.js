@@ -166,7 +166,8 @@ module.exports = {
                             ret.push({
                                 title: entry.MassagedContent,
                                 date: new Date().toLocaleDateString(),
-                                name: entry.CreatedByFirstNameAndInitial
+                                name: entry.CreatedByFirstNameAndInitial,
+                                photo: url.resolve('http://genome.klick.com', entry.CreatedByPhotoPath)
                             });
                         }
 
