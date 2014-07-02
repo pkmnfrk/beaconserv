@@ -2,7 +2,12 @@ var url = require("url"),
     querystring = require("querystring"),
     statics = require("node-static"),
     database = require("./database"),
-    staticServer = new statics.Server('./static'),
+    staticServer = new statics.Server('./static', {
+        cache: false,
+        headers: {
+            "Cache-Control": "none"
+        }
+    }),
     realtime_map = require("./realtime_map");
 
 exports.static = function staticHandler(request, response, file) {

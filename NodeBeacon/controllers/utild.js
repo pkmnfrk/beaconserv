@@ -174,10 +174,16 @@ module.exports = {
                                 d.attachments = [];
                                 for(var a = 0; a < entry.Attachments.length; a++) {
                                     d.attachments.push({
-                                        url: url.resolve('http://genome.klick.com', entry.Attachments[a].Link)
+                                        url: url.resolve('http://genome.klick.com', entry.Attachments[a].Link),
+                                        type: entry.Attachments[a].ContentType,
+                                        width: entry.Attachments[a].Width,
+                                        height: entry.Attachments[a].Height
                                     });
                                 }
-                            }
+                            } 
+                            //else {
+                            //    continue;
+                            //}
                             
                             ret.push(d);
                         }
