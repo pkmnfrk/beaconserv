@@ -17,11 +17,15 @@ body {
 }
 
 .fsbutton {
-    opacity: 0;
-    top: 50px;
-    left: 10px;
-    font-size: 50px;
+    
     position: absolute;
+    opacity: 0;
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    bottom: 200px;
+    left: -120px;
+    font-size: 50px;
+    
 }
 
 .fsbutton:hover {

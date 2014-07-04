@@ -59,10 +59,13 @@
                     $.ajax({
                         url: "/utild/chatter",
                         success: function(data) {
+                            stopRotation();
+                            
                             var list = $("section ul"); 
                             $("li", list).remove();
 
                             currentPost = 0;
+                            
                             var template = $("#postTemplate").html();
 
                             for(var i = 0; i < data.length; i++) {
@@ -110,21 +113,19 @@
                                 list.append(el);
                                 el.hide();
                                 
-                                if(i == currentPost) showCurrent();
-                            }                        
+                            }
+                            
+                            showCurrent();
+                            startRotation();
                         }
                     })
 
-                    setTimeout(update, 15 * 60000);
+                    //setTimeout(update, 15 * 60000);
                 }
                 
-                if(currentPost != -1) {
-                    hideCurrent();
-                    
-                    currentPost = -1;
-                } else {
-                    whenDone();
-                }
+                
+                whenDone();
+                
                 
                 
             }
@@ -162,6 +163,11 @@
 
                 if(currentPost >= list.length) {
                     currentPost = 0;
+                    updateTimer += 1;
+                    if(updateTimer == 2) {
+                        updateTimer = 0;
+                        update();
+                    }
                 }
                 
                 showCurrent();
@@ -171,7 +177,19 @@
                 
             }
             
-            setInterval(doRotate, 12000);
+            function startRotation() {
+                int = setInterval(doRotate, 12000);
+            }
+            
+            function stopRotation() {
+                clearInterval(int);
+                int = null;
+            }
+            var int = null; 
+            var updateTimer = 0;
+            
+            
+            //startRotation();
             //doRotate();
             update();
             
