@@ -163,6 +163,7 @@ module.exports = {
 
                         for(var i = 0; i < data.Entries.length; i++) {
                             var entry = data.Entries[i];
+                            if(entry.IsKudos) continue; //not that I don't want to show kudos, but they need more work so let's omit them for now
                             var d = {
                                 title: entry.MassagedContent,
                                 date: new Date().toLocaleDateString(),
