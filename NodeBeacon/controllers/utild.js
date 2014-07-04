@@ -168,7 +168,8 @@ module.exports = {
                                 title: entry.MassagedContent,
                                 date: new Date().toLocaleDateString(),
                                 name: entry.CreatedByFirstNameAndInitial,
-                                photo: url.resolve('http://genome.klick.com', entry.CreatedByPhotoPath)
+                                photo: url.resolve('http://genome.klick.com', entry.CreatedByPhotoPath),
+                                isCatter: entry.ChatterID === 26059
                             };
                             
                             if(entry.Attachments.length) {
