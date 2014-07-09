@@ -24,6 +24,7 @@ function onmessage(msg) {
 }
 
 
+
 function toggleFullScreen() {
   if (!document.fullscreenElement &&    // alternative standard method
       !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
@@ -92,3 +93,9 @@ var websocket = null;
 tryConnect();
 
 $(".fsbutton").click(toggleFullScreen);
+
+$(window).on("message", function(evt) {
+    var msg = evt.originalEvent.data;
+    
+    websocket.send(msg);
+});

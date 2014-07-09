@@ -1,7 +1,8 @@
 var server = require("./server"),
     database = require("./database"),
     WebSocketServer = require("ws").Server,
-    socketServer = null;
+    socketServer = null,
+    fs = require("fs");
 
 
 
@@ -40,7 +41,23 @@ var onInitialMessage = function (msg) {
 
 
 var onMessage = function (msg) {
+    //console.log(msg);
+    msg = JSON.parse(msg);
     
+    if(msg.msg === "log") {
+        var today = new Date();
+        today = today.getFullYear() + "-" + (today.getMonth() < 10 ? "0" : "") + today.getMonth() + "-" + (today.getDay() < 10 ? "0" : "") + today.getDay();
+        
+        var filename = 'static/logs/' + today + '-' + this.name + '.log';
+
+        var line = "{date} - {text}\n";
+        line = line.replace("{date}", new Date().toISOString()).replace("{text}", msg.text);
+
+        fs.appendFile(filename, line, function(err) {
+            //don't care about the result
+        });
+        
+    }
 };
 
 var parseTime = function parseTime(t) {

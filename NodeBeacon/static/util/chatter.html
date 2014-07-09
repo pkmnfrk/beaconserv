@@ -27,7 +27,7 @@
         </footer>
         
         <script id="postTemplate" type="text/html">
-            <li data-catter="{isCatter}">
+            <li data-catter="{isCatter}" data-id="{id}">
                 <div>
                     <img src="{photo}" class="photo" />
                     <h2>{name}</h2>
@@ -72,7 +72,7 @@
                                 var lHtml = template;
                                 for(var q in data[i]) {
                                     if(data[i].hasOwnProperty(q)) {
-                                        if(typeof data[i][q] === "string" || typeof data[i][q] === "boolean") {
+                                        if(typeof data[i][q] === "string" || typeof data[i][q] === "boolean" || typeof data[i][q] === "number") {
                                             lHtml = lHtml.replace('{' + q + '}', data[i][q]);
                                         }
                                     }
@@ -149,6 +149,8 @@
                     $("h1 span").text("chatter");
                 }
                 
+                log("Displaying Chatter post #" + cur.data("id"));
+                
                 return cur;
             }
             
@@ -192,6 +194,16 @@
             //startRotation();
             //doRotate();
             update();
+            
+            function log(text) {
+                var msg = {
+                    msg: "log",
+                    text: text
+                }
+                
+                window.parent.postMessage(JSON.stringify(msg), "*");
+                
+            }
             
         </script>
     </body>

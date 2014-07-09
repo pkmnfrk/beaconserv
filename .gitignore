@@ -13,3 +13,4 @@ iisnode
 *.debug
 NodeBeacon/static/util/clock.json
 NodeBeacon/static/util/football.json
+NodeBeacon/static/logs/*.log

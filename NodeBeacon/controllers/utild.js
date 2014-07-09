@@ -165,6 +165,7 @@ module.exports = {
                             var entry = data.Entries[i];
                             if(entry.IsKudos) continue; //not that I don't want to show kudos, but they need more work so let's omit them for now
                             var d = {
+                                id: entry.ChatterID,
                                 title: entry.MassagedContent,
                                 date: new Date().toLocaleDateString(),
                                 name: entry.CreatedByFirstNameAndInitial,
