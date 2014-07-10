@@ -106,7 +106,8 @@ module.exports = {
                     if(err) {
                         item.push({
                             title: "Error fetching feed",
-                            date: new Date().toLocaleDateString()
+                            date: new Date().toLocaleDateString(),
+                            error: err
                         });
                     } else {
                         for(var i = 0; i < Math.min(6, articles.length); i++) {
