@@ -1,13 +1,14 @@
 /* jshint node:true */
 "use strict";
 
-var realtime_map = require("../realtime_map");
+var server = require("../server");
 
 module.exports = {
     get: function (req, res) {
-        
+
         res.writeJson({
-            supportsWebsockets: realtime_map.supportsWebsockets
+            supportsWebsockets: server.supportsWebsockets,
+            alive: true
         });
         
     }
