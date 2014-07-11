@@ -117,6 +117,10 @@
                             
                             showCurrent();
                             startRotation();
+                            
+                            if(data.err) {
+                                setTimeout(update, 30000);
+                            }
                         }
                     })
 
