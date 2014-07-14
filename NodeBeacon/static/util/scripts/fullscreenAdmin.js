@@ -40,6 +40,9 @@ function getData(src) {
         }
     } else if(src.data("kind") === "feed") {
         url += "?feed=" + encodeURI($(".feed", src).val());
+    } else if(src.data("kind") === "text") {
+        url += "?text=" + encodeURIComponent($(".text", src).val());
+        url += "&size=" + encodeURIComponent($(".size", src).val());
     }
     
     return { url: url, name: name };

@@ -84,6 +84,10 @@ function showMarkers(force) {
             var bx = findBeacon(b.major, b.minor);
             bx.marker = marker;
 
+            bx.label = B.SimpleLabel({
+               text: "My Label" 
+            });
+            
             if(in_device) {
                 addBeacon(beacons);
             } else {
