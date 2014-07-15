@@ -112,9 +112,7 @@ module.exports = {
             database.findBeacon(uuid, major, minor, function(err, docs) {
                 var i, b;
                 if(err) {
-                    response.writeHead("500 Internal Server Error");
-                    response.write(JSON.stringify(err));
-                    response.end();
+                    response.writeError(err);
                     return;
                 }
 
@@ -217,11 +215,8 @@ module.exports = {
                 
                 fs.rename(file.path, "./static/" + path, function(err) {
                     if(err) {
-                        res.writeHeader(500, "Internal Server Error", {"Content-Type": "application/json"});
-                        res.write(JSON.stringify(err));
-                        res.end();
+                        res.writeError(err);
                         return;
-                        
                     }
                     var ret = {
                         path: path
@@ -241,7 +236,11 @@ module.exports = {
             
             data = JSON.parse(data);
             
-            database.storeBeacon(data, function(saved) {
+            database.storeBeacon(data, function(err, saved) {
+                if(err) {
+                    res.writeError(err);
+                    return;
+                }
                 realtime_map.notifyBeaconChange(saved);
                 res.writeJson(saved);
             });

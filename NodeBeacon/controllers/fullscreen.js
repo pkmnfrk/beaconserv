@@ -21,7 +21,12 @@ module.exports = {
         path.shift();
         
         if(path[0] === "config") {
-            database.getFullscreenConfig(function(config) {
+            database.getFullscreenConfig(function(err, config) {
+                if(err) {
+                    response.writeHead(500, "Internal Server Error");
+                    response.end();
+                    return;
+                }
                 if(path[1]) {
                     if(config.hasOwnProperty(path[1])) {
                         response.writeJson(config[path[1]]);
@@ -29,6 +34,7 @@ module.exports = {
                     }
                     
                     response.writeHead(404, "Not Found");
+                    response.end();
                     return;
                 }
                 
@@ -66,8 +72,14 @@ module.exports = {
             
             data = JSON.parse(data);
             
-            database.getFullscreenConfig(function(config) {
+            database.getFullscreenConfig(function(err, config) {
             
+                if(err) {
+                    response.writeHead(500, "Internal Server Error");
+                    response.end();
+                    return;
+                }
+                
                 if(path[1] === "current") {
                     
                     config[id].name = data.name;

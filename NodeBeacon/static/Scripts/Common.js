@@ -185,6 +185,9 @@ B = (function () {
         },
         
         saveBeacon: function(beacon, onDone) {
+            var marker = beacon.marker;
+            beacon.marker = undefined;
+            
             $.ajax({
                 url: "/beacon",
                 type: "POST",
@@ -193,6 +196,51 @@ B = (function () {
                 dataType: "json",
                 complete: function(response) {
                     if(onDone) onDone(response.responseJSON);
+                }
+            });
+            
+            beacon.marker = marker;
+        },
+        
+        deleteBeacon: function(beacon, onDone) {
+            var marker = beacon.marker;
+            beacon.marker = undefined;
+            
+            $.ajax({
+                url: "/beacon/" + beacon.uuid + "/" + beacon.major + "/" + beacon.minor,
+                type: "DELETE",
+                complete: function(response) {
+                    if(onDone) onDone();
+                }
+            });
+            
+            beacon.marker = marker;
+        },
+
+        getLabels: function(onDone)
+        {
+            $.ajax({
+                url: "/map/labels",
+                type: "GET",
+                dataType: "json",
+                complete: function(response)
+                {
+                    if(onDone) onDone(response.responseJSON);
+                }
+            });
+        },
+        
+        storeLabel: function(label, onDone)
+        {
+            $.ajax({
+                url: "/map/label",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(label),
+                complete: function(response)
+                {
+                    
+                    if(onDone) onDone();
                 }
             });
         },
@@ -207,6 +255,9 @@ B = (function () {
                 color: "white"
                 
             },
+            includes: [
+                L.Mixin.Events  
+            ],
             initialize: function (latlng, options) {
                 // save position of the layer or any options from the constructor
                 this._latlng = latlng;
@@ -239,16 +290,27 @@ B = (function () {
                 testElement.style.fontSize = this.options.fontSize;
                 $(testElement).text(this.options.text);
                 var width = (testElement.clientWidth + 6);
+                var height = (testElement.clientHeight + 0);
                 
                 $(this._el).css({
                     width: width + "px",
-                    marginLeft: -(width / 2) + "px"
+                    marginLeft: -(width / 2) + "px",
+                    //height: height + "px",
+                    marginTop: -(height / 2) + "px"
                 });
+                
+                //$(this._el).on('click', this._click, this);
                 
                 map.getPanes().overlayPane.appendChild(this._el);
 
                 // add a viewreset event listener for updating layer's position, do the latter
                 map.on('viewreset', this._reset, this);
+                
+                this._draggable = new L.Draggable(this._el);
+                this._draggable.enable();
+                this._draggable.on("drag", this._drag, this);
+                this._draggable.on("dragend", this._dragend, this);
+                
                 this._reset();
             },
 
@@ -273,19 +335,43 @@ B = (function () {
                 L.DomUtil.setPosition(this._el, pos);
             },
             
-            move: function(latlng) {
+            setLatLng: function(latlng) {
                 this._latlng = latlng;
                 this._reset();
             },
             
             setText: function(text) {
                 $(this._el).text(text);
+                this._reset();
             },
             
             setMinZoom: function(z) {
                 this.options.minZoom = z;
                 this._reset();
+            },
+            
+            _click: function(e) {
+                this.fire("click", e);
+            },
+            
+            _drag: function(e) {
+                var pos = L.DomUtil.getPosition(this._el);
+                this._latlng = marker._map.layerPointToLatLng(pos);
+                
+                this.fire("drag");
+            },
+
+            _dragend: function(e) {
+                this.fire("dragend", e);
+                //$(this._el).on('click', this._click, this);
+            },
+            
+            _dragstart: function(e) {
+                //$(this._el).off('click', this._click);
             }
+            
+            
+        
         })
 
     };

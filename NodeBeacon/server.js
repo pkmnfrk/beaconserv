@@ -16,6 +16,12 @@ http.ServerResponse.prototype.writeJson = function(obj) {
     this.end();
 };
 
+http.ServerResponse.prototype.writeError = function(obj) {
+    this.writeHead(500, { "Content-Type":"application/json" });
+    this.write(JSON.stringify(obj));
+    this.end();
+};
+
 function start(route, handle) {
     server = http.createServer(function (request, response) {
         var postData = "";

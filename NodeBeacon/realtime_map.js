@@ -127,12 +127,14 @@ exports.notifyPing = function(uuid, major, minor, clientid, name) {
 exports.notifyBeaconChange = function(beacon) {
     if(!server.supportsWebsockets) return;
     
+    if(beacon === null) throw "Beacon cannot be null";
+    
     var msg = {
         msg: "beacon",
         beacon: beacon
     };
     
-    //console.log("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
+    console.log("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
     
     socketServer.broadcast(JSON.stringify(msg));
 };

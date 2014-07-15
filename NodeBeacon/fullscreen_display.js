@@ -21,7 +21,12 @@ var onInitialMessage = function (msg) {
         
         console.log("Client's name is " + self.name);
         
-        database.getFullscreenConfig(function(config) {
+        database.getFullscreenConfig(function(err, config) {
+            if(err) {
+                response.writeHead(500, "Internal Server Error");
+                response.end();
+                return;
+            }
             if(config[self.name]) {
                 console.log("Notifying about configured screen");
                 exports.notifyChange(self.name, config[self.name]);
@@ -85,7 +90,13 @@ var beginningOfDay = parseTime("00:00");
 
 var checkSchedules = function() {
     
-    database.getFullscreenConfig(function(config) {
+    database.getFullscreenConfig(function(err, config) {
+        
+        if(err) {
+            response.writeHead(500, "Internal Server Error");
+            response.end();
+            return;
+        }
         
         var now = new Date();
         now.setDate(1);

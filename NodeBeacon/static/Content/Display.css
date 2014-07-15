@@ -62,3 +62,7 @@ body {
 {
     margin-top: 10px;
 }
+
+.delete-button {
+    color: red !important;
+}

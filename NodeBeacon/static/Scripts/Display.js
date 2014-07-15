@@ -4,6 +4,7 @@ var scalar = 0x4c10;
 
 var in_device = false;
 var in_tv = false;
+var editable = true;
 
 if(location.search == "?ios") {
     in_device = true;
@@ -11,7 +12,10 @@ if(location.search == "?ios") {
     in_tv = true;
 }
 
+var labels = null;
+
 var show_markers = !in_tv;
+var show_labels = true;
 
 if(in_device || in_tv) {
     $("#debugArea").remove();
@@ -24,14 +28,16 @@ if (updateStatusBar) {
 }
 
 var showEditorDialog = function () {
-    var self = this;
-    var beacon = this.beacon;
-    if(!beacon.minZoom)
-        beacon.minZoom = zoomOffset;
+    if(!show_labels) return;
     
-    $("#beacon_minZoomLabel").text(beacon.minZoom);
+    var self = this;
+    var label = this.label;
+    if(!label.minZoom)
+        label.minZoom = zoomOffset;
+    
+    $("#beacon_minZoomLabel").text(label.minZoom);
     $("#beacon_minZoom").slider({
-        value: beacon.minZoom,
+        value: label.minZoom,
         min: zoomOffset,
         max: zoomOffset + 5,
         slide: function(event, ui) {
@@ -43,16 +49,36 @@ var showEditorDialog = function () {
     
     var dialog = $("#editor").dialog({
         modal: true,
-        buttons: {
-            "Save": function() {
-                beacon.title = $("#beacon_name").val();
-                beacon.minZoom = $("#beacon_minZoom").slider("value");
-                beacon.label.setText(beacon.title);
-                beacon.label.setMinZoom(beacon.minZoom);
-                //storeBeacon(beacon);
-                $( this ).dialog( "close" );
+        buttons: [
+            {
+                text: "Delete",
+                click: function() {
+                    var ok = confirm("Are you sure you want to delete this label? This cannot be undone!");
+                    if(ok) {
+                        //B.deleteBeacon(beacon);
+                        $(this).dialog("close");
+                    }
+                },
+                class: "delete-button"
+            },
+            {
+                text: "Save",
+                click: function() {
+                    label.text = $("#beacon_name").val();
+                    label.minZoom = $("#beacon_minZoom").slider("value");
+                    label.label.setText(label.text);
+                    label.label.setMinZoom(label.minZoom);
+
+                    label.latitude = label.marker.getLatLng().lat;
+                    label.longitude = label.marker.getLatLng().lng;
+
+                    //B.saveBeacon(beacon);
+                    B.storeLabel(label);
+                    $( this ).dialog( "close" );
+                },
             }
-        }
+            
+        ]
     });
 };
 
@@ -84,47 +110,7 @@ function showMarkers(force) {
                 b = beacons.shift();
             } while (b.minor === 0);
 
-            marker = L.marker([b.latitude, b.longitude], {
-                //bounceOnAdd: true,
-                draggable: !(in_device || in_tv)
-            })
-                .addTo(map)
-            ;
-            
-            marker.beacon = b;
-            
-            
-            if(in_device) {
-                marker.on("click", (function(b) { return function(e) {
-
-
-                    if(in_device) {
-                        sendMessageToOverlord("click", {
-                            major: b.major,
-                            minor: b.minor
-                        });
-
-                        return false;
-                    }
-
-                }; })(b));
-            } else {
-                marker.on('drag', onMarkerDrag);
-                marker.on('dragend', onMarkerDragEnd);
-                marker.on('click', showEditorDialog);
-                //marker.bindPopup(b.title);
-            }
-
-            var bx = findBeacon(b.major, b.minor);
-            bx.marker = marker;
-
-            bx.label = new B.SimpleLabel([b.latitude, b.longitude], {
-                text: b.title,
-                minZoom: b.minZoom
-            });
-            
-            map.addLayer(bx.label);
-            
+            addMarkerToMap(b);
             
             
             if(in_device) {
@@ -140,6 +126,72 @@ function showMarkers(force) {
     };
 
     anim(newList);
+}
+
+
+function showLabels(data)
+{
+    labels = data;
+    
+    for(var i = 0; i < labels.length; i++) {
+        var l = labels[i];
+
+        l.label = new B.SimpleLabel([l.latitude, l.longitude], {
+            text: l.text,
+            minZoom: l.minZoom
+        });
+        
+        l.label.label = l;
+
+        map.addLayer(l.label);
+
+        if(editable) {
+            l.label.on('click', showEditorDialog);
+        }
+            
+        
+
+
+    }
+}
+
+function addMarkerToMap(b) {
+    console.log("addMarkerToMap");
+    marker = L.marker([b.latitude, b.longitude], {
+        //bounceOnAdd: true,
+        draggable: editable
+    });
+    marker.addTo(map);
+
+    marker.beacon = b;
+
+
+    if(in_device) {
+        marker.on("click", (function(b) { return function(e) {
+
+
+            if(in_device) {
+                sendMessageToOverlord("click", {
+                    major: b.major,
+                    minor: b.minor
+                });
+
+                return false;
+            }
+
+        }; })(b));
+    } 
+    
+    if(editable) {
+        marker.on('drag', onMarkerDrag);
+        marker.on('dragend', onMarkerDragEnd);
+        //marker.on('click', showEditorDialog);
+        //marker.bindPopup(b.title);
+    }
+
+    var bx = findBeacon(b.major, b.minor);
+    bx.marker = marker;
+
 }
 
 function hideMarkers() {
@@ -179,6 +231,11 @@ function loadBeacons() {
             processUpdates();
         }
     });
+    
+    if(show_labels){
+        B.getLabels(showLabels);
+    }
+
 }
 
 function findBeacon(major, minor) {
@@ -212,7 +269,7 @@ var map = L.map('map', {
 }).on('mousemove', function (e) {
     
 }).on('click', function (e) {
-    $("#debugArea").val("[" + (e.latlng.lat * scalar).toString() + ", " + (e.latlng.lng * scalar).toString() + "]");
+    $("#debugArea").val("[" + (e.latlng.lat).toString() + ", " + (e.latlng.lng ).toString() + "]");
     $("#debugArea").focus();
     $("#debugArea").select();
     
@@ -467,41 +524,38 @@ var socketMessageHandler = function (msg) {
                         //do we know about this beacon already?
                         b = findBeacon(data.beacon.major, data.beacon.minor);
                         
+                        data.beacon.latitude /= scalar;
+                        data.beacon.longitude /= scalar;
+                        
                         if(b) {
+                            console.log("Existing beacon, removing it and adding a new one");
                             //we just need to update some incidentals
-                            if(b.marker) {
-                                map.removeLayer(b.marker);
-                                b.marker = null;
-                            }
+                            
                             
                             for(var prop in data.beacon) {
                                 b[prop] = data.beacon[prop];
                             }
                             
-                            
+                            if(b.marker) {
+                                b.marker.setLatLng([data.beacon.latitude, data.beacon.longitude]);
+                            }
                             
                             
                         } else {
+                            console.log("New beacon, just adding it");
                             //we need to add it new
                             b = data.beacon;
                             beaconsList[b.minor] = b;
                             
-                            
+                            if(show_markers) {
+                                addMarkerToMap(b);
+                            }
+
                         }
                         
-                        b.latitude /= scalar;
-                        b.longitude /= scalar;
                         
-                        if(show_markers) {
-                            b.marker = L.marker([b.latitude, b.longitude], {
-                                draggable: !(in_device || in_tv)
-                            }).addTo(map);
-                            //b.marker.bindPopup(b.title);
-                            b.marker.beacon = b;
-                            b.marker.on('drag', onMarkerDrag);
-                            b.marker.on('dragend', onMarkerDragEnd);
-                            b.marker.on('click', showEditorDialog);
-                        }
+                        
+                        
                         break;
                 }
             }
@@ -522,16 +576,7 @@ var processUpdates = function () {
 var onMarkerDragEnd = function(e) {
     this.beacon.latitude = this.getLatLng().lat * scalar;
     this.beacon.longitude = this.getLatLng().lng * scalar;
-    this.beacon.label.move(this.getLatLng());
-    
-    this.beacon.marker = undefined;
-    var label = this.beacon.label;
-    this.beacon.label = undefined;
-    
     B.saveBeacon(this.beacon);
-    
-    this.beacon.marker = this;
-    this.beacon.label = label;
 };
 
 var onMarkerDrag = function(e) {

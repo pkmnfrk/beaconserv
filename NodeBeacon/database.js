@@ -63,18 +63,18 @@ function storeBeacon(beacon, onComplete) {
     var query = { uuid: beacon.uuid, major: beacon.major, minor: beacon.minor};
     
     beacons.update(query, beacon, { upsert:true }, function(err, doc) {
-        if(err) throw err;
+        if(err) onComplete(err);
         
         console.log(doc);
         
         
         
         beacons.findOne(query, function(err, obj) {
-            if(err) throw err;
+            if(err) onComplete(err);
             
             console.log(obj);
             
-            onComplete(obj);
+            onComplete(null, obj);
         });
     });
 }
@@ -163,6 +163,38 @@ exports.findBeaconById = function(id, callback) {
     });
 };
 
+exports.getLabels = function(callback) {
+    var labels = db.collection("label");
+    var query = {};
+    
+    labels.find(query).toArray(function(err, objs) {
+       if(err) throw err;
+        
+        callback(objs);
+    });
+};
+
+exports.storeLabel = function(label, callback)
+{
+    var labels = db.collection("label");
+    console.log(typeof(label._id));
+    var query;
+    
+    if(label._id) {
+        
+        label._id = typeof(label._id) === "object" ? label._id : new mongo.ObjectID(label._id);
+    
+        query = {_id: label._id};
+    } else{
+        query = {_id: new mongo.ObjectID() };
+    }
+    
+    
+    labels.update(query, label, { upsert:true }, function(err) { 
+        if(callback) callback(err);
+    });
+};
+
 var fullscreenConfig = {
     left: {
         name: "Blank",
@@ -181,7 +213,7 @@ exports.getFullscreenConfig = function(callback) {
             obj = fullscreenConfig;
         }
             
-        callback(obj);
+        callback(err, obj);
         
     });
 };
