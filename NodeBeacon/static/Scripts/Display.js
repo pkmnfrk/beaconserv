@@ -11,7 +11,7 @@ if(location.search == "?ios") {
     in_tv = true;
 }
 
-var show_markers = in_device;
+var show_markers = !in_tv;
 
 if(in_device || in_tv) {
     $("#debugArea").remove();
@@ -22,6 +22,39 @@ var updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) &&
 if (updateStatusBar) {
     document.body.style.marginTop = '20px';
 }
+
+var showEditorDialog = function () {
+    var self = this;
+    var beacon = this.beacon;
+    if(!beacon.minZoom)
+        beacon.minZoom = zoomOffset;
+    
+    $("#beacon_minZoomLabel").text(beacon.minZoom);
+    $("#beacon_minZoom").slider({
+        value: beacon.minZoom,
+        min: zoomOffset,
+        max: zoomOffset + 5,
+        slide: function(event, ui) {
+            $("#beacon_minZoomLabel").text(ui.value);
+        },
+        
+    });
+    $("#beacon_name").val(beacon.title);
+    
+    var dialog = $("#editor").dialog({
+        modal: true,
+        buttons: {
+            "Save": function() {
+                beacon.title = $("#beacon_name").val();
+                beacon.minZoom = $("#beacon_minZoom").slider("value");
+                beacon.label.setText(beacon.title);
+                beacon.label.setMinZoom(beacon.minZoom);
+                //storeBeacon(beacon);
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+};
 
 function showMarkers(force) {
     var b;
@@ -78,15 +111,21 @@ function showMarkers(force) {
             } else {
                 marker.on('drag', onMarkerDrag);
                 marker.on('dragend', onMarkerDragEnd);
-                marker.bindPopup(b.title);
+                marker.on('click', showEditorDialog);
+                //marker.bindPopup(b.title);
             }
 
             var bx = findBeacon(b.major, b.minor);
             bx.marker = marker;
 
-            bx.label = B.SimpleLabel({
-               text: "My Label" 
+            bx.label = new B.SimpleLabel([b.latitude, b.longitude], {
+                text: b.title,
+                minZoom: b.minZoom
             });
+            
+            map.addLayer(bx.label);
+            
+            
             
             if(in_device) {
                 addBeacon(beacons);
@@ -160,6 +199,7 @@ var map = L.map('map', {
     center: [-53.75 / scalar, 72.5 / scalar],
     zoom: zoomOffset + 2,
     crs: L.CRS.Simple,
+    maxZoom: zoomOffset + 5,
     maxBounds: [
         [64/scalar, -64/scalar],
         [-196/scalar, 196/scalar]
@@ -180,6 +220,9 @@ var map = L.map('map', {
     
 }).on('load', function (e) {
     
+}).on('viewreset', function(e) {
+    var z = map.getZoom();
+    $("#debugArea").val(z);
 });
 
 
@@ -200,7 +243,7 @@ var layerOpts = {
 
 L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
-L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
+//L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
 if(!(in_device || in_tv)) {
     L.control.scale().addTo(map);
@@ -453,10 +496,11 @@ var socketMessageHandler = function (msg) {
                             b.marker = L.marker([b.latitude, b.longitude], {
                                 draggable: !(in_device || in_tv)
                             }).addTo(map);
-                            b.marker.bindPopup(b.title);
+                            //b.marker.bindPopup(b.title);
                             b.marker.beacon = b;
                             b.marker.on('drag', onMarkerDrag);
                             b.marker.on('dragend', onMarkerDragEnd);
+                            b.marker.on('click', showEditorDialog);
                         }
                         break;
                 }
@@ -478,12 +522,16 @@ var processUpdates = function () {
 var onMarkerDragEnd = function(e) {
     this.beacon.latitude = this.getLatLng().lat * scalar;
     this.beacon.longitude = this.getLatLng().lng * scalar;
+    this.beacon.label.move(this.getLatLng());
     
     this.beacon.marker = undefined;
+    var label = this.beacon.label;
+    this.beacon.label = undefined;
     
     B.saveBeacon(this.beacon);
     
     this.beacon.marker = this;
+    this.beacon.label = label;
 };
 
 var onMarkerDrag = function(e) {
@@ -530,6 +578,8 @@ var sendMessageToOverlord = function(action, params, callback) {
     
     window.location = url; //this won't actually navigate, hopefully
 };
+
+
 
 loadBeacons();
 /*

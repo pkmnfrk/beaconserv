@@ -198,10 +198,29 @@ B = (function () {
         },
         
         SimpleLabel: L.Class.extend({
-
-            initialize: function (latlng) {
+            options: {
+                minZoom: 0,
+                maxZoom: 1000,
+                text: "My Label",
+                fontSize: "18px",
+                backgroundColor: "rgba(0,0,0,0.5)",
+                color: "white"
+                
+            },
+            initialize: function (latlng, options) {
                 // save position of the layer or any options from the constructor
                 this._latlng = latlng;
+                
+                L.Util.setOptions(this, options);
+                this._manuallyHidden = false;
+                
+                var testElement = document.getElementById("Test");
+                if(!testElement) {
+                    testElement = L.DomUtil.create('div', '');
+                    testElement.id = "Test";
+                    document.body.appendChild(testElement);
+                }
+                
             },
 
             onAdd: function (map) {
@@ -210,7 +229,21 @@ B = (function () {
                 // create a DOM element and put it into one of the map panes
                 this._el = L.DomUtil.create('div', 'simple-label-layer leaflet-zoom-hide');
                 
-                $(this._el).text("Hello!");
+                $(this._el).text(this.options.text).css({
+                    fontSize: this.options.fontSize,
+                    backgroundColor: this.options.backgroundColor,
+                    color: this.options.color
+                });
+                
+                var testElement = document.getElementById("Test");
+                testElement.style.fontSize = this.options.fontSize;
+                $(testElement).text(this.options.text);
+                var width = (testElement.clientWidth + 6);
+                
+                $(this._el).css({
+                    width: width + "px",
+                    marginLeft: -(width / 2) + "px"
+                });
                 
                 map.getPanes().overlayPane.appendChild(this._el);
 
@@ -226,9 +259,32 @@ B = (function () {
             },
 
             _reset: function () {
+                if(this._manuallyHidden) {
+                    return;
+                }
+                var zoom = this._map.getZoom();
+                if(zoom < this.options.minZoom || zoom > this.options.maxZoom) {
+                    $(this._el).hide();
+                } else {
+                    $(this._el).show();
+                }
                 // update layer's position
                 var pos = this._map.latLngToLayerPoint(this._latlng);
                 L.DomUtil.setPosition(this._el, pos);
+            },
+            
+            move: function(latlng) {
+                this._latlng = latlng;
+                this._reset();
+            },
+            
+            setText: function(text) {
+                $(this._el).text(text);
+            },
+            
+            setMinZoom: function(z) {
+                this.options.minZoom = z;
+                this._reset();
             }
         })
 

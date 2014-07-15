@@ -43,6 +43,9 @@ function polyFillBeacon(b) {
         b.latitude = null;
     if(!b.longitude)
         b.longitude = null;
+    
+    if(!b.minZoom)
+        b.minZoom = 15;
 }
 
 module.exports = {

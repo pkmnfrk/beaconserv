@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
     <link href='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.2/leaflet.fullscreen.css' rel='stylesheet' />
+    <link rel="stylesheet" href="Content/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
     <link href="/Content/leaflet.label.css" rel="stylesheet"/>
     <link href="/Content/Display.css" rel="stylesheet"/>
 </head>
@@ -22,8 +23,14 @@
     <div id="clients">
 
     </div>
+    
+    <div id="editor" title="Edit Beacon">
+        Name: <input id="beacon_name" value="" />
+        Minimum Zoom: <span id="beacon_minZoomLabel"></span><div id="beacon_minZoom"></div>
+    </div>
 
     <script src="/Scripts/jquery-1.10.2.js"></script>
+    <script src="/Scripts/jquery-ui-1.10.4.custom.min.js"></script>
     <script src="/Scripts/jquery.touchwipe.min.js"></script>
 
     <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
