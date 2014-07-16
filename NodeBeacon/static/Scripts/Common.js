@@ -21,7 +21,7 @@ window.didEnterForeground = function () {
 };
 
 B = (function () {
-    return {
+    var ret = {
         me: null,
 
         getName: function () {
@@ -245,6 +245,42 @@ B = (function () {
             });
         },
         
+        getMarkers: function (floor, whenLoaded) {
+            if (typeof (floor) == "function") {
+                whenLoaded = floor;
+                floor = null;
+            }
+            if (!whenLoaded) return; //the whole point of this is to load data and call a callback!
+
+            var url = "/map/markers";
+            if(floor) url += "/" + floor;
+            
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                complete: function (response) {
+                    whenLoaded(response.responseJSON);
+                }
+            });
+
+        },
+        
+        storeMarker: function(marker, onDone)
+        {
+            $.ajax({
+                url: "/map/marker",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(marker),
+                complete: function(response)
+                {
+                    
+                    if(onDone) onDone();
+                }
+            });
+        },
+        
         SimpleLabel: L.Class.extend({
             options: {
                 minZoom: 0,
@@ -375,5 +411,51 @@ B = (function () {
         })
 
     };
+    
+    ret.AppProxy = function(tag) {
+        this._tag = tag;
+        this._cbid = 1;
+    };
+    
+    ret.AppProxy.prototype = {
+        send: function(action, params, callback) {
+            
+            if(typeof params === "function") {
+                callback = params;
+                params = null;
+            }
+
+            if(callback && typeof callback === "function") {
+                var cbid = this._tag + "_callback_" + (this._cbid++);
+                window[cbid] = callback;
+                if(!params) {
+                    params = {};
+                }
+                
+                params[callback] = cbid;
+            }
+
+            var url = this._tag + "://" + action;
+
+            if(params) {
+                url += "?";
+                var args = [];
+
+                for(var key in params) {
+
+                    if(params.hasOwnProperty(key)) {
+                        args.push(encodeURIComponent(key) + "=" + encodeURIComponent(params[key]));
+                    }
+                }
+
+                url += args.join("&");
+            }
+
+            window.location = url; //this won't actually navigate, hopefully
+        }
+
+    };
+    
+    return ret;
 
 })();

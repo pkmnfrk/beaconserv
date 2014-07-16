@@ -1,17 +1,17 @@
 /* jshint browser:true, undef: true, unused: true */
-/* global L, Display */
+/* global B, Display */
 
-Display.Marker = function(data) {
+Display.Label = function(data) {
     for(var i in data) {
         if(data.hasOwnProperty(i)) {
             this[i] = data[i];
         }
     }
     
-    this._marker = L.Marker();
-    this._marker.Marker = this;
+    this._label = new B.SimpleLabel();
+    this._label.Label = this;
 };
 
-Display.Marker.prototype = {
+Display.Label.prototype = {
     
 };

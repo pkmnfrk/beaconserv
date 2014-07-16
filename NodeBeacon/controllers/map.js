@@ -33,6 +33,21 @@ module.exports = {
                 });
                 
                 return;
+            case "markers":
+                var floor = null;
+                if(path.length > 1) {
+                    floor = parseInt(path[1], 10);
+                }
+                database.getMarkers(floor, function(err, markers) {
+                    if(err) {
+                        res.writeError(err);
+                        return;
+                    }
+                    
+                    res.writeJson(markers);
+                    
+                });
+                return;
         }
         
         
@@ -68,9 +83,30 @@ module.exports = {
                     database.storeLabel(data, function(err) {
                         if(err)
                         {
-                            console.log(err);
-                            res.writeHead(500, "Internal Server Error");
-                            res.end();
+                            res.writeError(err);
+                            return;
+                        }     
+                        
+                        res.writeHead(204, "No Content");
+                        res.end();
+                    });
+                    
+                });
+                //req.finish();
+                return;
+                
+            case "marker":
+                
+                req.on('data', function(d) {
+                    data += d;
+                });
+                req.on('end', function() {
+                    data = JSON.parse(data);
+                    
+                    database.storeMarker(data, function(err) {
+                        if(err)
+                        {
+                            res.writeError(err);
                             return;
                         }    
                         

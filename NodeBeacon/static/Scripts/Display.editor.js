@@ -1,35 +1,33 @@
+/* jshint browser:true, undef: true, unused: true */
+/* global $, B, display */
 
-Display.showEditorDialog = function () {
-    if(!show_labels) return;
+display.showEditorDialog = function (label) {
+    if(!display.shouldShowLabels()) return;
     
-    var self = this;
-    var label = this.label;
-    if(!label.minZoom)
-        label.minZoom = zoomOffset;
     
-    $("#beacon_minZoomLabel").text(label.minZoom);
+    $("#beacon_minZoomLabel").text(label.getMinZoom());
     $("#beacon_minZoom").slider({
-        value: label.minZoom,
-        min: zoomOffset,
-        max: zoomOffset + 5,
+        value: label.getMinZoom(),
+        min: display.zoomOffset,
+        max: display.zoomOffset + 5,
         slide: function(event, ui) {
             $("#beacon_minZoomLabel").text(ui.value);
         },
         
     });
-    $("#beacon_name").val(beacon.title);
+    $("#beacon_name").val(label.getText());
     
-    var dialog = $("#editor").dialog({
+    /*var dialog =*/ $("#editor").dialog({
         modal: true,
         buttons: [
             {
                 text: "Delete",
                 click: function() {
-                    var ok = confirm("Are you sure you want to delete this label? This cannot be undone!");
-                    if(ok) {
+                    //var ok = confirm("Are you sure you want to delete this label? This cannot be undone!");
+                    //if(ok) {
                         //B.deleteBeacon(beacon);
                         $(this).dialog("close");
-                    }
+                    //}
                 },
                 class: "delete-button"
             },

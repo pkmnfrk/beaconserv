@@ -190,9 +190,36 @@ exports.storeLabel = function(label, callback)
     }
     
     
-    labels.update(query, label, { upsert:true }, function(err) { 
-        if(callback) callback(err);
-    });
+    labels.update(query, label, { upsert:true }, callback);
+};
+
+exports.getMarkers = function(floor, callback)
+{
+    var query = {};
+    if(floor) query.floor = floor;
+    
+    var markers = db.collection("marker");
+    markers.find(query).toArray(callback);
+};
+
+
+exports.storeMarker = function(marker, callback)
+{
+    var markers = db.collection("marker");
+    console.log(typeof(marker._id));
+    var query;
+    
+    if(marker._id) {
+        
+        marker._id = typeof(marker._id) === "object" ? marker._id : new mongo.ObjectID(marker._id);
+    
+        query = {_id: marker._id};
+    } else{
+        query = {_id: new mongo.ObjectID() };
+    }
+    
+    
+    markers.update(query, marker, { upsert:true }, callback);
 };
 
 var fullscreenConfig = {
