@@ -8,6 +8,7 @@ var realtime_map = require("../realtime_map"),
 module.exports = {
     get: function (req, res) {
         var path = url.parse(req.url).pathname.split('/');
+        var floor;
         
         path.shift();
         path.shift();
@@ -28,13 +29,17 @@ module.exports = {
                 
                 return;
             case "labels":
-                database.getLabels(function(labels) {
+                floor = null;
+                if(path.length > 1) {
+                    floor = parseInt(path[1], 10);
+                }
+                database.getLabels(floor, function(labels) {
                     res.writeJson(labels);
                 });
                 
                 return;
             case "markers":
-                var floor = null;
+                floor = null;
                 if(path.length > 1) {
                     floor = parseInt(path[1], 10);
                 }

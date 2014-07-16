@@ -163,9 +163,13 @@ exports.findBeaconById = function(id, callback) {
     });
 };
 
-exports.getLabels = function(callback) {
+exports.getLabels = function(floor, callback) {
     var labels = db.collection("label");
     var query = {};
+    
+    if(floor) {
+        query.floor = floor;
+    }
     
     labels.find(query).toArray(function(err, objs) {
        if(err) throw err;

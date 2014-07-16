@@ -217,10 +217,15 @@ B = (function () {
             beacon.marker = marker;
         },
 
-        getLabels: function(onDone)
+        getLabels: function(floor, onDone)
         {
+            var url = "/map/labels";
+            if(floor)
+                url += "/" + floor;
+            
+            
             $.ajax({
-                url: "/map/labels",
+                url: url,
                 type: "GET",
                 dataType: "json",
                 complete: function(response)
@@ -371,6 +376,9 @@ B = (function () {
                 L.DomUtil.setPosition(this._el, pos);
             },
             
+            getLatLng: function() {
+                return this._latlng;
+            },
             setLatLng: function(latlng) {
                 this._latlng = latlng;
                 this._reset();
@@ -392,7 +400,7 @@ B = (function () {
             
             _drag: function(e) {
                 var pos = L.DomUtil.getPosition(this._el);
-                this._latlng = marker._map.layerPointToLatLng(pos);
+                this._latlng = this._map.layerPointToLatLng(pos);
                 
                 this.fire("drag");
             },

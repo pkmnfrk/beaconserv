@@ -123,6 +123,7 @@ Display.prototype = {
         
         
         this._loadMarkers(this._onMarkersLoaded);
+        this._loadLabels(this._onLabelsLoaded);
     },
     
     _loadBeacons: function(whenDone) {
@@ -192,6 +193,51 @@ Display.prototype = {
         this.rawData.longitude = latlng.lng;
         
         B.storeMarker(this.rawData);
+        
+    },
+    
+    _loadLabels: function(whenDone)
+    {
+        var self = this;
+        
+        B.getLabels(7, function(labels) {
+            self.labels = labels;
+            
+            for(var i = 0; i < self.labels.length; i++)
+            {
+                var m = self.labels[i];
+
+                self.labels[i] = new B.SimpleLabel([ m.latitude, m.longitude ], {
+                    text: m.text,
+                    minZoom: m.minZoom
+                });
+                
+                self.labels[i].rawData = m;
+                self.labels[i].on('dragend', self._onLabelDragEnd);
+            }
+
+            if(whenDone)
+                whenDone.apply(self);
+        });
+    },
+    
+    _onLabelsLoaded: function()
+    {
+        if(this.shouldShowLabels()) {
+            for(var i = 0; i < this.labels.length; i++) {
+                this.map.addLayer(this.labels[i]);
+            }
+        }
+    },
+    
+    _onLabelDragEnd: function()
+    {
+        //this, in this case, is the marker
+        var latlng = this.getLatLng();
+        this.rawData.latitude = latlng.lat;
+        this.rawData.longitude = latlng.lng;
+        
+        B.storeLabel(this.rawData);
         
     },
     
