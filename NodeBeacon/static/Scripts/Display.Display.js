@@ -26,11 +26,15 @@ function Display() {
     
     this._loadBeacons(this._onBeaconsLoaded);
     
-    this._socket = new Display.Websocket();
-    //bind events to the socket
-    this._socket.on('client', this._msg_client);
-    this._socket.on('beacon', this._msg_beacon);
-    this._socket.open();
+    B.getPrefs(function(prefs) {
+        if(prefs.supportsWebsockets) {
+            this._socket = new Display.Websocket();
+            //bind events to the socket
+            this._socket.on('client', this._msg_client);
+            this._socket.on('beacon', this._msg_beacon);
+            this._socket.open();
+        }
+    });
 }
 
 

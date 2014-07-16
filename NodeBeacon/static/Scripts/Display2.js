@@ -69,10 +69,3 @@ var socket_onClose = function () {
         
 };
 */
-/*
-B.getPrefs(function(prefs) {
-    if(prefs.supportsWebsockets) {
-        reconnect();
-    }
-});
-*/
