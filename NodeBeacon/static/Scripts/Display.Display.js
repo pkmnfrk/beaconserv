@@ -1,5 +1,5 @@
 /* jshint browser:true, undef: true, unused: true */
-/* global $, L, B */
+/* global $, L, B, OverlappingMarkerSpiderfier */
 /* exported Display */
 
 function Display() {
@@ -26,15 +26,7 @@ function Display() {
     
     this._loadBeacons(this._onBeaconsLoaded);
     
-    B.getPrefs(function(prefs) {
-        if(prefs.supportsWebsockets) {
-            this._socket = new Display.Websocket();
-            //bind events to the socket
-            this._socket.on('client', this._msg_client);
-            this._socket.on('beacon', this._msg_beacon);
-            this._socket.open();
-        }
-    });
+    
 }
 
 
@@ -121,9 +113,24 @@ Display.prototype = {
         
         this.map.setView([-53.75 / this.scalar, 72.5 / this.scalar], this.zoomOffset + 2);
         
+        this.clients = {};
+        this._clientContainer = new OverlappingMarkerSpiderfier(this.map, {
+            circleFootSeparation: 50,
+            keepSpiderfied: true
+        });
         
         this._loadMarkers(this._onMarkersLoaded);
         this._loadLabels(this._onLabelsLoaded);
+        
+        B.getPrefs(function(prefs) {
+            if(prefs.supportsWebsockets) {
+                this._socket = new Display.Websocket();
+                //bind events to the socket
+                this._socket.on('client', this._msg_client, this);
+                this._socket.on('beacon', this._msg_beacon, this);
+                this._socket.open();
+            }
+        }.bind(this));
     },
     
     _loadBeacons: function(whenDone) {
@@ -242,61 +249,63 @@ Display.prototype = {
     },
     
     _msg_client: function(data) {
-        data = data;
-        /*console.log("adding client " + data.name);
-        var client = clients[data.clientid];
-        var b = findBeacon(data.major, data.minor);
+        //data = data;
+        var self = this;
+        
+        console.log("adding client " + data.name);
+        
+        this._clientContainer.unspiderfy();
+        
+        var client = this.clients[data.clientid];
 
-        var pos = L.latLng(b.latitude, b.longitude);
-
-        clientContainer.unspiderfy();
-
-        if (!client) {
-            clients[data.clientid] = {
-                clientid: data.clientid,
-                marker: null,
-                zIndexOffset: 10000,
-            };
-            client = clients[data.clientid];
-        } 
-
-        if(client.marker === null) {
-            client.marker = L.marker(pos, {
-                    icon: B.redMarker
-                }).addTo(map).on("click", function(e) {
-
-
-                if(in_device) {
-                    sendMessageToOverlord("click", {
-                        major: b.major,
-                        minor: b.minor
-                    });
-
-                    return false;
-                }
-
-            });
-
-            clientContainer.addMarker(client.marker);
+        if(client) {
+            this._clientContainer.removeMarker(client.marker);
+            this.map.removeLayer(client.marker);
+            delete this.clients[data.clientid];
         }
+        
+        var pos = L.latLng(data.latitude / this.scalar, data.longitude / this.scalar);
+        
+        client = {
+            clientid: data.clientid,
+            marker: null,
+            zIndexOffset: 10000,
+            display: this
+        };
+        
+        this.clients[data.clientid] = client;
 
-        client.marker.setLatLng(pos);
+        client.marker = L.marker(pos, {
+            icon: B.redMarker
+        }).addTo(this.map).on("click", this._client_click.bind(client));
 
+        this._clientContainer.addMarker(client.marker);
 
-        if(!in_device) {
+        if(!this.inDevice()) {
             client.marker.bindPopup(data.name);
-
-            if(client.removalTimer) {
-                clearTimeout(client.removalTimer);
-                client.removalTimer = null;
-            }
-
+            
             client.removalTimer = setTimeout(function() {
-                map.removeMarker(client.marker);
+                self._clientContainer.unspiderfy();
+                self._clientContainer.removeMarker(client.marker);
+                
+                self.map.removeMarker(client.marker);
                 client.marker = null;
                 client.removalTimer = null;
+                
+                delete self.clients[client.clientid];
             }, 10 * 60 * 1000);
-        }*/
+        }
+    },
+    
+    _client_click: function() {
+        if(this.display.inDevice()) {
+            this.display.getAppProxy().send("click", {
+                major: this.major,
+                minor: this.minor
+            });
+
+            return false;
+        }
     },
     
     _msg_beacon: function(data) {

@@ -47,7 +47,7 @@ module.exports = {
 
                 database.storeClient(client, function() {
 
-                    realtime_map.notifyPing(uuid, major, minor, request.clientid, client.name);
+                    realtime_map.notifyPing(client, beacon);
 
                     response.writeJson(beacon);
                 });

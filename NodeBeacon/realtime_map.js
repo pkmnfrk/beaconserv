@@ -41,14 +41,7 @@ var onInitialMessage = function (msg) {
                 database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
                     console.log("Loaded beacon for client " + client.clientid);
                     if(beacon) {
-                        var msg = {
-                            msg: "client",
-                            uuid: beacon.uuid,
-                            major: beacon.major,
-                            minor: beacon.minor,
-                            clientid: client.clientid,
-                            name: client.name
-                        };
+                        var msg = getBeaconNotifyMessage(client, beacon);
 
                         self.send(JSON.stringify(msg));
                     }
@@ -107,22 +100,29 @@ function start() {
 }
     
 exports.start = start;
-exports.notifyPing = function(uuid, major, minor, clientid, name) {
+exports.notifyPing = function(client, beacon) {
     if(!server.supportsWebsockets) return;
     
-    var msg = {
-        msg: "client",
-        uuid: uuid,
-        major: major,
-        minor: minor,
-        clientid: clientid,
-        name: name
-    };
+    var msg = getBeaconNotifyMessage(client, beacon);
     
     //console.log("Broadcasting msg abount client " + clientid);
     
     socketServer.broadcast(JSON.stringify(msg));
 };
+
+function getBeaconNotifyMessage(client, beacon) {
+    return {
+        msg: "client",
+        uuid: beacon.uuid,
+        major: beacon.major,
+        minor: beacon.minor,
+        clientid: client.clientid,
+        name: client.name,
+        latitude: beacon.latitude,
+        longitude: beacon.longitude
+        
+    };
+}
 
 exports.notifyBeaconChange = function(beacon) {
     if(!server.supportsWebsockets) return;
