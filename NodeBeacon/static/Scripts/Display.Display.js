@@ -91,7 +91,7 @@ Display.prototype = {
         var layerOpts = {
             minZoom: this.zoomOffset,
             maxZoom: this.zoomOffset + 5,
-            maxNativeZoom: 4,
+            maxNativeZoom: 5,
             tileSize: 256,
             continuousWorld: true,
             noWrap: true,
@@ -103,7 +103,7 @@ Display.prototype = {
             ]
         };
 
-        L.tileLayer('/Content/maps/7th/{z}/{x}/{y}.png', layerOpts).addTo(this.map);
+        L.tileLayer('/Content/maps/7thC/{z}/{x}/{y}.png', layerOpts).addTo(this.map);
 
         //L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
@@ -171,7 +171,8 @@ Display.prototype = {
                 var m = self.markers[i];
 
                 self.markers[i] = L.marker([ m.latitude, m.longitude ], {
-                    draggable: true
+                    draggable: true,
+                    icon: B.animatedMarker
                 });
                 
                 self.markers[i].rawData = m;
@@ -288,7 +289,7 @@ Display.prototype = {
                 self._clientContainer.unspiderfy();
                 self._clientContainer.removeMarker(client.marker);
                 
-                self.map.removeMarker(client.marker);
+                self.map.removeLayer(client.marker);
                 client.marker = null;
                 client.removalTimer = null;
                 

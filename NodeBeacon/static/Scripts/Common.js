@@ -167,6 +167,35 @@ B = (function () {
             }
         })(),
         
+        animatedMarker: (function () {
+            if (typeof window.L !== "undefined") {
+                return L.icon({
+                    iconSize: [40, 60],
+                    iconAnchor: [20, 59],
+                    popupAnchor: [20, -50],
+                    labelAnchor: [0, 0],
+                    iconUrl: "/Content/images/animated-marker.gif",
+                    iconRetinaUrl: "/Content/images/animated-marker-2x.gif"
+                });
+            }
+        })(),
+        
+        bigMarker: (function () {
+            if (typeof window.L !== "undefined") {
+                return L.icon({
+                    iconSize: [67, 145],
+                    iconAnchor: [33, 144],
+                    popupAnchor: [1, -34],
+                    shadowSize: [127, 96],
+                    shadowAnchor: [8, 90],
+                    labelAnchor: [0, 0],
+                    iconUrl: "/Content/images/pink-marker.png",
+                    shadowUrl: "/Content/images/pink-marker_Shadow.png"
+                    //iconRetinaUrl: "/Content/images/red-marker-2x.png",
+                });
+            }
+        })(),
+        
         getPrefs: function(withPrefs) {
             if(this.prefs) {
                 withPrefs(this.prefs);
