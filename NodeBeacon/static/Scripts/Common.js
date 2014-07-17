@@ -171,7 +171,7 @@ B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [40, 60],
-                    iconAnchor: [20, 59],
+                    iconAnchor: [0, 55],
                     popupAnchor: [20, -50],
                     labelAnchor: [0, 0],
                     iconUrl: "/Content/images/animated-marker.gif",
