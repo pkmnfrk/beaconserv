@@ -1,5 +1,9 @@
 body {
-    background-color:transparent;
+    background-color:#e5e0d7;
+}
+
+body.device {
+    background-color: transparent;
 }
 #map {
     position:absolute;

@@ -25,8 +25,6 @@ function Display() {
     this._appProxy = new B.AppProxy("myapp");
     
     this._loadBeacons(this._onBeaconsLoaded);
-    
-    
 }
 
 
@@ -57,6 +55,14 @@ Display.prototype = {
     
     createMap: function(div)
     {
+        if(this.inTv()) {
+            $("body").addClass("tv");
+        }
+        
+        if(this.inDevice()) {
+            $("body").addClass("device");
+        }
+        
         var self = this;
         this.map = L.map(div, {
             center: [-53.75 / this.scalar, 72.5 / this.scalar],
