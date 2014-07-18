@@ -1,3 +1,7 @@
+/*jshint undef: true, unused:true, browser:true, jquery: true */
+/*globals L, prompt */
+/* exports B */
+
 window.beacon = function (beacon_id, major, minor, device_id, proximity) {
 
     beacon_id = beacon_id.toLowerCase();
@@ -20,7 +24,7 @@ window.didEnterForeground = function () {
     }
 };
 
-B = (function () {
+var B = (function () {
     var ret = {
         me: null,
 
@@ -171,8 +175,8 @@ B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [40, 60],
-                    iconAnchor: [0, 55],
-                    popupAnchor: [20, -50],
+                    iconAnchor: [20, 55],
+                    popupAnchor: [0, -50],
                     labelAnchor: [0, 0],
                     iconUrl: "/Content/images/animated-marker.gif",
                     iconRetinaUrl: "/Content/images/animated-marker-2x.gif"
@@ -238,7 +242,7 @@ B = (function () {
             $.ajax({
                 url: "/beacon/" + beacon.uuid + "/" + beacon.major + "/" + beacon.minor,
                 type: "DELETE",
-                complete: function(response) {
+                complete: function() {
                     if(onDone) onDone();
                 }
             });
@@ -272,6 +276,24 @@ B = (function () {
                 contentType: "application/json",
                 data: JSON.stringify(label),
                 complete: function(response)
+                {
+                    
+                    if(onDone) onDone(response.responseJSON);
+                }
+            });
+        },
+        
+        deleteLabel: function(label, onDone)
+        {
+            if(!label._id) {
+                if(onDone) onDone();
+                return;
+            }
+            
+            $.ajax({
+                url: "/map/label/" + label._id,
+                type: "DELETE",
+                complete: function()
                 {
                     
                     if(onDone) onDone();
@@ -313,7 +335,25 @@ B = (function () {
                     if(onDone) onDone(response.responseJSON);
                 }
             });
-        }
+        },
+        
+        deleteMarker: function(marker, onDone)
+        {
+            if(!marker._id) {
+                if(onDone) onDone();
+                return;
+            }
+            
+            $.ajax({
+                url: "/map/marker/" + marker._id,
+                type: "DELETE",
+                complete: function()
+                {
+                    
+                    if(onDone) onDone();
+                }
+            });
+        },
 
     };
     

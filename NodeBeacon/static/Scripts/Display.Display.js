@@ -140,71 +140,8 @@ Display.prototype = {
         }.bind(this));
         
         if(this.editable()) {
-            $.contextMenu({
-                selector: "#map",
-                items: {
-                    addMarker: { name: "Add Marker", callback: this._contextmenu_cmd_addmarker.bind(this) },
-                    addLabel: { name: "Add Label", callback: this._contextmenu_cmd_addlabel.bind(this) },
-                },
-                events: {
-                    show: this._contextmenu_show
-                },
-                position: this._contextmenu_position.bind(this)
-            });
+            this.initializeEditors();
         }
-    },
-    
-    _contextmenu_show: function(e) {
-        e = e;
-    },
-    
-    _contextmenu_position: function(opt, x, y) {
-        this._contextmenu_coordinates = [x, y];
-        opt.$menu.css({top: y, left: x});
-    },
-
-    _contextmenu_cmd_addmarker: function() {
-        var coords = this._contextmenu_coordinates;
-        //var latlng = this.map.layerPointToLatLng(coords);
-        var latlng = this.map.containerPointToLatLng(coords);
-        
-        var newMarker = this._createMarkerFromData({
-            latitude: latlng.lat,
-            longitude: latlng.lng,
-            floor: this.floor
-        });
-        
-        this.markers.push(newMarker);
-        this.map.addLayer(newMarker);
-        
-        B.storeMarker(newMarker.rawData, function(obj) {
-            if(obj) {
-                newMarker.rawData = obj;
-            }
-        });
-    },
-    
-    _contextmenu_cmd_addlabel: function() {
-        var coords = this._contextmenu_coordinates;
-        //var latlng = this.map.layerPointToLatLng(coords);
-        var latlng = this.map.containerPointToLatLng(coords);
-        
-        var newLabel = this._createLabelFromData({
-            latitude: latlng.lat,
-            longitude: latlng.lng,
-            text: "newLabel",
-            minZoom: this.map.getZoom(),
-            floor: this.floor
-        });
-        
-        this.labels.push(newLabel);
-        this.map.addLayer(newLabel);
-        
-        B.storeLabel(newLabel.rawData, function(obj) {
-            if(obj) {
-                newLabel.rawData = obj;
-            }
-        });
     },
     
     _loadBeacons: function(whenDone) {
@@ -255,6 +192,7 @@ Display.prototype = {
             icon: B.animatedMarker
         });
         
+        ret.bindPopup(data.title);
         ret.rawData = data;
         ret.on('dragend', this._onMarkerDragEnd);
         

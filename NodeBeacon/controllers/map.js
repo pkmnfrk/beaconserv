@@ -90,15 +90,20 @@ module.exports = {
                 req.on('end', function() {
                     data = JSON.parse(data);
                     
-                    database.storeLabel(data, function(err) {
+                    database.storeLabel(data, function(err, obj) {
                         if(err)
                         {
                             res.writeError(err);
                             return;
                         }     
                         
-                        res.writeHead(204, "No Content");
-                        res.end();
+                        if(obj) {
+                            res.writeJson(obj);
+                            
+                        } else {
+                            res.writeHead(204, "No Content");
+                            res.end();
+                        }
                     });
                     
                 });
@@ -137,5 +142,56 @@ module.exports = {
         res.writeHead(404, "Not Found");
         res.end();
         
+    },
+    
+    "delete": function(req, res) {
+        var path = url.parse(req.url).pathname.split('/');
+        var data = '';
+        
+        
+        path.shift();
+        path.shift();
+        
+        if(!path.length) {
+            res.writeHead(404, "Not Found");
+            res.end();
+            return;
+        }
+        
+        switch(path[0]) {
+            case "label":
+                
+                database.deleteLabel(path[1], function(err, nDel) {
+                    if(err) {
+                        res.writeError(err);
+                    } else if(nDel < 1) {
+                        res.WriteHead(404, "Not Found");
+                    } else {
+                        res.writeHead(204, "No Content");
+                        res.end();
+                    }
+                });
+                
+                return;
+                
+            case "marker":
+                 
+                database.deleteMarker(path[1], function(err, nDel) {
+                    if(err) {
+                        res.writeError(err);
+                    } else if(nDel < 1) {
+                        res.WriteHead(404, "Not Found");
+                    } else {
+                        res.writeHead(204, "No Content");
+                        res.end();
+                    }
+                });
+                //req.finish();
+                return;
+        }
+        
+        
+        res.writeHead(404, "Not Found");
+        res.end();
     }
 };

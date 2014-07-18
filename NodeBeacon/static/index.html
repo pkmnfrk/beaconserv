@@ -25,9 +25,16 @@
 
     </div>
     
-    <div id="editor" title="Edit Beacon">
-        Name: <input id="beacon_name" value="" />
-        Minimum Zoom: <span id="beacon_minZoomLabel"></span><div id="beacon_minZoom"></div>
+    <div id="labelEditor" class="editor" title="Edit Label">
+        Text: <input id="label_name" value="" />
+        Minimum Zoom: <span id="label_minZoomLabel"></span><div id="label_minZoom"></div>
+    </div>
+    
+    <div id="markerEditor" class="editor" title="Marker Label">
+        Title: <input id="marker_title" value="" /><br/>
+        Image: <input type="file" id="marker_file" /><br/>
+        Copy:<br/>
+        <textarea id="marker_copy"></textarea>
     </div>
 
     <script src="/Scripts/jquery-1.10.2.js"></script>

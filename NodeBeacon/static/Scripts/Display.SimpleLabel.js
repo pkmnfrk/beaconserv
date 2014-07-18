@@ -29,6 +29,21 @@ B.SimpleLabel = L.Class.extend({
         }
 
     },
+    
+    recalcSize: function() {
+        var testElement = document.getElementById("Test");
+        testElement.style.fontSize = this.options.fontSize;
+        $(testElement).text($(this._el).text());
+        var width = (testElement.clientWidth + 14);
+        var height = (testElement.clientHeight + 10);
+
+        $(this._el).css({
+            width: width + "px",
+            marginLeft: -(width / 2) + "px",
+            //height: height + "px",
+            marginTop: -(height / 2) + "px"
+        });
+    },
 
     onAdd: function (map) {
         this._map = map;
@@ -40,20 +55,9 @@ B.SimpleLabel = L.Class.extend({
             fontSize: this.options.fontSize,
             backgroundColor: this.options.backgroundColor,
             color: this.options.color
-        });
+        }).data("SimpleLabel", this);
 
-        var testElement = document.getElementById("Test");
-        testElement.style.fontSize = this.options.fontSize;
-        $(testElement).text(this.options.text);
-        var width = (testElement.clientWidth + 6);
-        var height = (testElement.clientHeight + 0);
-
-        $(this._el).css({
-            width: width + "px",
-            marginLeft: -(width / 2) + "px",
-            //height: height + "px",
-            marginTop: -(height / 2) + "px"
-        });
+        this.recalcSize();
 
         //$(this._el).on('click', this._click, this);
 
@@ -101,9 +105,14 @@ B.SimpleLabel = L.Class.extend({
 
     setText: function(text) {
         $(this._el).text(text);
+        this.recalcSize();
         this._reset();
     },
 
+    getMinZoom: function() {
+        return this.options.minZoom;
+    },
+    
     setMinZoom: function(z) {
         this.options.minZoom = z;
         this._reset();

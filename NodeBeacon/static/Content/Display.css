@@ -56,13 +56,13 @@ body.device {
     padding: 5px 7px;
 }
 
-#editor
+.editor
 {
     width: 600px;
     display:none;
 }
 
-#beacon_minZoom
+#label_minZoom
 {
     margin-top: 10px;
 }

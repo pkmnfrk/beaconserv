@@ -201,6 +201,16 @@ exports.storeLabel = function(label, callback)
     storeObject(db.collection("label"), label, callback);
 };
 
+exports.deleteLabel = function(id, callback)
+{
+    if(typeof id !== "object") {
+        id = new mongo.ObjectID(id);
+    }
+    
+    var labels = db.collection("label");
+    labels.remove({_id: id}, callback);
+};
+
 exports.getMarkers = function(floor, callback)
 {
     var query = {};
@@ -216,6 +226,17 @@ exports.storeMarker = function(marker, callback)
     storeObject(db.collection("marker"), marker, callback);
 };
 
+exports.deleteMarker = function(id, callback)
+{
+    if(typeof id !== "object") {
+        id = new mongo.ObjectID(id);
+    }
+    console.log("About to delete a marker");
+    
+    var markers = db.collection("marker");
+    markers.remove({_id: id}, callback);
+};
+
 var fullscreenConfig = {
     left: {
         name: "Blank",
@@ -226,6 +247,7 @@ var fullscreenConfig = {
         url: "about:blank"
     }
 };
+
 
 exports.getFullscreenConfig = function(callback) {
     var fsconfig = db.collection("fsconfig");
