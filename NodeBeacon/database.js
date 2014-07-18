@@ -218,12 +218,21 @@ exports.storeMarker = function(marker, callback)
         marker._id = typeof(marker._id) === "object" ? marker._id : new mongo.ObjectID(marker._id);
     
         query = {_id: marker._id};
+        markers.update(query, marker, { upsert:true }, function(err) {
+            callback(err);
+        });
     } else{
         query = {_id: new mongo.ObjectID() };
+        markers.save(marker, function(err, obj) {
+            if(!err) {
+                console.log(obj);
+            }
+            callback(err, obj);
+        });
     }
     
     
-    markers.update(query, marker, { upsert:true }, callback);
+    
 };
 
 var fullscreenConfig = {

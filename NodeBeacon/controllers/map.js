@@ -108,15 +108,19 @@ module.exports = {
                 req.on('end', function() {
                     data = JSON.parse(data);
                     
-                    database.storeMarker(data, function(err) {
+                    database.storeMarker(data, function(err, obj) {
                         if(err)
                         {
                             res.writeError(err);
                             return;
                         }    
-                        
-                        res.writeHead(204, "No Content");
-                        res.end();
+                        if(obj) {
+                            res.writeJson(obj);
+                            
+                        } else {
+                            res.writeHead(204, "No Content");
+                            res.end();
+                        }
                     });
                     
                 });

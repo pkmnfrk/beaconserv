@@ -12,6 +12,7 @@ function Display() {
     this.markers = [];
     this.map = null;
     this.zoomOffset = 15;
+    this.floor = 7;
     
     $("#debugArea").remove();
 
@@ -109,7 +110,7 @@ Display.prototype = {
             ]
         };
 
-        L.tileLayer('/Content/maps/7thC/{z}/{x}/{y}.png', layerOpts).addTo(this.map);
+        L.tileLayer('/Content/maps/floor_' + this.floor + '/{z}/{x}/{y}.png', layerOpts).addTo(this.map);
 
         //L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
@@ -137,12 +138,65 @@ Display.prototype = {
                 this._socket.open();
             }
         }.bind(this));
+        
+        if(this.editable()) {
+            $.contextMenu({
+                selector: "#map",
+                items: {
+                    addMarker: { name: "Add Marker", callback: this._contextmenu_cmd_addmarker.bind(this) },
+                    addLabel: { name: "Add Label", callback: this._contextmenu_cmd_addlabel.bind(this) },
+                },
+                events: {
+                    show: this._contextmenu_show
+                },
+                position: this._contextmenu_position.bind(this)
+            });
+        }
+    },
+    
+    _contextmenu_show: function(e) {
+        e = e;
+    },
+    
+    _contextmenu_position: function(opt, x, y) {
+        this._contextmenu_coordinates = [x, y];
+        opt.$menu.css({top: y, left: x});
+    },
+
+    _contextmenu_cmd_addmarker: function() {
+        var coords = this._contextmenu_coordinates;
+        //var latlng = this.map.layerPointToLatLng(coords);
+        var latlng = this.map.containerPointToLatLng(coords);
+        
+        var newMarker = this._createMarkerFromData({
+            latitude: latlng.lat,
+            longitude: latlng.lng,
+            floor: this.floor
+        });
+        
+        this.markers.push(newMarker);
+        this.map.addLayer(newMarker);
+    },
+    
+    _contextmenu_cmd_addlabel: function() {
+        /*var coords = this._contextmenu_coordinates;
+        //var latlng = this.map.layerPointToLatLng(coords);
+        var latlng = this.map.containerPointToLatLng(coords);
+        
+        var newMarker = this._createMarkerFromData({
+            latitude: latlng.lat,
+            longitude: latlng.lng,
+            floor: this.floor
+        });
+        
+        this.markers.push(newMarker);
+        this.map.addLayer(newMarker);*/
     },
     
     _loadBeacons: function(whenDone) {
         var self = this;
         
-        B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", 7, function (beacons) {
+        B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", this.floor, function (beacons) {
             self.beacons = beacons;
 
             for (var i = 0; i < self.beacons.length; i++) {
@@ -167,27 +221,30 @@ Display.prototype = {
     
     _loadMarkers: function(whenDone)
     {
-        var self = this;
-        
-        B.getMarkers(7, function(markers) {
-            self.markers = markers;
+        B.getMarkers(this.floor, function(markers) {
+            this.markers = markers;
             
-            for(var i = 0; i < self.markers.length; i++)
+            for(var i = 0; i < this.markers.length; i++)
             {
-                var m = self.markers[i];
-
-                self.markers[i] = L.marker([ m.latitude, m.longitude ], {
-                    draggable: true,
-                    icon: B.animatedMarker
-                });
-                
-                self.markers[i].rawData = m;
-                self.markers[i].on('dragend', self._onMarkerDragEnd);
+                this.markers[i] = this._createMarkerFromData(this.markers[i]);
+                    
             }
 
             if(whenDone)
-                whenDone.apply(self);
+                whenDone.apply(this);
+        }.bind(this));
+    },
+    
+    _createMarkerFromData: function(data) {
+        var ret = L.marker([data.latitude, data.longitude], {
+            draggable: true,
+            icon: B.animatedMarker
         });
+        
+        ret.rawData = data;
+        ret.on('dragend', this._onMarkerDragEnd);
+        
+        return ret;
     },
     
     _onMarkersLoaded: function()
@@ -206,7 +263,11 @@ Display.prototype = {
         this.rawData.latitude = latlng.lat;
         this.rawData.longitude = latlng.lng;
         
-        B.storeMarker(this.rawData);
+        B.storeMarker(this.rawData, function(obj) {
+            if(obj) {
+                this.rawData = obj;
+            }
+        }.bind(this));
         
     },
     
