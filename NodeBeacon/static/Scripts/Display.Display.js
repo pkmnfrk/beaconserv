@@ -176,6 +176,12 @@ Display.prototype = {
         
         this.markers.push(newMarker);
         this.map.addLayer(newMarker);
+        
+        B.storeMarker(newMarker.rawData, function(obj) {
+            if(obj) {
+                newMarker.rawData = obj;
+            }
+        });
     },
     
     _contextmenu_cmd_addlabel: function() {
@@ -193,6 +199,12 @@ Display.prototype = {
         
         this.labels.push(newLabel);
         this.map.addLayer(newLabel);
+        
+        B.storeLabel(newLabel.rawData, function(obj) {
+            if(obj) {
+                newLabel.rawData = obj;
+            }
+        });
     },
     
     _loadBeacons: function(whenDone) {
