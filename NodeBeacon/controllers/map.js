@@ -33,7 +33,12 @@ module.exports = {
                 if(path.length > 1) {
                     floor = parseInt(path[1], 10);
                 }
-                database.getLabels(floor, function(labels) {
+                database.getLabels(floor, function(err, labels) {
+                    if(err) {
+                        res.writeError(err);
+                        return;
+                    }
+                    
                     res.writeJson(labels);
                 });
                 

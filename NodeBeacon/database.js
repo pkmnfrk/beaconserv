@@ -1,3 +1,4 @@
+/* jshint node: true, undef: true */
 
 var mongo = require('mongodb'),
     client = mongo.MongoClient,
@@ -78,6 +79,26 @@ function storeBeacon(beacon, onComplete) {
         });
     });
 }
+
+function storeObject(collection, object, callback) {
+    if(object._id) {
+        
+        object._id = typeof(object._id) === "object" ? object._id : new mongo.ObjectID(object._id);
+    
+        var query = {_id: object._id};
+        collection.update(query, object, { upsert:true }, function(err) {
+            callback(err);
+        });
+    } else{
+        collection.save(object, function(err, obj) {
+            if(!err) {
+                console.log(obj);
+            }
+            callback(err, obj);
+        });
+    }
+}
+
 
 exports.start = start;
 exports.findBeacon = findBeacon;
@@ -171,30 +192,13 @@ exports.getLabels = function(floor, callback) {
         query.floor = floor;
     }
     
-    labels.find(query).toArray(function(err, objs) {
-       if(err) throw err;
-        
-        callback(objs);
-    });
+    labels.find(query).toArray(callback);
 };
+
 
 exports.storeLabel = function(label, callback)
 {
-    var labels = db.collection("label");
-    console.log(typeof(label._id));
-    var query;
-    
-    if(label._id) {
-        
-        label._id = typeof(label._id) === "object" ? label._id : new mongo.ObjectID(label._id);
-    
-        query = {_id: label._id};
-    } else{
-        query = {_id: new mongo.ObjectID() };
-    }
-    
-    
-    labels.update(query, label, { upsert:true }, callback);
+    storeObject(db.collection("label"), label, callback);
 };
 
 exports.getMarkers = function(floor, callback)
@@ -209,30 +213,7 @@ exports.getMarkers = function(floor, callback)
 
 exports.storeMarker = function(marker, callback)
 {
-    var markers = db.collection("marker");
-    console.log(typeof(marker._id));
-    var query;
-    
-    if(marker._id) {
-        
-        marker._id = typeof(marker._id) === "object" ? marker._id : new mongo.ObjectID(marker._id);
-    
-        query = {_id: marker._id};
-        markers.update(query, marker, { upsert:true }, function(err) {
-            callback(err);
-        });
-    } else{
-        query = {_id: new mongo.ObjectID() };
-        markers.save(marker, function(err, obj) {
-            if(!err) {
-                console.log(obj);
-            }
-            callback(err, obj);
-        });
-    }
-    
-    
-    
+    storeObject(db.collection("marker"), marker, callback);
 };
 
 var fullscreenConfig = {

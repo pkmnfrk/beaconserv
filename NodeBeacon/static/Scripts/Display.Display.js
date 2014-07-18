@@ -179,18 +179,20 @@ Display.prototype = {
     },
     
     _contextmenu_cmd_addlabel: function() {
-        /*var coords = this._contextmenu_coordinates;
+        var coords = this._contextmenu_coordinates;
         //var latlng = this.map.layerPointToLatLng(coords);
         var latlng = this.map.containerPointToLatLng(coords);
         
-        var newMarker = this._createMarkerFromData({
+        var newLabel = this._createLabelFromData({
             latitude: latlng.lat,
             longitude: latlng.lng,
+            text: "newLabel",
+            minZoom: this.map.getZoom(),
             floor: this.floor
         });
         
-        this.markers.push(newMarker);
-        this.map.addLayer(newMarker);*/
+        this.labels.push(newLabel);
+        this.map.addLayer(newLabel);
     },
     
     _loadBeacons: function(whenDone) {
@@ -273,27 +275,31 @@ Display.prototype = {
     
     _loadLabels: function(whenDone)
     {
-        var self = this;
         
-        B.getLabels(7, function(labels) {
-            self.labels = labels;
+        B.getLabels(this.floor, function(labels) {
+            this.labels = labels;
             
-            for(var i = 0; i < self.labels.length; i++)
+            for(var i = 0; i < this.labels.length; i++)
             {
-                var m = self.labels[i];
-
-                self.labels[i] = new B.SimpleLabel([ m.latitude, m.longitude ], {
-                    text: m.text,
-                    minZoom: m.minZoom
-                });
                 
-                self.labels[i].rawData = m;
-                self.labels[i].on('dragend', self._onLabelDragEnd);
-            }
+                this.labels[i] = this._createLabelFromData(this.labels[i]);
+            }           
 
             if(whenDone)
-                whenDone.apply(self);
+                whenDone.apply(this);
+        }.bind(this));
+    },
+    
+    _createLabelFromData: function(data) {
+        var ret = new B.SimpleLabel([data.latitude, data.longitude], {
+            text: data.text,
+            minZoom: data.minZoom
         });
+        
+        ret.rawData = data;
+        ret.on('dragend', this._onLabelDragEnd);
+        
+        return ret;
     },
     
     _onLabelsLoaded: function()
