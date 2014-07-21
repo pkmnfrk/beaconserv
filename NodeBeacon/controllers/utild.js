@@ -148,7 +148,7 @@ module.exports = {
                     hostname: "genome.klick.com",
                     path: "/api/Chatter?PageSize=" + n,
                     headers: {
-                        "Cookie": "SessionState.SessionID=2dcc7e3f-b5ef-44e6-8a30-ded6d274e545; ss-id=UGNjos6hwFLQAXT1VM0/; ss-pid=i0zV6AZkIK3zFXHngnMu; SmartSiteVisitorID=b20b06fb34014f5f8928d9018b64b5d7",
+                        "Cookie": "SessionState.SessionID=5614bc3f-42e0-4290-bca6-e260c6258ca9; SmartSiteVisitorID=19727f2085db4ee4b20bc94c342cae56",
                         "Accept": "application/json"
                     }
                     
