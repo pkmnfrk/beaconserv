@@ -107,7 +107,8 @@ Display.prototype = {
                 [0, 0],
                 [-127.9, 127.9]
 
-            ]
+            ],
+            unloadInvisibleTiles: false
         };
 
         L.tileLayer('/Content/maps/floor_' + this.floor + '/{z}/{x}/{y}.png', layerOpts).addTo(this.map);
