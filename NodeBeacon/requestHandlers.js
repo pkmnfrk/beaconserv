@@ -3,12 +3,23 @@ var url = require("url"),
     statics = require("node-static"),
     database = require("./database"),
     staticServer = new statics.Server('./static', {
-        cache: false,
-        headers: {
-            "Cache-Control": "none"
-        }
+        cache: false //I manually add caching headers down below
     }),
     realtime_map = require("./realtime_map");
+
+var superStaticPaths = [
+    "/Content/maps/",
+    "/Content/images/"
+];
+
+function isSuperStatic(path) {
+    for(var i = 0; i < superStaticPaths.length; i++){
+        if(path.indexOf(superStaticPaths[i] === 0))
+            return true;
+    }
+    
+    return false;
+}
 
 exports.static = function staticHandler(request, response, file) {
     
@@ -16,10 +27,16 @@ exports.static = function staticHandler(request, response, file) {
         if (file) {
             staticServer.serveFile(file, 200, {}, request, response);
         } else {
+            if(isSuperStatic(request.url)) {
+                staticServer.options.headers['Cache-Control'] = 'public, max-age=86400';
+            } else {
+                staticServer.options.headers['Cache-Control'] = 'max-age=60';
+            }
+            
             staticServer.serve(request, response, function(e, res) {
                 if(e && (e.status === 404)) {
                     //console.log(e);
-                    if(request.url.indexOf("/Content/maps/") === 0) {
+                    if(isSuperStatic(request.url)) {
                         staticServer.serveFile("Content/maps/blank.png", 200, {"Content-Type":"image/png"}, request, response);
                     } else {
                         response.writeHead(e.status, e.headers);

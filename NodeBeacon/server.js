@@ -1,32 +1,41 @@
+/*jshint node:true, unused: true, undef: true */
+
 "use strict";
 
 require("./polyfills");
 
 var http = require("http"),
-    url = require("url"),
     uuid = require("node-uuid"),
     os = require("os"),
     Cookies = require("cookies");
 
-var server = null, socketServer = null;
+var server = null;
 
-http.ServerResponse.prototype.writeJson = function(obj) {
-    this.writeHead(200, { "Content-Type":"application/json" });
+http.ServerResponse.prototype.writeJson = function(obj, headers) {
+    var my_headers = { 
+        "Content-Type": "application/json",
+        "Cache-Control": "private, max-age=0, no-cache" //assume, by default, that JSON responses are APIs without caching
+    };
+    for(var k in headers) {
+        my_headers[k] = headers[k];
+    }
+    this.writeHead(200, my_headers);
     this.write(JSON.stringify(obj));
     this.end();
 };
 
-http.ServerResponse.prototype.writeError = function(obj) {
-    this.writeHead(500, { "Content-Type":"application/json" });
+http.ServerResponse.prototype.writeError = function(obj, headers) {
+    var my_headers = { "Content-Type": "application/json" };
+    for(var k in headers) {
+        my_headers[k] = headers[k];
+    }
+    this.writeHead(500, my_headers);
     this.write(JSON.stringify(obj));
     this.end();
 };
 
 function start(route, handle) {
     server = http.createServer(function (request, response) {
-        var postData = "";
-        //var pathname = url.parse(request.url).pathname;
-        //console.log("Request received for " + pathname);
         
         request.cookies = response.cookies = new Cookies(request, response);
         
