@@ -199,6 +199,10 @@ Display.prototype = {
             ret.on('dragend', this._onMarkerDragEnd);
         }
         
+        if(this.inDevice()) {
+            
+        }
+        
         return ret;
     },
     
@@ -224,6 +228,16 @@ Display.prototype = {
             }
         }.bind(this));
         
+    },
+    
+    _marker_click: function() {
+        if(this.display.inDevice()) {
+            this.display.getAppProxy().send("marker_click", {
+                id: this._id
+            });
+
+            return false;
+        }
     },
     
     _loadLabels: function(whenDone)
