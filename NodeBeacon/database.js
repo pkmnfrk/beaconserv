@@ -220,6 +220,20 @@ exports.getMarkers = function(floor, callback)
     markers.find(query).toArray(callback);
 };
 
+exports.getMarker = function(markerId, callback)
+{
+    var query = {};
+    
+    if(typeof markerId !== "object") {
+        markerId = new mongo.ObjectID(markerId);
+    }
+    
+    query._id = markerId;
+    
+    var markers = db.collection("marker");
+    markers.findOne(query, callback);
+};
+
 
 exports.storeMarker = function(marker, callback)
 {

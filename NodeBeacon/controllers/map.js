@@ -58,6 +58,21 @@ module.exports = {
                     
                 });
                 return;
+            case "marker":
+                
+                database.getMarker(path[1], function(err, marker) {
+                    if(err) {
+                        res.writeError(err);
+                        return;
+                    }
+                    
+                    res.writeJson(marker, {
+                        "Cache-Control": "max-age=60"
+                    });
+                        
+                });
+                
+                return;
         }
         
         
