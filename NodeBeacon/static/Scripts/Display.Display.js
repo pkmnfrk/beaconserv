@@ -195,12 +195,14 @@ Display.prototype = {
         
         ret.bindPopup(data.title);
         ret.rawData = data;
+        ret.display = this;
+        
         if(this.editable()) {
             ret.on('dragend', this._onMarkerDragEnd);
         }
         
         if(this.inDevice()) {
-            ret.on('click', function() { this._marker_click(ret); }.bind(this));
+            ret.on('click', this._marker_click.bind(ret));
         }
         
         return ret;
@@ -230,10 +232,10 @@ Display.prototype = {
         
     },
     
-    _marker_click: function(marker) {
+    _marker_click: function() {
         if(this.display.inDevice()) {
             this.display.getAppProxy().send("marker_click", {
-                id: marker.rawData._id
+                id: this.rawData._id
             });
 
             return false;
