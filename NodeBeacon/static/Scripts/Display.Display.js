@@ -200,7 +200,7 @@ Display.prototype = {
         }
         
         if(this.inDevice()) {
-            
+            ret.on('click', function() { this._marker_click(ret); }.bind(this));
         }
         
         return ret;
@@ -230,10 +230,10 @@ Display.prototype = {
         
     },
     
-    _marker_click: function() {
+    _marker_click: function(marker) {
         if(this.display.inDevice()) {
             this.display.getAppProxy().send("marker_click", {
-                id: this._id
+                id: marker.rawData._id
             });
 
             return false;
