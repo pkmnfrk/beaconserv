@@ -8,7 +8,8 @@ B.SimpleLabel = L.Class.extend({
         text: "My Label",
         fontSize: "18px",
         backgroundColor: "rgba(0,0,0,0.5)",
-        color: "white"
+        color: "white",
+        draggable: false
 
     },
     includes: [
@@ -67,9 +68,12 @@ B.SimpleLabel = L.Class.extend({
         map.on('viewreset', this._reset, this);
 
         this._draggable = new L.Draggable(this._el);
-        this._draggable.enable();
         this._draggable.on("drag", this._drag, this);
         this._draggable.on("dragend", this._dragend, this);
+        
+        if(this.options.dragable) {
+            this._draggable.enable();
+        }
 
         this._reset();
     },
