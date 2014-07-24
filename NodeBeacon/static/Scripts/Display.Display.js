@@ -189,13 +189,15 @@ Display.prototype = {
     
     _createMarkerFromData: function(data) {
         var ret = L.marker([data.latitude, data.longitude], {
-            draggable: true,
+            draggable: this.editable(),
             icon: B.animatedMarker
         });
         
         ret.bindPopup(data.title);
         ret.rawData = data;
-        ret.on('dragend', this._onMarkerDragEnd);
+        if(this.editable()) {
+            ret.on('dragend', this._onMarkerDragEnd);
+        }
         
         return ret;
     },
@@ -244,11 +246,15 @@ Display.prototype = {
     _createLabelFromData: function(data) {
         var ret = new B.SimpleLabel([data.latitude, data.longitude], {
             text: data.text,
-            minZoom: data.minZoom
+            minZoom: data.minZoom,
+            draggable: this.editable()
         });
         
         ret.rawData = data;
-        ret.on('dragend', this._onLabelDragEnd);
+        
+        if(this.editable()) {
+            ret.on('dragend', this._onLabelDragEnd);
+        }
         
         return ret;
     },
