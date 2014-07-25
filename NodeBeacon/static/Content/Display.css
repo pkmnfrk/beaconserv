@@ -70,3 +70,13 @@ body.device {
 .delete-button {
     color: red !important;
 }
+
+#widgetPreview {
+    float:right;
+    zoom: 0.5;
+    background-color: black;
+}
+
+.stat_option {
+    display:none;
+}

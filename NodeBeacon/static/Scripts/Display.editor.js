@@ -124,6 +124,7 @@ Display.prototype.showLabelEditorDialog = function (label) {
     
     /*var dialog =*/ $("#labelEditor").dialog({
         modal: true,
+        width: 600,
         buttons: [
             {
                 text: "Delete",
@@ -165,12 +166,77 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
     //label is a L.Label object
     //this is the display
     var display = this;
+    var widget_data = null;
+    
+    if(marker.rawData.widget) {
+        widget_data = marker.rawData.widget;
+    } else {
+        widget_data = {
+            type: "none"
+        };
+    }
+    
+    if(!widget_data.perc) {
+        widget_data.perc = {
+            color: "#808080",
+            percentage: 40
+        };
+    }
+
+    $("#perc_color").val(widget_data.perc.color);
+        
+    
+    
+    $("#perc_color").on('change', function() {
+        widget_data.perc.color = $(this).val();
+        B.drawPieChartThing("widgetPreview", widget_data.perc);
+    });
+    $("#perc_value").slider({
+        min: 1,
+        max: 99,
+        value: widget_data.perc.percentage
+    }).css({
+        width: 220,
+        display: 'inline-block'
+    }).on('slide', function(e, ui) {
+        widget_data.perc.percentage = ui.value;
+        B.drawPieChartThing("widgetPreview", widget_data.perc);
+    });
+    $("#perc_inner_label").val(widget_data.perc.innerLabel).on('keyup', function() {
+        widget_data.perc.innerLabel = $(this).val().replace(/\\n/g, "\n");
+        B.drawPieChartThing("widgetPreview", widget_data.perc);
+    });
+    $("#perc_outer_label").val(widget_data.perc.outerLabel).on('keyup', function() {
+        widget_data.perc.outerLabel = $(this).val().replace(/\\n/g, "\n");
+        B.drawPieChartThing("widgetPreview", widget_data.perc);
+    });
     
     $("#marker_title").val(marker.rawData.title);
     $("#marker_copy").val(marker.rawData.copy);
+    $("#stat_none").on('click', function() {
+        $(".stat_option").hide();
+        $("#widgetPreview").hide();
+    });
+    $("#stat_perc").on('click', function() {
+        $(".stat_option").hide();
+        $("#perc_options").show();
+        $("#widgetPreview").show();
+        B.drawPieChartThing("widgetPreview", widget_data.perc);
+        widget_data.type = 'perc';
+        if(!widget_data.perc) {
+            widget_data.perc = {};
+        }
+    });
+    
+    $("#stat_" + widget_data.type).click();
+    
+    
+    
+    
     
     /*var dialog =*/ $("#markerEditor").dialog({
         modal: true,
+        width: 600,
         buttons: [
             {
                 text: "Delete",
@@ -190,6 +256,7 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
                 click: function() {
                     marker.rawData.title = $("#marker_title").val();
                     marker.rawData.copy = $("#marker_copy").val();
+                    marker.rawData.widget = widget_data;
                     marker.bindPopup(marker.rawData.title);
                     
                     B.storeMarker(marker.rawData, function(obj) {

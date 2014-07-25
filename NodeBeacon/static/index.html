@@ -31,10 +31,21 @@
     </div>
     
     <div id="markerEditor" class="editor" title="Marker Label">
+        <canvas id="widgetPreview" width="490" height="352"></canvas>
         Title: <input id="marker_title" value="" /><br/>
         Image: <input type="file" id="marker_file" /><br/>
         Copy:<br/>
-        <textarea id="marker_copy"></textarea>
+        <textarea id="marker_copy"></textarea><br/>
+        Statistic Type:
+        <input type="radio" name="statType" value="none" id="stat_none" checked="checked"/> <label for="stat_none">None</label>
+        <input type="radio" name="statType" value="none" id="stat_perc"/> <label for="stat_perc">Percentage</label>
+        <br/>
+        <div class="stat_option" id="perc_options">
+            Color: <input type="color" name="perc_color" id="perc_color" value="#808080" /><br/>
+            Value: <div id="perc_value"></div><span id="perc_value_label"></span><br/>
+            Inner Label: <input type="text" name="perc_inner_label" id="perc_inner_label" /><br/>
+            Outer Label: <input type="text" name="perc_outer_label" id="perc_outer_label" /><br/>
+        </div>
     </div>
 
     <script src="/Scripts/jquery-1.10.2.js"></script>

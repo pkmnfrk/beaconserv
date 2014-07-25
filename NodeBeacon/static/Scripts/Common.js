@@ -355,17 +355,20 @@ var B = (function () {
             });
         },
 
-        drawPieChartThing: function(element, percentage, options) {
+        drawPieChartThing: function(element, options) {
             var defaults = {
                 color: '#808080',
-                middleLabel: '',
+                innerLabel: '',
                 outerLabel: '',
                 outerRadius: 176,
-                innerRadius: 80
+                innerRadius: 80,
+                percentage: 10
             };
             
-            for(var o in options) {
-                defaults[o] = options[o];
+            if(options) {
+                for(var o in options) {
+                    defaults[o] = options[o];
+                }
             }
             
             var can = document.getElementById(element);
@@ -373,13 +376,13 @@ var B = (function () {
             
             can.width = can.width; //clear the canvas
             
-            percentage = ( percentage / 100);
+            defaults.percentage = ( defaults.percentage / 100);
             
             //var mx = can.width / 2;
             var my = can.height / 2;
             var pad = can.height - (defaults.outerRadius * 2);
             var startAngle = 0 - Math.PI / 4;
-            var endAngle = Math.PI * 2 - (Math.PI * 2 * percentage) - Math.PI / 4;
+            var endAngle = Math.PI * 2 - (Math.PI * 2 * defaults.percentage) - Math.PI / 4;
             var mx = pad + defaults.outerRadius;
             
             con.fillStyle = defaults.color;
@@ -403,9 +406,9 @@ var B = (function () {
             
             con.fillStyle = 'white';
             
-            if(defaults.middleLabel) {
+            if(defaults.innerLabel) {
                 con.textAlign = 'center';
-                con.fillText(defaults.middleLabel, mx, my);
+                con.fillText(defaults.innerLabel, mx, my + 8);
             }
             if(defaults.outerLabel) {
                 con.textAlign = 'left';
