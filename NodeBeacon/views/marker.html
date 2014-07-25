@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=320, height=568" />
+        <title>Detail view</title>
+        <style>
+            body {
+                background-color: black /* transparent */;
+                color: white;
+                font-size: 8pt;
+                font-family: 'Roboto Light', 'Helvetica Neue Light', sans-serif;
+                font-weight: 100;
+                margin-left: 25px;
+                margin-right: 25px;
+            }
+            p {
+                width: 100%;
+                margin: 10px;
+                color: #41a6cd;
+                font-size: 9pt;
+
+            }
+            h1 {
+                border-left: 6px solid #41a6cd;
+                padding-left: 10px;
+                font-size: 18pt;
+                font-weight: 100;
+            }
+            h2 {
+                font-size: 8pt;
+                font-weight: 200;
+                padding-left:17px;
+                text-transform: uppercase;
+                color: #ad9ab6;
+            }
+            div.image {
+                height: 176px;
+                width: 295px;
+                display:inline-block;
+            }
+        
+        canvas {
+            zoom: 0.5;
+        }
+        </style>
+    </head>
+    <body>
+        <h1 id="title">Quality Assurance (QA)</h1>
+        <h2>Klick Health / Floor <span id="floor">7</span></h2>
+        
+        <div id="imageCarousel">
+            <div class="image"></div>
+        </div>
+        <p id="body">
+            <strong>Quality Assurance (QA)</strong> is one of our most important resources. They are the second pair of eyes that looks over every email, line of code, or other content-type we produce, ensuring it meets Klicks high standards.
+        </p>
+        <h1>Department Statistics</h1>
+        <canvas id="stat" width="490" height="352"></canvas>
+        <h1>Personnel Breakdown</h1>
+        <script>
+            var data;
+            function loadContent(marker) {
+                data = marker;
+                drawPieGraph('stat', '#41a6cd', 22, "Klick", marker.title, 176, 80);
+                
+                
+                return;
+                //if(beacon.image) document.getElementById("image").src = beacon.image;
+                document.getElementById("title").innerHTML = marker.title;
+                document.getElementById("floor").innerHTML = marker.floor;
+                document.getElementById("body").innerHTML = marker.body;
+                
+                
+                
+            }
+        
+        function drawPieGraph(id, color, percentage, middle_label, outer_label, outer_radius, inner_radius) {
+            var can = document.getElementById(id);
+            var con = can.getContext("2d");
+            
+            percentage = ( percentage / 100);
+            
+            //var mx = can.width / 2;
+            var my = can.height / 2;
+            var pad = can.height - (outer_radius * 2);
+            var startAngle = 0 - Math.PI / 4;
+            var endAngle = Math.PI * 2 - (Math.PI * 2 * percentage) - Math.PI / 4;
+            var mx = pad + outer_radius;
+            
+            con.fillStyle = color;
+            
+            con.globalAlpha = 0.5;
+            
+            con.beginPath();
+            con.arc(mx, my, outer_radius, 0, Math.PI * 2, true);
+            con.arc(mx, my, inner_radius, 0, Math.PI * 2, false);
+            con.fill();
+            
+            con.globalAlpha = 1;
+            con.beginPath();
+            con.arc(mx, my, outer_radius, startAngle, endAngle, true);
+            con.arc(mx, my, inner_radius, endAngle, startAngle, false);
+            //con.closePath();
+            
+            con.fill();
+            
+            con.font = '400 18pt Helvetica Neue';
+            
+            con.fillStyle = 'white';
+            
+            if(middle_label) {
+                con.textAlign = 'center';
+                con.fillText(middle_label, mx, my);
+            }
+            if(outer_label) {
+                con.textAlign = 'left';
+                con.fillText(outer_label, mx + outer_radius + 12, my - outer_radius + 28, can.width - pad - outer_radius * 2 - 12);
+                
+
+                con.beginPath();
+                
+                con.arc(mx, my, outer_radius, startAngle, startAngle, false);
+                con.lineTo(mx + outer_radius - 20.5, my - outer_radius + 20.5);
+                con.lineTo(mx + outer_radius + 2.5, my - outer_radius + 20.5);
+                
+                con.strokeStyle = color;
+                con.lineWidth = 2;
+                con.stroke();
+                
+                
+            }
+            
+        }
+        </script>
+    </body>
+</html>

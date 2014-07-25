@@ -355,6 +355,78 @@ var B = (function () {
             });
         },
 
+        drawPieChartThing: function(element, percentage, options) {
+            var defaults = {
+                color: '#808080',
+                middleLabel: '',
+                outerLabel: '',
+                outerRadius: 176,
+                innerRadius: 80
+            };
+            
+            for(var o in options) {
+                defaults[o] = options[o];
+            }
+            
+            var can = document.getElementById(element);
+            var con = can.getContext("2d");
+            
+            can.width = can.width; //clear the canvas
+            
+            percentage = ( percentage / 100);
+            
+            //var mx = can.width / 2;
+            var my = can.height / 2;
+            var pad = can.height - (defaults.outerRadius * 2);
+            var startAngle = 0 - Math.PI / 4;
+            var endAngle = Math.PI * 2 - (Math.PI * 2 * percentage) - Math.PI / 4;
+            var mx = pad + defaults.outerRadius;
+            
+            con.fillStyle = defaults.color;
+            
+            con.globalAlpha = 0.5;
+            
+            con.beginPath();
+            con.arc(mx, my, defaults.outerRadius, 0, Math.PI * 2, true);
+            con.arc(mx, my, defaults.innerRadius, 0, Math.PI * 2, false);
+            con.fill();
+            
+            con.globalAlpha = 1;
+            con.beginPath();
+            con.arc(mx, my, defaults.outerRadius, startAngle, endAngle, true);
+            con.arc(mx, my, defaults.innerRadius, endAngle, startAngle, false);
+            //con.closePath();
+            
+            con.fill();
+            
+            con.font = '400 18pt Helvetica Neue';
+            
+            con.fillStyle = 'white';
+            
+            if(defaults.middleLabel) {
+                con.textAlign = 'center';
+                con.fillText(defaults.middleLabel, mx, my);
+            }
+            if(defaults.outerLabel) {
+                con.textAlign = 'left';
+                con.fillText(defaults.outerLabel, mx + defaults.outerRadius + 12, my - defaults.outerRadius + 28, can.width - pad - defaults.outerRadius * 2 - 12);
+                
+
+                con.beginPath();
+                
+                con.arc(mx, my, defaults.outerRadius, startAngle, startAngle, false);
+                con.lineTo(mx + defaults.outerRadius - 20.5, my - defaults.outerRadius + 20.5);
+                con.lineTo(mx + defaults.outerRadius + 2.5, my - defaults.outerRadius + 20.5);
+                
+                con.strokeStyle = defaults.color;
+                con.lineWidth = 2;
+                con.stroke();
+                
+                
+            }
+
+            
+        }
     };
     
     ret.AppProxy = function(tag) {
