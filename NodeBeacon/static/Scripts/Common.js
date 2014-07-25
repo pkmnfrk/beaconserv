@@ -409,7 +409,7 @@ var B = (function () {
             }
             if(defaults.outerLabel) {
                 con.textAlign = 'left';
-                con.fillText(defaults.outerLabel, mx + defaults.outerRadius + 12, my - defaults.outerRadius + 28, can.width - pad - defaults.outerRadius * 2 - 12);
+                B.wrapText(con, defaults.outerLabel, mx + defaults.outerRadius + 12, my - defaults.outerRadius + 28, can.width - pad - defaults.outerRadius * 2 - 12, 25);
                 
 
                 con.beginPath();
@@ -426,7 +426,40 @@ var B = (function () {
             }
 
             
+        },
+        wrapText: function(context, text, x, y, maxWidth, lineHeight) {
+            var words = text.replace(/\n/g, " {newLine} ");
+            console.log("Operating on " + words);
+            words = words.split(' ');
+            var line = '';
+
+            for(var n = 0; n < words.length; n++) {
+                if(words[n] == "{newLine}") {
+                    if(line) {
+                        console.log("printing: " + line);
+                        context.fillText(line, x, y);
+                        line = '';
+                    }
+                    y += lineHeight;
+                } else {
+                    var testLine = line + words[n] + ' ';
+                    var metrics = context.measureText(testLine);
+                    var testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        console.log("printing: " + line);
+                        context.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    }
+                    else {
+                        line = testLine;
+                    }
+                }
+            }
+            console.log("printing: " + line);
+            context.fillText(line, x, y);
         }
+        
     };
     
     ret.AppProxy = function(tag) {
