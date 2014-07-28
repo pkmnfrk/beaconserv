@@ -168,6 +168,8 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
     var display = this;
     var widget_data = null;
     
+    $("#marker_fileWrapper").html($("#marker_fileWrapper").html());
+    
     if(marker.rawData.widget) {
         widget_data = marker.rawData.widget;
     } else {
@@ -230,10 +232,21 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
 
     $("#marker_file").on('change', function(e) {
         $("#marker_file_list li[data-not-uploaded]").remove();
+        $("#marker_file_list li").show();
+        
+        var hideMatchingElement = function(i, el) {
+            if($(this).data("filename") == file.name) {
+                $(this).hide();
+            }
+        };
         
         for(var i = 0; i < e.target.files.length; i++) {
             var file = e.target.files[i];
-            $("<li data-not-uploaded='true'/>").text(file.name).appendTo($("#marker_file_list"));
+            $("#marker_file_list li").each(hideMatchingElement);
+            
+            $("<li data-not-uploaded='true'/>").data("filename", file.name).text(file.name + " (pending)").appendTo($("#marker_file_list"));
+            
+            
             
         }
     });
@@ -241,7 +254,14 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
     $("#stat_" + widget_data.type).click();
     
     
-    
+    $("#marker_file_list li").remove();
+    if(marker.rawData.images) {
+        for(var i = 0; i < marker.rawData.images.length; i++) {
+            var im = marker.rawData.images[i];
+            
+            $("<li />").text(im.filename).data("filename", im.filename).appendTo($("#marker_file_list"));
+        }
+    }
     
     
     /*var dialog =*/ $("#markerEditor").dialog({
