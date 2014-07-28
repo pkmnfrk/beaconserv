@@ -227,6 +227,16 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
             widget_data.perc = {};
         }
     });
+
+    $("#marker_file").on('change', function(e) {
+        $("#marker_file_list li[data-not-uploaded]").remove();
+        
+        for(var i = 0; i < e.target.files.length; i++) {
+            var file = e.target.files[i];
+            $("<li data-not-uploaded='true'/>").text(file.name).appendTo($("#marker_file_list"));
+            
+        }
+    });
     
     $("#stat_" + widget_data.type).click();
     
@@ -236,7 +246,13 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
     
     /*var dialog =*/ $("#markerEditor").dialog({
         modal: true,
-        width: 600,
+        width: 700,
+        close: function() {
+            $("#stat_none").off('click');
+            $("#stat_perc").off('click');
+            $("#marker_file").off('change');
+            $("#perc_color").off('change');
+        },
         buttons: [
             {
                 text: "Delete",
@@ -254,17 +270,73 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
             {
                 text: "Save",
                 click: function() {
-                    marker.rawData.title = $("#marker_title").val();
-                    marker.rawData.copy = $("#marker_copy").val();
-                    marker.rawData.widget = widget_data;
-                    marker.bindPopup(marker.rawData.title);
+                    var self = this;
+                    var whenDone = function() {
+                        marker.rawData.title = $("#marker_title").val();
+                        marker.rawData.copy = $("#marker_copy").val();
+                        marker.rawData.widget = widget_data;
+                        marker.bindPopup(marker.rawData.title);
+
+                        B.storeMarker(marker.rawData, function(obj) {
+                            if(obj) {
+                                marker.rawData = obj;
+                            }
+                        });
+                        $( self ).dialog( "close" );
+                    };
                     
-                    B.storeMarker(marker.rawData, function(obj) {
-                        if(obj) {
-                            marker.rawData = obj;
-                        }
-                    });
-                    $( this ).dialog( "close" );
+                    if($("#marker_file")[0].files.length) {
+                        var f = 0;
+                        var uploadFile = function uploadFile() {
+                            var file = $("#marker_file")[0].files[f];
+                            if(!file) {
+                                whenDone();
+                                return;
+                            }
+                            
+                            $("#marker_file_list li[data-not-uploaded]").eq(f).append("<img src='/Content/images/ajax-loader.gif' />");
+                            
+                            var fr = new FileReader();
+                            
+                            fr.onload = function(evt) {
+                                $.ajax({
+                                    url: "/map/marker/" + marker.rawData._id + "/images",
+                                    type: "post",
+                                    headers: {
+                                        "X-Filename": file.name
+                                    },
+                                    data: evt.target.result,
+                                    contentType: file.type,
+                                    processData: false,
+                                    success: function(xhr, textStatus) {
+                                        xhr=xhr;
+                                        textStatus=textStatus;
+                                        
+                                    },
+                                    error: function(xhr, textStatus, errorThrown) {
+                                        xhr=xhr; textStatus=textStatus; errorThrown=errorThrown;
+                                        
+                                        
+                                        
+                                        alert(errorThrown);
+                                        
+                                    },
+                                    complete: function() {
+                                        $("img", $("#marker_file_list li[data-not-uploaded]").eq(f)).remove();
+                                        f++;
+                                        uploadFile();
+                                    }
+                                });
+                            };
+                            
+                            fr.readAsDataURL(file);
+                            
+                        };
+                        
+                        uploadFile();
+                    } else {
+                        whenDone();
+                    }
                 },
                 class: "default"
             }

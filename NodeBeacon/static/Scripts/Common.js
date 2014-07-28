@@ -432,7 +432,7 @@ var B = (function () {
         },
         wrapText: function(context, text, x, y, maxWidth, lineHeight) {
             var words = text.replace(/\n/g, " {newLine} ");
-            console.log("Operating on " + words);
+            //console.log("Operating on " + words);
             words = words.split(' ');
             var line = '';
 
@@ -449,7 +449,7 @@ var B = (function () {
                     var metrics = context.measureText(testLine);
                     var testWidth = metrics.width;
                     if (testWidth > maxWidth && n > 0) {
-                        console.log("printing: " + line);
+                        //console.log("printing: " + line);
                         context.fillText(line, x, y);
                         line = words[n] + ' ';
                         y += lineHeight;
@@ -459,7 +459,7 @@ var B = (function () {
                     }
                 }
             }
-            console.log("printing: " + line);
+            //console.log("printing: " + line);
             context.fillText(line, x, y);
         }
         

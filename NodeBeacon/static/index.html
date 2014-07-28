@@ -33,7 +33,9 @@
     <div id="markerEditor" class="editor" title="Marker Label">
         <canvas id="widgetPreview" width="490" height="352"></canvas>
         Title: <input id="marker_title" value="" /><br/>
-        Image: <input type="file" id="marker_file" /><br/>
+        Images: <input type="file" id="marker_file" multiple="multiple" /><br/>
+        <ul id="marker_file_list">
+        </ul>
         Copy:<br/>
         <textarea id="marker_copy"></textarea><br/>
         Statistic Type:

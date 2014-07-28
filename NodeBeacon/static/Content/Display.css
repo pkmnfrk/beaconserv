@@ -60,6 +60,7 @@ body.device {
 {
     width: 600px;
     display:none;
+    font-size: 14px;
 }
 
 #label_minZoom
@@ -76,6 +77,16 @@ body.device {
     zoom: 0.5;
     background-color: black;
 }
+
+#marker_copy {
+    width: 250px;
+}
+
+#marker_file_list {
+    width: 300px;
+    text-overflow: ellipsis;
+}
+
 
 .stat_option {
     display:none;

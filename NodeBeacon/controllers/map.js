@@ -3,7 +3,9 @@
 
 var realtime_map = require("../realtime_map"),
     url = require("url"),
-    database = require("../database");
+    database = require("../database"),
+    fs = require("fs"),
+    mkdirp = require("mkdirp");
 
 module.exports = {
     get: function (req, res) {
@@ -131,26 +133,124 @@ module.exports = {
                     data += d;
                 });
                 req.on('end', function() {
-                    data = JSON.parse(data);
-                    
-                    database.storeMarker(data, function(err, obj) {
-                        if(err)
-                        {
-                            res.writeError(err);
-                            return;
-                        }    
-                        if(obj) {
-                            res.writeJson(obj);
+
+                    var onMarkerLoad = function(marker) {
+                        if(!path[2]) {
+                            data = JSON.parse(data);
+
+                            database.storeMarker(data, function(err, obj) {
+                                if(err)
+                                {
+                                    res.writeError(err);
+                                    return;
+                                }    
+                                if(obj) {
+                                    res.writeJson(obj);
+
+                                } else {
+                                    res.writeHead(204, "No Content");
+                                    res.end();
+                                }
+                            });
+                        } else if(path[2] == "images") {
+                            data = data.split(',')[1];
+                            data = new Buffer(data, 'base64');
                             
-                        } else {
-                            res.writeHead(204, "No Content");
-                            res.end();
+                            var filename = req.headers["x-filename"];
+                            if(!filename) {
+                                res.writeError({
+                                    message: "Filename is missing",
+                                    headers: req.headers
+                                });
+                                return;
+                            }
+                            
+                            filename = filename.replace(/[/\\*?]/g, '');
+                            var type = req.headers["content-type"];
+                            
+                            var destDir = "./static/Content/markers/" + marker._id;
+                            var filePath = destDir + "/" + filename;
+                            
+                            mkdirp("./static/Content/markers/" + marker._id, function(err) {
+                                
+                                if(err) {
+                                    res.writeError(err);
+                                    return;
+                                }
+                                
+                                console.log(data.length);
+                                
+                                fs.writeFile(filePath, data, { encoding: 'binary', flag: "w" }, function(err) {
+                                    if(err) {
+                                        res.writeError(err);
+                                        return;
+                                    }
+                                    
+                                    if(!marker.images) {
+                                        marker.images = [];
+                                    }
+                                    
+                                    for(var i = 0; i < marker.images.length; i++) {
+                                        if(marker.images[i] === null) {
+                                            marker.images.splice(i, 1);
+                                            i--;
+                                        } else if(marker.images[i].filename == filename) {
+                                            marker.images.splice(i, 1);
+                                            i--;
+                                        }
+                                    }
+                                    
+                                    marker.images.push({
+                                        filename: filename,
+                                        filetype: type,
+                                        url: "/Content/markers/" + marker._id + "/" + filename
+                                    });
+                                    
+                                    database.storeMarker(marker, function(err, obj) {
+                                        if(err) {
+                                            res.writeError(err);
+                                            return;
+                                        }
+                                        
+                                        if(obj) {
+                                            res.writeJson(obj);
+                                            return;
+                                        } else {
+                                            res.writeJson(marker);
+                                            return;
+                                        }
+                                        
+                                        
+                                    });
+                                    
+                                });
+                                
+                                
+                                
+                            });
                         }
-                    });
+                    };
+                    
+                    if(path[1]) {
+                        database.getMarker(path[1], function(err, marker) {
+                            
+                            if(err) {
+                                res.writeError(err);
+                                return;
+                            }
+                            
+                            onMarkerLoad(marker);
+                            
+                        });
+                    } else {
+                        onMarkerLoad(null);
+                    }
+
                     
                 });
                 //req.finish();
                 return;
+                
         }
         
         
