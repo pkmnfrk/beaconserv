@@ -229,12 +229,15 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
             widget_data.perc = {};
         }
     });
+    
+    var uploaded_tpl = $("#marker_uploaded_tpl").html();
+    var pending_tpl = $("#marker_pending_tpl").html();
 
     $("#marker_file").on('change', function(e) {
         $("#marker_file_list li[data-not-uploaded]").remove();
         $("#marker_file_list li").show();
         
-        var hideMatchingElement = function(i, el) {
+        var hideMatchingElement = function() {
             if($(this).data("filename") == file.name) {
                 $(this).hide();
             }
@@ -244,7 +247,10 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
             var file = e.target.files[i];
             $("#marker_file_list li").each(hideMatchingElement);
             
-            $("<li data-not-uploaded='true'/>").data("filename", file.name).text(file.name + " (pending)").appendTo($("#marker_file_list"));
+            
+            $(pending_tpl.replace(/\{FILENAME\}/g, file.name)).appendTo($("#marker_file_list"));
+            
+            //$("<li data-not-uploaded='true'/>").data("filename", file.name).text(file.name + " (pending)").appendTo($("#marker_file_list"));
             
             
             
@@ -259,7 +265,8 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
         for(var i = 0; i < marker.rawData.images.length; i++) {
             var im = marker.rawData.images[i];
             
-            $("<li />").text(im.filename).data("filename", im.filename).appendTo($("#marker_file_list"));
+            //$("<li />").text(im.filename).data("filename", im.filename).appendTo($("#marker_file_list"));
+            $(uploaded_tpl.replace(/\{FILENAME\}/g, im.filename)).appendTo($("#marker_file_list"));
         }
     }
     
@@ -328,9 +335,9 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
                                     data: evt.target.result,
                                     contentType: file.type,
                                     processData: false,
-                                    success: function(xhr, textStatus) {
-                                        xhr=xhr;
-                                        textStatus=textStatus;
+                                    success: function(obj) {
+                                        
+                                        marker.rawData.images = obj.images;
                                         
                                     },
                                     error: function(xhr, textStatus, errorThrown) {

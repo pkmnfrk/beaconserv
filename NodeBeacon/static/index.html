@@ -49,6 +49,14 @@
             Outer Label: <input type="text" name="perc_outer_label" id="perc_outer_label" /><br/>
         </div>
     </div>
+    
+    <script id="marker_uploaded_tpl" type="text/html">
+        <li data-filename="{FILENAME}">{FILENAME} <button type="button">Del</button></li>
+    </script>
+    
+    <script id="marker_pending_tpl" type="text/html">
+        <li data-filename="{FILENAME}" data-not-uploaded="true">{FILENAME} (pending)</li>
+    </script>
 
     <script src="/Scripts/jquery-1.10.2.js"></script>
     <script src="/Scripts/jquery-ui-1.10.4.custom.min.js"></script>
