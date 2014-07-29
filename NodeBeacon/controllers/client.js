@@ -40,7 +40,31 @@ module.exports = {
             return;
             
         } else if (path[0] === "all") {
-            database.findClients(function(clients) {
+            database.findClients(function(err, clients) {
+                if(err) {
+                    response.writeError(err);
+                    return;
+                }
+                response.writeJson(clients);
+                return;
+            });
+            
+            return;
+        } else if (path[0] === "most") {
+            database.findClients({
+                
+                "pings": {
+                    "$elemMatch": {
+                        date: {
+                            "$gt": new Date().addMinutes(-10)
+                        }
+                    }
+                }
+            }, function(err, clients) {
+                if(err) {
+                    response.writeError(err);
+                    return;
+                }
                 response.writeJson(clients);
                 return;
             });

@@ -31,7 +31,7 @@ var onInitialMessage = function (msg) {
                     }
                 }
             }
-        }, function(clients) {
+        }, function(err, clients) {
             debug.debug("Clients: ", clients);
             
             var client;

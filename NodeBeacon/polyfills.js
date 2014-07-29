@@ -4,3 +4,8 @@ Date.prototype.addDays = function(days)
     dat.setDate(dat.getDate() + days);
     return dat;
 }
+
+Date.prototype.addMinutes = function(mins)
+{
+    return new Date(this.valueOf() + (mins * 60 * 1000));
+}

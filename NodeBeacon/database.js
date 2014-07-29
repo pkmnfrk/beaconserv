@@ -147,7 +147,11 @@ exports.findClients = function(query, callback) {
     }
     
     clients.find(query).toArray(function(err, objs) {
-        if(err) throw err;
+        if(err){
+            callback(err, null);
+            return;
+        }
+        
         var now = new Date();
         var toSave = [];
         
@@ -166,7 +170,7 @@ exports.findClients = function(query, callback) {
         }
         
         (function saveFunc() {
-            if(!toSave.length) callback(objs);
+            if(!toSave.length) callback(null, objs);
             else exports.storeClient(toSave.pop(), saveFunc);
         })();
     });
