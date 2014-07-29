@@ -301,9 +301,13 @@ module.exports = {
                 database.deleteMarker(path[1], function(err, nDel) {
                     if(err) {
                         res.writeError(err);
-                    } else if(nDel < 1) {
-                        res.WriteHead(404, "Not Found");
+                        return;
+                    }
+                    if(nDel < 1) {
+                        res.writeHead(404, "Not Found");
+                        res.end();
                     } else {
+                        realtime_map.notifyMarkerDeleted(path[1]);
                         res.writeHead(204, "No Content");
                         res.end();
                     }

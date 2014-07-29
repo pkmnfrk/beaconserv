@@ -53,7 +53,7 @@ Display.prototype._contextmenu_cmd_addmarker = function() {
         floor: this.floor
     });
 
-    this.markers.push(newMarker);
+    //this.markers.push(newMarker);
     this.map.addLayer(newMarker);
 
     //B.storeMarker(newMarker.rawData, function(obj) {
@@ -287,6 +287,14 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
                     //var ok = confirm("Are you sure you want to delete this label? This cannot be undone!");
                     //if(ok) {
                         B.deleteMarker(marker.rawData, function() {
+                            if(marker.rawData._id) {
+                                for(var i = 0; i < display.markers.length; i++) {
+                                    if(display.markers[i].rawData._id == marker.rawData._id) {
+                                        display.markers[i].splice(i, 1);
+                                        break;
+                                    }
+                                }
+                            }
                             display.map.removeLayer(marker);
                         });
                         $(this).dialog("close");
@@ -305,8 +313,8 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
                         marker.bindPopup(marker.rawData.title);
 
                         B.storeMarker(marker.rawData, function(obj) {
-                            if(obj) {
-                                marker.rawData = obj;
+                            if(!marker.rawData._id) {
+                                display.map.removeLayer(marker);
                             }
                         });
                         $( self ).dialog( "close" );
@@ -383,6 +391,14 @@ Display.prototype._contextmenu_cmd_deleteMarker = function()
 {
     var marker = this.targetMarker;
     B.deleteMarker(marker.rawData, function() {
+        if(marker.rawData._id) {
+            for(var i = 0; i < this.markers.length; i++) {
+                if(this.markers[i].rawData._id == marker.rawData._id) {
+                    this.markers[i].splice(i, 1);
+                    break;
+                }
+            }
+        }
         this.map.removeLayer(marker);
     }.bind(this));
 };

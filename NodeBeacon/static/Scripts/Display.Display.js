@@ -136,6 +136,8 @@ Display.prototype = {
                 //bind events to the socket
                 this._socket.on('client', this._msg_client, this);
                 this._socket.on('beacon', this._msg_beacon, this);
+                this._socket.on('marker', this._msg_marker, this);
+                this._socket.on('marker_deleted', this._msg_marker_deleted, this);
                 this._socket.open();
             }
         }.bind(this));
@@ -390,6 +392,38 @@ Display.prototype = {
             }
 
         }*/
+    },
+    
+    _msg_marker: function(data) {
+        console.log("Adding/updating marker");
+        data = data;
+        
+        for(var i = 0; i < this.markers.length; i++) {
+            if(this.markers[i].rawData._id === data.marker._id) {
+                this.map.removeLayer(this.markers[i]);
+                this.markers[i] = this._createMarkerFromData(data.marker);
+                this.map.addLayer(this.markers[i]);
+                return;
+            }
+        }
+        
+        //no existing marker, create one
+        var newMarker = this._createMarkerFromData(data.marker);
+        this.markers.push(newMarker);
+        this.map.addLayer(newMarker);
+        
+        
+    },
+    
+    _msg_marker_deleted: function(data) {
+        console.log("Removing marker");
+        for(var i = 0; i < this.markers.length; i++) {
+            if(this.markers[i].rawData._id === data.marker_id) {
+                this.map.removeLayer(this.markers[i]);
+                this.markers.splice(i, 1);
+                return;
+            }
+        }
     }
     
 };

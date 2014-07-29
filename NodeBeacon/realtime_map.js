@@ -158,6 +158,22 @@ exports.notifyMarkerChange = function(marker) {
     socketServer.broadcast(JSON.stringify(msg));
 };
 
+exports.notifyMarkerDeleted = function(marker_id) {
+    if(!server.supportsWebsockets) return;
+    
+    if(marker_id === null) throw "Marker ID cannot be null";
+    
+    var msg = {
+        msg: "marker_deleted",
+        marker_id: marker_id
+    };
+    
+    debug.info("Broadcasting marker deletion about marker " + marker_id);
+    
+    socketServer.broadcast(JSON.stringify(msg));
+};
+
+
 exports.closeAllConnections = function () {
     if(!server.supportsWebsockets) return;
     
