@@ -143,7 +143,9 @@ module.exports = {
                                 {
                                     res.writeError(err);
                                     return;
-                                }    
+                                }
+                                
+                                realtime_map.notifyMarkerChange(obj ? obj : data);
                                 if(obj) {
                                     res.writeJson(obj);
 
@@ -212,11 +214,16 @@ module.exports = {
                                             return;
                                         }
                                         
+                                        
+                                        
                                         if(obj) {
+                                            realtime_map.notifyMarkerChange(obj);
                                             res.writeJson(obj);
                                             return;
                                         } else {
+                                            realtime_map.notifyMarkerChange(marker);
                                             res.writeJson(marker);
+                                            
                                             return;
                                         }
                                         

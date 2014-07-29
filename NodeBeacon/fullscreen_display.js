@@ -1,3 +1,7 @@
+/*jshint node:true, unused: true, undef: true */
+
+"use strict";
+
 var server = require("./server"),
     database = require("./database"),
     WebSocketServer = require("ws").Server,
@@ -24,10 +28,10 @@ var onInitialMessage = function (msg) {
         
         database.getFullscreenConfig(function(err, config) {
             if(err) {
-                response.writeHead(500, "Internal Server Error");
-                response.end();
+                exports.notifyChange(self.name, {url: "about:blank" });
                 return;
             }
+            
             if(config[self.name]) {
                 debug.info("Notifying about configured screen");
                 exports.notifyChange(self.name, config[self.name]);
@@ -59,7 +63,7 @@ var onMessage = function (msg) {
         var line = "{date} - {text}\n";
         line = line.replace("{date}", new Date().toISOString()).replace("{text}", msg.text);
 
-        fs.appendFile(filename, line, function(err) {
+        fs.appendFile(filename, line, function() {
             //don't care about the result
         });
         
@@ -94,8 +98,7 @@ var checkSchedules = function() {
     database.getFullscreenConfig(function(err, config) {
         
         if(err) {
-            response.writeHead(500, "Internal Server Error");
-            response.end();
+            debug.error("Unable to load configuration data");
             return;
         }
         

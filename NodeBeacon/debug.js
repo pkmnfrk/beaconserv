@@ -15,35 +15,41 @@ module.exports = function(level) {
         }
     } else if(typeof(level) === "undefined") {
         
-        level = LOG;
+        level = null;
     }
     
     this.logLevel = level;
 };
 
 module.exports.prototype = {
-    
+    getLogLevel: function() {
+        if(this.logLevel === null) {
+            return logLevel;
+        }
+        
+        return this.logLevel;
+    },
     setLogLevel: function(level) {
         this.logLevel = level;
     },
     error: function() {
-        if(this.logLevel > ERROR) return;
+        if(this.getLogLevel() > ERROR) return;
         console.error.apply(console, arguments);
     },
     warn: function() {
-        if(this.logLevel > WARN) return;
+        if(this.getLogLevel() > WARN) return;
         console.warn.apply(console, arguments);
     },
     log: function() {
-        if(this.logLevel > LOG) return;
+        if(this.getLogLevel() > LOG) return;
         console.log.apply(console, arguments);
     },
     info: function() {
-        if(this.logLevel > INFO) return;
+        if(this.getLogLevel() > INFO) return;
         console.info.apply(console, arguments);
     },
     debug: function() {
-        if(this.logLevel > DEBUG) return;
+        if(this.getLogLevel() > DEBUG) return;
         console.log.apply(console, arguments);
     }
 };

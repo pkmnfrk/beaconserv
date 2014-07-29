@@ -3,7 +3,7 @@
 "use strict";
 
 var url = require("url"),
-    debug = new (require("./debug"))("INFO"),
+    debug = new (require("./debug"))(),
     fs = require("fs");
 
 var _staticHandler = null;
@@ -31,6 +31,7 @@ function route(handle, request, response) {
             debug.info("No cached controller for " + modName);
             //maybe try loading it?
             if(fs.existsSync("./controllers/" + modName + ".js")) {
+                debug.info("Controller exists, trying to load it");
                 try {
                     handler = require("./controllers/" + modName);
                     debug.info("Found controller file for " + modName);

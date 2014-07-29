@@ -1,3 +1,7 @@
+/*jshint node:true, unused: true, undef: true */
+
+"use strict";
+
 var server = require("./server"),
     database = require("./database"),
     uuid = require("node-uuid"),
@@ -66,7 +70,7 @@ var onInitialMessage = function (msg) {
 
 
 var onMessage = function (msg) {
-    
+    msg = msg;
 };
 
 function start() {
@@ -135,6 +139,21 @@ exports.notifyBeaconChange = function(beacon) {
     };
     
     debug.info("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
+    
+    socketServer.broadcast(JSON.stringify(msg));
+};
+
+exports.notifyMarkerChange = function(marker) {
+    if(!server.supportsWebsockets) return;
+    
+    if(marker === null) throw "Marker cannot be null";
+    
+    var msg = {
+        msg: "marker",
+        marker: marker
+    };
+    
+    debug.info("Broadcasting marker change about marker " + marker._id);
     
     socketServer.broadcast(JSON.stringify(msg));
 };
