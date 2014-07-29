@@ -2,14 +2,15 @@ var server = require("./server"),
     database = require("./database"),
     WebSocketServer = require("ws").Server,
     socketServer = null,
-    fs = require("fs");
+    fs = require("fs"),
+    debug = require("./debug");
 
 
 
 var onInitialMessage = function (msg) {
     var self = this;
     
-    console.log("Got initial message from client: " + msg);
+    debug.info("Got initial message from client: " + msg);
     
     msg = JSON.parse(msg);
     if(msg.name) {
@@ -19,7 +20,7 @@ var onInitialMessage = function (msg) {
         
         self.name = msg.name;
         
-        console.log("Client's name is " + self.name);
+        debug.info("Client's name is " + self.name);
         
         database.getFullscreenConfig(function(err, config) {
             if(err) {
@@ -28,10 +29,10 @@ var onInitialMessage = function (msg) {
                 return;
             }
             if(config[self.name]) {
-                console.log("Notifying about configured screen");
+                debug.info("Notifying about configured screen");
                 exports.notifyChange(self.name, config[self.name]);
             } else {
-                console.log("Unknown screen");
+                debug.log("Unknown screen " + self.name);
                 exports.notifyChange(self.name, {url: "about:blank" });
             }
         });
@@ -46,7 +47,7 @@ var onInitialMessage = function (msg) {
 
 
 var onMessage = function (msg) {
-    //console.log(msg);
+    //debug.log(msg);
     msg = JSON.parse(msg);
     
     if(msg.msg === "log") {
@@ -159,7 +160,7 @@ var checkSchedules = function() {
 
 function start() {
     
-    //console.log(process.env);
+    //debug.log(process.env);
     
     if(!server.supportsWebsockets) return;
     
@@ -169,7 +170,7 @@ function start() {
         server: server.getServer(),
         path: "/display"
     }).on("connection", function(ws) {
-        console.log("Connection");
+        debug.log("Connection");
 
         ws.handler = onInitialMessage.bind(ws);
         ws.on("message", ws.handler);
@@ -196,15 +197,15 @@ exports.notifyChange = function(screen, data) {
     };
     
     msg = JSON.stringify(msg);
-    console.log("Broadcasting fullscreen change");
+    debug.info("Broadcasting fullscreen change");
     
     for(var i in socketServer.clients) {
         if(socketServer.clients[i].name === screen) {
-            console.log("Notifying " + screen + " about " + JSON.stringify(data));
+            debug.info("Notifying " + screen + " about " + JSON.stringify(data));
             socketServer.clients[i].send(msg);
         } else {
             
-            console.log("Skipping screen " + socketServer.clients[i].name);
+            debug.debug("Skipping screen " + socketServer.clients[i].name);
         }
     }
     

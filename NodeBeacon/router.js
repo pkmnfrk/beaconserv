@@ -2,37 +2,44 @@
 
 "use strict";
 
-var url = require("url");
+var url = require("url"),
+    debug = new (require("./debug"))("INFO"),
+    fs = require("fs");
 
 var _staticHandler = null;
 var modules = {};
 
 function route(handle, request, response) {
     var pathname = url.parse(request.url).pathname;
-    //console.log("About to route a request for " + pathname);
+    debug.info("About to route a request for " + pathname);
     
     var handler = null;
     
     var parts = pathname.substring(1).split("/");
     
     if(parts[0]) {
+        
         //maybe we have a controller?
         var modName = parts[0].toLowerCase();
         
-        //console.log("Trying to load " + modName);
+        debug.info("Trying to load " + modName);
         
         if(modName in modules) {
-            //console.log("Found cached controller for " + modName);
+            debug.info("Found cached controller for " + modName);
             handler = modules[modName];
         } else {
-            //console.log("No cached controller for " + modName);
+            debug.info("No cached controller for " + modName);
             //maybe try loading it?
-            try {
-                handler = require("./controllers/" + modName);
-                //console.log("Found controller file for " + modName);
-            } catch(e) {
-                console.log("Error loading controller file for " + modName);
-                console.log(e);
+            if(fs.existsSync("./controllers/" + modName + ".js")) {
+                try {
+                    handler = require("./controllers/" + modName);
+                    debug.info("Found controller file for " + modName);
+                } catch(e) {
+                    debug.error("Error loading controller file for " + modName, e);
+
+                }
+            } else {
+                debug.info("No controller for " + modName);
             }
             //whether successful or otherwise, cache the result
             modules[modName] = handler;
@@ -53,7 +60,7 @@ function route(handle, request, response) {
                     methods.push(i.toUpperCase());
                 }
             }
-            console.log("Invalid request method for " + pathname);
+            debug.log("Invalid request method for " + pathname);
             response.writeHead("405 Method Not Allowed", {
                 "Allow": methods.join(", ")
             });
@@ -62,13 +69,14 @@ function route(handle, request, response) {
             return;
         }
     }   
+    var h;
     
-    /*for(var h in handle) {
-        console.log("Handler: " + h + ", " + handle[h]);
-    }*/
+    for(h in handle) {
+        debug.debug("Handler: " + h + ", " + handle[h]);
+    }
     
     if(handler === null) {
-        for(var h in handle) {
+        for(h in handle) {
            if(!handle[h].r) {
                 handle[h].r = new RegExp(h, "i");
            }
@@ -86,7 +94,7 @@ function route(handle, request, response) {
         if(_staticHandler) {
             _staticHandler(request, response);
         } else {
-            console.log("No request handler found for " + pathname);
+            debug.info("No request handler found for " + pathname);
             response.writeHead("404 Not Found");
             response.write("404 Not Found");
             response.end();
@@ -95,8 +103,11 @@ function route(handle, request, response) {
 }
 
 function setStaticHandler(staticHandler) {
-    if(typeof staticHandler !== "function")
-        throw "Not a function";
+    if(typeof staticHandler !== "function") {
+        debug.error("Invalid static handler passed in");
+        console.trace("Invalid handler source");
+        return;
+    }
     
     _staticHandler = staticHandler;
 }

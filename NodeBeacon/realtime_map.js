@@ -2,14 +2,15 @@ var server = require("./server"),
     database = require("./database"),
     uuid = require("node-uuid"),
     WebSocketServer = require("ws").Server,
-    socketServer = null;
+    socketServer = null,
+    debug = require("./debug");
 
 
 
 var onInitialMessage = function (msg) {
     var self = this;
     
-    console.log("Got initial message from client: " + msg);
+    debug.info("Got initial message from client: " + msg);
     
     msg = JSON.parse(msg);
     if(msg.ok) {
@@ -27,8 +28,7 @@ var onInitialMessage = function (msg) {
                 }
             }
         }, function(clients) {
-            //console.log("Clients:");
-            //console.log(clients);
+            debug.debug("Clients: ", clients);
             
             var client;
             
@@ -39,7 +39,7 @@ var onInitialMessage = function (msg) {
             
             if(client) {
                 database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
-                    console.log("Loaded beacon for client " + client.clientid);
+                    debug.info("Loaded beacon for client " + client.clientid);
                     if(beacon) {
                         var msg = getBeaconNotifyMessage(client, beacon);
 
@@ -71,7 +71,7 @@ var onMessage = function (msg) {
 
 function start() {
     
-    //console.log(process.env);
+    //debug.info(process.env);
     
     if(!server.supportsWebsockets) return;
     
@@ -79,7 +79,7 @@ function start() {
         server: server.getServer(),
         path: "/socket"
     }).on("connection", function(ws) {
-        console.log("Connection");
+        debug.info("Connection");
 
         ws.uuid = uuid.v4();
 
@@ -105,7 +105,7 @@ exports.notifyPing = function(client, beacon) {
     
     var msg = getBeaconNotifyMessage(client, beacon);
     
-    //console.log("Broadcasting msg abount client " + clientid);
+    //debug.info("Broadcasting msg abount client " + clientid);
     
     socketServer.broadcast(JSON.stringify(msg));
 };
@@ -134,7 +134,7 @@ exports.notifyBeaconChange = function(beacon) {
         beacon: beacon
     };
     
-    console.log("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
+    debug.info("Broadcasting beacon change about beacon " + beacon.major + ", " + beacon.minor);
     
     socketServer.broadcast(JSON.stringify(msg));
 };

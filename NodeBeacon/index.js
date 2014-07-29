@@ -7,7 +7,10 @@ var
     requestHandlers = require("./requestHandlers"),
     realtime_map = require("./realtime_map"),
     fullscreen_display = require("./fullscreen_display"),
-    database = require("./database");
+    database = require("./database"),
+    debug = require("./debug");
+
+debug.setLogLevel(debug.ERROR);
 
 var handle = {
     "^/client$": requestHandlers.client,

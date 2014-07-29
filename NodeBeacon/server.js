@@ -7,7 +7,8 @@ require("./polyfills");
 var http = require("http"),
     uuid = require("node-uuid"),
     os = require("os"),
-    Cookies = require("cookies");
+    Cookies = require("cookies"),
+    debug = require("./debug");
 
 var server = null;
 
@@ -58,7 +59,7 @@ function start(route, handle) {
     server.listen(port);
     
     
-    console.log("Server started");
+    debug.log("Server started");
 }
 
 function getServer() {
@@ -70,15 +71,15 @@ exports.getServer = getServer;
 
 exports.supportsWebsockets = (function() { 
     if(process.env.IISNODE_VERSION) { //running under iisnode == restricted by IIS version
-        console.log("IIS detected, but what version?");
+        debug.info("IIS detected, but what version?");
         if(os.release() < "6.2") {
-            console.log("Detected IIS <= 7, so disabling websocket support");
+            debug.info("Detected IIS <= 7, so disabling websocket support");
             return false;
         } else {
-            console.log("Detected IIS > 7, so enabling websocket support");
+            debug.info("Detected IIS > 7, so enabling websocket support");
         }
     } else {
-        console.log("No IIS so enabling websocket support");
+        debug.info("No IIS so enabling websocket support");
     }
     
     return true;

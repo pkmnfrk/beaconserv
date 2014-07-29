@@ -2,18 +2,19 @@
 
 var mongo = require('mongodb'),
     client = mongo.MongoClient,
+    debug = require("./debug"),
     db = null;
 
 function start(onReady) {
-    console.log("Connecting to db...");
+    debug.info("Connecting to db...");
     
     client.connect("mongodb://localhost:27017/beacon", {}, function(err, database) {
         if(err) throw err;
         
-        console.log("Connected to db.");
+        debug.info("Connected to db.");
         db = database;
         
-        console.log("Running maintenance:");
+        debug.info("Running maintenance:");
         
         db.collection("beacon").ensureIndex({uuid: 1, major: 1, minor: 1}, {background: true}, function(err) {
             
@@ -59,21 +60,21 @@ function storeBeacon(beacon, onComplete) {
     
     if(beacon.uuid) beacon.uuid = beacon.uuid.toLowerCase();
     
-    console.log(beacon);
+    debug.log(beacon);
     
     var query = { uuid: beacon.uuid, major: beacon.major, minor: beacon.minor};
     
     beacons.update(query, beacon, { upsert:true }, function(err, doc) {
         if(err) onComplete(err);
         
-        console.log(doc);
+        debug.log(doc);
         
         
         
         beacons.findOne(query, function(err, obj) {
             if(err) onComplete(err);
             
-            console.log(obj);
+            debug.log(obj);
             
             onComplete(null, obj);
         });
@@ -92,7 +93,7 @@ function storeObject(collection, object, callback) {
     } else{
         collection.save(object, function(err, obj) {
             if(!err) {
-                console.log(obj);
+                debug.log(obj);
             }
             callback(err, obj);
         });
@@ -116,12 +117,12 @@ exports.findClient = function(clientid, callback) {
                 pings: []
             };
             clients.save(obj, function(err) {
-                console.log("Saving new client");
+                debug.info("Saving new client");
                 callback(obj);
             });
         } else {
             setTimeout(function() {
-                console.log("Returning old client");
+                debug.info("Returning old client");
                 callback(obj); 
             }, 0);
         }
@@ -245,7 +246,7 @@ exports.deleteMarker = function(id, callback)
     if(typeof id !== "object") {
         id = new mongo.ObjectID(id);
     }
-    console.log("About to delete a marker");
+    debug.info("About to delete a marker");
     
     var markers = db.collection("marker");
     markers.remove({_id: id}, callback);
