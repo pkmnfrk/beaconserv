@@ -7,7 +7,8 @@ var url = require("url"),
     realtime_map = require("../realtime_map"),
     multiparty = require("multiparty"),
     fs = require("fs"),
-    qs = require("querystring");
+    qs = require("querystring"),
+    debug = new (require("../debug"))("DEBUG");
 
 module.exports = {
     get: function(request, response) {
@@ -23,7 +24,7 @@ module.exports = {
         path.shift();
         path.shift();
         
-        console.log(path);
+        debug.info(path);
         
         if(!path.length) {
             response.writeHead(404, "Not Found!");
@@ -52,8 +53,7 @@ module.exports = {
             return;
         } else if (path[0] === "most") {
             database.findClients({
-                
-                "pings": {
+                pings: {
                     "$elemMatch": {
                         date: {
                             "$gt": new Date().addMinutes(-10)
@@ -107,7 +107,15 @@ module.exports = {
                     request.on("end", function(){ 
                         var data = qs.parse(body);
                         
-                        //console.log(data.name);
+                        
+                        debug.debug(body);
+                        debug.log("Setting client name to ", data.name);
+                        
+                        if(!data || !data.name) {
+                            response.writeError({error:"Must specify a name"});
+                            response.end();
+                            return;
+                        }
                         
                         c.name = data.name;
                         

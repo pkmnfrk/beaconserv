@@ -8,7 +8,7 @@ var http = require("http"),
     uuid = require("node-uuid"),
     os = require("os"),
     Cookies = require("cookies"),
-    debug = require("./debug");
+    debug = new (require("./debug"))();
 
 var server = null;
 
@@ -44,8 +44,10 @@ function start(route, handle) {
         
         if(!request.clientid) {
             request.clientid = uuid.v4();
-            response.cookies.set("ClientID", request.clientid, { httpOnly: true, expires: new Date().addDays(365) });
+            debug.debug("Client request has no client id, so creating one: " + request.clientid);
         }
+        
+        response.cookies.set("ClientID", request.clientid, { httpOnly: true, expires: new Date().addDays(365) });
         
         route(handle, request, response);
         
