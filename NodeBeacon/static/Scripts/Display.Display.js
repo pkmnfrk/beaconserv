@@ -152,6 +152,8 @@ Display.prototype = {
     
     focusOnClient: function(clientID) {
         
+        clientID = clientID.toLowerCase();
+        
         var client = this.clients[clientID];
         
         this.map.panTo(client.marker.getLatLng(), {
@@ -317,6 +319,8 @@ Display.prototype = {
         console.log("adding client " + data.name);
         
         this._clientContainer.unspiderfy();
+        
+        data.clientid = data.clientid.toLowerCase();
         
         var client = this.clients[data.clientid];
 
