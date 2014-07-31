@@ -330,36 +330,38 @@ Display.prototype = {
             delete this.clients[data.clientid];
         }
         
-        var pos = L.latLng(data.latitude / this.scalar, data.longitude / this.scalar);
-        
-        client = {
-            clientid: data.clientid,
-            marker: null,
-            zIndexOffset: 10000,
-            display: this
-        };
-        
-        this.clients[data.clientid] = client;
+        if(data.latitude !== null) {
+            var pos = L.latLng(data.latitude / this.scalar, data.longitude / this.scalar);
 
-        client.marker = L.marker(pos, {
-            icon: B.redMarker
-        }).addTo(this.map).on("click", this._client_click.bind(client));
+            client = {
+                clientid: data.clientid,
+                marker: null,
+                zIndexOffset: 10000,
+                display: this
+            };
 
-        this._clientContainer.addMarker(client.marker);
+            this.clients[data.clientid] = client;
 
-        if(!this.inDevice()) {
-            client.marker.bindPopup(data.name);
-            
-            client.removalTimer = setTimeout(function() {
-                self._clientContainer.unspiderfy();
-                self._clientContainer.removeMarker(client.marker);
-                
-                self.map.removeLayer(client.marker);
-                client.marker = null;
-                client.removalTimer = null;
-                
-                delete self.clients[client.clientid];
-            }, 10 * 60 * 1000);
+            client.marker = L.marker(pos, {
+                icon: B.redMarker
+            }).addTo(this.map).on("click", this._client_click.bind(client));
+
+            this._clientContainer.addMarker(client.marker);
+
+            if(!this.inDevice()) {
+                client.marker.bindPopup(data.name);
+
+                client.removalTimer = setTimeout(function() {
+                    self._clientContainer.unspiderfy();
+                    self._clientContainer.removeMarker(client.marker);
+
+                    self.map.removeLayer(client.marker);
+                    client.marker = null;
+                    client.removalTimer = null;
+
+                    delete self.clients[client.clientid];
+                }, 10 * 60 * 1000);
+            }
         }
     },
     

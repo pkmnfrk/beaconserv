@@ -117,13 +117,13 @@ exports.notifyPing = function(client, beacon) {
 function getBeaconNotifyMessage(client, beacon) {
     return {
         msg: "client",
-        uuid: beacon.uuid,
-        major: beacon.major,
-        minor: beacon.minor,
+        uuid: beacon ? beacon.uuid : null,
+        major: beacon ? beacon.major : null,
+        minor: beacon ? beacon.minor : null,
         clientid: client.clientid,
         name: client.name,
-        latitude: beacon.latitude,
-        longitude: beacon.longitude
+        latitude: beacon ? beacon.latitude : null,
+        longitude: beacon ? beacon.longitude : null
         
     };
 }

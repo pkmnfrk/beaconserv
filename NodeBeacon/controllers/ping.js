@@ -54,5 +54,32 @@ module.exports = {
                 
             });
         });
+    },
+    
+    "delete": function(request, response) {
+        var path = url.parse(request.url).pathname.split('/');
+        path.shift();
+        path.shift();
+
+        
+        database.findClient(request.clientid, function (client) {
+            
+            var ping = {
+                date: new Date(),
+                beacon_id: null
+            };
+
+            //console.log(client);
+
+            client.pings.unshift(ping);
+
+            database.storeClient(client, function() {
+
+                realtime_map.notifyPing(client, null);
+
+                response.writeHead(204, "No Content");
+                response.end();
+            });
+        });
     }
 };
