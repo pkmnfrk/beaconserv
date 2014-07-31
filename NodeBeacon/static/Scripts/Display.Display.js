@@ -344,24 +344,23 @@ Display.prototype = {
 
             client.marker = L.marker(pos, {
                 icon: B.redMarker
-            }).addTo(this.map).on("click", this._client_click.bind(client));
+            }).addTo(this.map);
 
             this._clientContainer.addMarker(client.marker);
 
-            if(!this.inDevice()) {
-                client.marker.bindPopup(data.name);
+            client.marker.bindPopup(data.name + " " + client.clientid);
 
-                client.removalTimer = setTimeout(function() {
-                    self._clientContainer.unspiderfy();
-                    self._clientContainer.removeMarker(client.marker);
+            client.removalTimer = setTimeout(function() {
+                self._clientContainer.unspiderfy();
+                self._clientContainer.removeMarker(client.marker);
 
-                    self.map.removeLayer(client.marker);
-                    client.marker = null;
-                    client.removalTimer = null;
+                self.map.removeLayer(client.marker);
+                client.marker = null;
+                client.removalTimer = null;
 
-                    delete self.clients[client.clientid];
-                }, 10 * 60 * 1000);
-            }
+                delete self.clients[client.clientid];
+            }, 10 * 60 * 1000);
+
         }
     },
     
