@@ -461,6 +461,21 @@ var B = (function () {
             }
             //console.log("printing: " + line);
             context.fillText(line, x, y);
+        },
+        getQuerystring: function() {
+            var qs2 = {}, querystring = window.location.search.substring(1);
+
+            querystring = querystring.split('&');
+            for(var i = 0; i < querystring.length;i++) {
+                var itm = querystring[i].split('=');
+                if(itm.length > 1) {
+                    qs2[decodeURIComponent(itm[0]).toLowerCase()] = decodeURIComponent(itm[1]);
+                } else {
+                    qs2[decodeURIComponent(itm[0]).toLowerCase()] = true;
+                }
+            }
+
+            return qs2;
         }
         
     };

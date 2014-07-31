@@ -11,5 +11,7 @@ $(function() {
 
     display.createMap("map");
 
-    
+    window.focusOnClient = function() {
+        display.focusOnClient.apply(this, arguments);
+    };
 });

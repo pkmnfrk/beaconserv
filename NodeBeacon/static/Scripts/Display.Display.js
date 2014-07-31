@@ -3,10 +3,13 @@
 /* exported Display */
 
 function Display() {
+    var qs = B.getQuerystring();
+    
     this.zoomOffset = 15;
     this.scalar = 0x4c10;
-    this._in_device = location.search === "?ios";
-    this._in_tv = location.search === "?tv";
+    this._in_device = qs.ios ? true : false;
+    this._in_tv = qs.tv ? true : false;
+    this.myClientId = qs.clientid;
     this.labels = [];
     this.beacons = [];
     this.markers = [];
@@ -145,6 +148,16 @@ Display.prototype = {
         if(this.editable()) {
             this.initializeEditors();
         }
+    },
+    
+    focusOnClient: function(clientID) {
+        
+        var client = this.clients[clientID];
+        
+        this.map.panTo(client.marker.getLatLng(), {
+            animate: true
+        });
+        
     },
     
     _loadBeacons: function(whenDone) {
