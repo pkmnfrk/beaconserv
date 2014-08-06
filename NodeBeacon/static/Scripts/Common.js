@@ -187,13 +187,14 @@ var B = (function () {
         bigMarker: (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
-                    iconSize: [67, 145],
-                    iconAnchor: [33, 144],
-                    popupAnchor: [1, -34],
-                    shadowSize: [127, 96],
-                    shadowAnchor: [8, 90],
+                    iconSize: [34, 73],
+                    iconAnchor: [16, 72],
+                    popupAnchor: [1, -17],
+                    shadowSize: [63, 48],
+                    shadowAnchor: [3, 45],
                     labelAnchor: [0, 0],
                     iconUrl: "/Content/images/pink-marker.png",
+                    iconRetinaUrl: "/Content/images/pink-marker-2x.png",
                     shadowUrl: "/Content/images/pink-marker_Shadow.png"
                     //iconRetinaUrl: "/Content/images/red-marker-2x.png",
                 });
