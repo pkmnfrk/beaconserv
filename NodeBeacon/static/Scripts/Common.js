@@ -194,7 +194,7 @@ var B = (function () {
                     shadowAnchor: [3, 45],
                     labelAnchor: [0, 0],
                     iconUrl: "/Content/images/pink-marker.png",
-                    iconRetinaUrl: "/Content/images/pink-marker-2x.png",
+                    iconRetinaUrl: "/Content/images/pink-marker@2x.png",
                     shadowUrl: "/Content/images/pink-marker_Shadow.png"
                     //iconRetinaUrl: "/Content/images/red-marker-2x.png",
                 });
