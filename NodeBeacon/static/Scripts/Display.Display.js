@@ -377,7 +377,7 @@ Display.prototype = {
 
             this._clientContainer.addMarker(client.marker);
 
-            client.marker.bindPopup(data.name + " " + client.clientid);
+            client.marker.bindPopup(data.name);
 
             client.removalTimer = setTimeout(function() {
                 self._clientContainer.unspiderfy();
