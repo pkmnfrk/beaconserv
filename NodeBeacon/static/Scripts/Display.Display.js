@@ -438,10 +438,7 @@ Display.prototype = {
         //do we know about this beacon already?
         var b = this._deleteBeacon(data.beacon.major, data.beacon.minor);
 
-        if(data.beacon.latitude) {
-            data.beacon.latitude /= this.scalar;
-            data.beacon.longitude /= this.scalar;
-        }
+        
 
         if(b) {
             console.log("Existing beacon, removing it and adding a new one");
