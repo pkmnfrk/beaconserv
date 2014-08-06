@@ -205,7 +205,7 @@ Display.prototype = {
     _createMarkerFromData: function(data) {
         var ret = L.marker([data.latitude, data.longitude], {
             draggable: this.editable(),
-            icon: B.animatedMarker
+            icon: B.bigMarker
         });
         
         ret.bindPopup(data.title);
