@@ -151,7 +151,7 @@ Display.prototype = {
         }
     },
     
-    focusOnClient: function(clientID) {
+    focusOnClient: function(clientID, alsoClick) {
         
         clientID = clientID.toLowerCase();
         
@@ -160,6 +160,8 @@ Display.prototype = {
         this.map.panTo(client.marker.getLatLng(), {
             animate: true
         });
+        
+        if(alsoClick) client.marker.openPopup();
         
     },
     
