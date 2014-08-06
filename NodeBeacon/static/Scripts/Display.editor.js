@@ -8,6 +8,7 @@ Display.prototype.initializeEditors = function() {
             items: {
                 addMarker: { name: "Add Marker", callback: this._contextmenu_cmd_addmarker.bind(this) },
                 addLabel: { name: "Add Label", callback: this._contextmenu_cmd_addlabel.bind(this) },
+                addBeacon: { name: "Add Beacon", callback: this._contextmenu_cmd_addBeacon.bind(this) },
             },
             events: {
                 show: this._contextmenu_show
@@ -24,10 +25,18 @@ Display.prototype.initializeEditors = function() {
         });
         
         $.contextMenu({
-            selector: ".leaflet-marker-icon",
+            selector: ".fakeMarkerThing",
             items: {
                 edit: { name: "Edit Marker", callback: this._contextmenu_cmd_editMarker.bind(this) },
                 "delete": { name: "Delete Marker", callback: this._contextmenu_cmd_deleteMarker.bind(this) }
+            }
+        });
+        
+        $.contextMenu({
+            selector: ".fakeBeaconThing",
+            items: {
+                edit: { name: "Edit Beacon", callback: this._contextmenu_cmd_editBeacon.bind(this) },
+                "delete": { name: "Delete Beacon", callback: this._contextmenu_cmd_deleteBeacon.bind(this) }
             }
         });
     }
@@ -90,6 +99,35 @@ Display.prototype._contextmenu_cmd_addlabel = function() {
     this.showLabelEditorDialog(newLabel);
 };
 
+Display.prototype._contextmenu_cmd_addBeacon = function() {
+    var coords = this._contextmenu_coordinates;
+    //var latlng = this.map.layerPointToLatLng(coords);
+    var latlng = this.map.containerPointToLatLng(coords);
+
+    var newBeacon = {
+        latitude: latlng.lat,
+        longitude: latlng.lng,
+        text: "newBeacon",
+        uuid: this.mainuuid,
+        major: this.floor,
+        minor: 0
+    };
+    
+    var newMarker = this._createBeaconFromData(newBeacon);
+    newBeacon.marker = newMarker;
+
+    this.beacons.push(newBeacon);
+    this.map.addLayer(newMarker);
+
+    //B.storeLabel(newLabel.rawData, function(obj) {
+    //    if(obj) {
+    //        newLabel.rawData = obj;
+    //    }
+    //});
+    
+    this.showBeaconEditorDialog(newMarker);
+};
+
 Display.prototype._contextmenu_cmd_editLabel = function(cmd, obj)
 {
     var label = obj.$trigger.data("SimpleLabel");
@@ -150,6 +188,55 @@ Display.prototype.showLabelEditorDialog = function (label) {
                     B.storeLabel(label.rawData, function(obj) {
                         if(obj) {
                             label.rawData = obj;
+                        }
+                    });
+                    $( this ).dialog( "close" );
+                },
+                class: "default"
+            }
+            
+        ]
+    });
+};
+
+
+Display.prototype.showBeaconEditorDialog = function (beacon) {
+
+    //beacon is a Marker object
+    //this is the display
+    var display = this;
+    $("#beacon_uuid").val(beacon.rawData.uuid);
+    
+    $("#beacon_major").val(beacon.rawData.major);
+    $("#beacon_minor").val(beacon.rawData.minor);
+    
+    /*var dialog =*/ $("#beaconEditor").dialog({
+        modal: true,
+        width: 600,
+        buttons: [
+            {
+                text: "Delete",
+                click: function() {
+                    //var ok = confirm("Are you sure you want to delete this label? This cannot be undone!");
+                    //if(ok) {
+                        B.deleteBeacon(beacon.rawData, function() {
+                            display.map.removeLayer(beacon);
+                        });
+                        $(this).dialog("close");
+                    //}
+                },
+                class: "delete-button"
+            },
+            {
+                text: "Save",
+                click: function() {
+                    beacon.rawData.uuid = $("#beacon_uuid").val();
+                    beacon.rawData.major = parseInt($("#beacon_major").val(), 10);
+                    beacon.rawData.minor = parseInt($("#beacon_minor").val(), 10);
+                    
+                    B.saveBeacon(beacon.rawData, function(obj) {
+                        if(obj) {
+                            beacon.rawData = obj;
                         }
                     });
                     $( this ).dialog( "close" );
@@ -312,7 +399,7 @@ Display.prototype.showMarkerEditorDialog = function (marker) {
                         marker.rawData.widget = widget_data;
                         marker.bindPopup(marker.rawData.title);
 
-                        B.storeMarker(marker.rawData, function(obj) {
+                        B.storeMarker(marker.rawData, function() {
                             if(!marker.rawData._id) {
                                 display.map.removeLayer(marker);
                             }
@@ -403,6 +490,29 @@ Display.prototype._contextmenu_cmd_deleteMarker = function()
     }.bind(this));
 };
 
+Display.prototype._contextmenu_cmd_editBeacon = function()
+{
+    var beacon = this.targetMarker;
+    this.showBeaconEditorDialog(beacon);
+};
+
+
+Display.prototype._contextmenu_cmd_deleteBeacon = function()
+{
+    var beacon = this.targetMarker;
+    B.deleteBeacon(beacon.rawData, function() {
+        if(beacon.rawData._id) {
+            for(var i = 0; i < this.beacons.length; i++) {
+                if(this.beacons[i].rawData._id == beacon.rawData._id) {
+                    this.beacons[i].splice(i, 1);
+                    break;
+                }
+            }
+        }
+        this.map.removeLayer(beacon);
+    }.bind(this));
+};
+
 var old_createMarkerFromData = Display.prototype._createMarkerFromData;
 Display.prototype._createMarkerFromData = function(data)
 {
@@ -411,8 +521,28 @@ Display.prototype._createMarkerFromData = function(data)
     
     ret.on('contextmenu', function(e) {
         var marker = e.target;
+        $(marker._icon).addClass('fakeMarkerThing');
         display.targetMarker = marker;
-        $(".leaflet-marker-icon").contextMenu({
+        $(".fakeMarkerThing").contextMenu({
+            x: e.originalEvent.clientX,
+            y: e.originalEvent.clientY
+        });
+    }, this);
+    
+    return ret;
+};
+
+var old_createBeaconFromData = Display.prototype._createBeaconFromData;
+Display.prototype._createBeaconFromData = function(data)
+{
+    var ret = old_createBeaconFromData.call(this, data);
+    var display = this;
+    
+    ret.on('contextmenu', function(e) {
+        var beacon = e.target;
+        $(beacon._icon).addClass('fakeBeaconThing');
+        display.targetMarker = beacon;
+        $(".fakeBeaconThing").contextMenu({
             x: e.originalEvent.clientX,
             y: e.originalEvent.clientY
         });

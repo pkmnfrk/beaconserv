@@ -6,7 +6,8 @@ var url = require("url"),
     database = require("../database"),
     realtime_map = require("../realtime_map"),
     multiparty = require("multiparty"),
-    fs = require("fs");
+    fs = require("fs"),
+    debug = new (require("../debug"))("LOG");
 
 function polyFillBeacon(b) {
     
@@ -73,12 +74,12 @@ module.exports = {
             var id = path[1];
             
             database.findBeaconById(id, function(beacon) {
-                console.log(beacon);
+                debug.info(beacon);
                 
                 if(!beacon) {
                     beacon = {};
                 }
-                console.log(beacon);
+                debug.info(beacon);
                 
                 polyFillBeacon(beacon);
                 
@@ -107,7 +108,7 @@ module.exports = {
 
 
 
-            //console.log(uuid + " " + major + " " + minor);
+            //debug.info(uuid + " " + major + " " + minor);
 
             database.findBeacon(uuid, major, minor, function(err, docs) {
                 var i, b;
@@ -233,13 +234,20 @@ module.exports = {
         req.on("data", function (d) {
             data += d;
         }).on("end", function() {
+            debug.log("Posting Beacon", data);
             
             data = JSON.parse(data);
-            
+            if(!data) {
+                debug.warn("Passed JSON data is invalid", data);
+                
+            }
             database.storeBeacon(data, function(err, saved) {
                 if(err) {
                     res.writeError(err);
                     return;
+                }
+                if(!saved) {
+                    debug.error("What the hell, how could we get here??", err);
                 }
                 realtime_map.notifyBeaconChange(saved);
                 res.writeJson(saved);

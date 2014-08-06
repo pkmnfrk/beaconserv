@@ -131,7 +131,7 @@ function getBeaconNotifyMessage(client, beacon) {
 exports.notifyBeaconChange = function(beacon) {
     if(!server.supportsWebsockets) return;
     
-    if(beacon === null) throw "Beacon cannot be null";
+    //if(beacon === null) throw "Beacon cannot be null";
     
     var msg = {
         msg: "beacon",

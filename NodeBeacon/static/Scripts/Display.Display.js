@@ -16,6 +16,7 @@ function Display() {
     this.map = null;
     this.zoomOffset = 15;
     this.floor = 7;
+    this.mainuuid = "2f73d96d-f86e-4f95-b88d-694cefe5837f";
     
     $("#debugArea").remove();
 
@@ -165,16 +166,9 @@ Display.prototype = {
     _loadBeacons: function(whenDone) {
         var self = this;
         
+        if(!this.editable()) return;
         B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", this.floor, function (beacons) {
             self.beacons = beacons;
-
-            for (var i = 0; i < self.beacons.length; i++) {
-                var b = self.beacons[i];
-
-                b.latitude /= self.scalar;
-                b.longitude /= self.scalar;
-                
-            }
 
             if(whenDone)
                 whenDone.apply(self);
@@ -185,7 +179,11 @@ Display.prototype = {
     
     _onBeaconsLoaded: function()
     {
-    
+        for(var i = 0; i < this.beacons.length; i++) {
+            var b = this.beacons[i];
+            b.marker = this._createBeaconFromData(b);
+            this.map.addLayer(b.marker);
+        }
     },
     
     _loadMarkers: function(whenDone)
@@ -220,6 +218,22 @@ Display.prototype = {
         
         if(this.inDevice()) {
             ret.on('click', this._marker_click.bind(ret));
+        }
+        
+        return ret;
+    },
+    
+    _createBeaconFromData: function(data) {
+        var ret = L.marker([data.latitude, data.longitude], {
+            draggable: this.editable()
+        });
+        
+        //ret.bindPopup(data.title);
+        ret.rawData = data;
+        ret.display = this;
+        
+        if(this.editable()) {
+            ret.on('dragend', this._onBeaconDragEnd);
         }
         
         return ret;
@@ -312,6 +326,19 @@ Display.prototype = {
         
     },
     
+    _onBeaconDragEnd: function()
+    {
+        //this, in this case, is the marker
+        var latlng = this.getLatLng();
+        this.rawData.latitude = latlng.lat;
+        this.rawData.longitude = latlng.lng;
+        
+        B.saveBeacon(this.rawData, function() {
+            
+        });
+        
+    },
+    
     _msg_client: function(data) {
         //data = data;
         var self = this;
@@ -331,7 +358,7 @@ Display.prototype = {
         }
         
         if(data.latitude !== null) {
-            var pos = L.latLng(data.latitude / this.scalar, data.longitude / this.scalar);
+            var pos = L.latLng(data.latitude, data.longitude);
 
             client = {
                 clientid: data.clientid,
@@ -361,6 +388,9 @@ Display.prototype = {
                 delete self.clients[client.clientid];
             }, 10 * 60 * 1000);
 
+            if(client.clientid == this.myClientId) {
+                this.focusOnClient(client.clientid);
+            }
         }
     },
     
@@ -375,41 +405,60 @@ Display.prototype = {
         }
     },
     
+    _findBeacon: function(major, minor) {
+        var ret = null;
+        
+        this.beacons.every(function(b) {
+            if(b.major == major && b.minor == minor) {
+                ret = b;
+                return false;
+            }
+            return true;
+        });
+        return ret;
+    },
+    
+    _deleteBeacon: function(major, minor) {
+        var ret = null;
+        this.beacons.every(function(b, i) {
+            if(b.major == major && b.minor == minor) {
+                ret = b;
+                this.beacons.splice(i, 1);
+                return false;
+            }
+            return true;
+        }, this);
+        return ret;
+    },
+    
     _msg_beacon: function(data) {
         console.log("Adding/updating beacon");
         data = data;
-/*
-        //do we know about this beacon already?
-        b = findBeacon(data.beacon.major, data.beacon.minor);
 
-        data.beacon.latitude /= scalar;
-        data.beacon.longitude /= scalar;
+        //do we know about this beacon already?
+        var b = this._deleteBeacon(data.beacon.major, data.beacon.minor);
+
+        if(data.beacon.latitude) {
+            data.beacon.latitude /= this.scalar;
+            data.beacon.longitude /= this.scalar;
+        }
 
         if(b) {
             console.log("Existing beacon, removing it and adding a new one");
             //we just need to update some incidentals
 
+            this.map.removeLayer(b.marker);
+            //it was removed from the beacons array by _deleteBeacon
+        }
+        
+        if(data.beacon.latitude && this.editable()) {
+            data.beacon.marker = this._createBeaconFromData(data.beacon);
+            this.map.addLayer(data.beacon.marker);
+            this.beacons.push(data.beacon);
+        }
+        
+        
 
-            for(var prop in data.beacon) {
-                b[prop] = data.beacon[prop];
-            }
-
-            if(b.marker) {
-                b.marker.setLatLng([data.beacon.latitude, data.beacon.longitude]);
-            }
-
-
-        } else {
-            console.log("New beacon, just adding it");
-            //we need to add it new
-            b = data.beacon;
-            beaconsList[b.minor] = b;
-
-            if(show_markers) {
-                addMarkerToMap(b);
-            }
-
-        }*/
     },
     
     _msg_marker: function(data) {
