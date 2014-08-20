@@ -403,7 +403,7 @@ Display.prototype = {
             }).addTo(this.map);
 
             this._clientContainer.addMarker(client.marker);
-            this._clientContainer.spiderfy();
+            this._clientContainer.spiderfy([client.marker]);
             
             client.marker.bindPopup(data.name);
 
