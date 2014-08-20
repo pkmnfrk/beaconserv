@@ -403,7 +403,9 @@ Display.prototype = {
             }).addTo(this.map);
 
             this._clientContainer.addMarker(client.marker);
-            this._clientContainer.spiderfy([client.marker]);
+            
+            //FIXME: I hope there aren't multiple clients here
+            //this._clientContainer.spiderfy([client.marker]);
             
             client.marker.bindPopup(data.name);
 
