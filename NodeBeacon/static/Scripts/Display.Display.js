@@ -216,7 +216,7 @@ Display.prototype = {
     _createMarkerFromData: function(data) {
         var ret = L.marker([data.latitude, data.longitude], {
             draggable: this.editable(),
-            icon: B.bigMarker
+            icon: B.infoMarker
         });
         
         ret.bindPopup(data.title);
@@ -375,6 +375,17 @@ Display.prototype = {
             delete this.clients[data.clientid];
         }
         
+        var beacon = null;
+        
+        if(data.uuid) {
+            for(var b in this.beacons) {
+                if(b.uuid == data.uuid && b.major == data.major && b.minor == data.minor) {
+                    beacon = b;
+                    break;
+                }
+            }
+        }
+        
         if(data.latitude !== null) {
             var pos = L.latLng(data.latitude, data.longitude);
 
@@ -388,11 +399,12 @@ Display.prototype = {
             this.clients[data.clientid] = client;
 
             client.marker = L.marker(pos, {
-                icon: B.redMarker
+                icon: B.manMarker
             }).addTo(this.map);
 
             this._clientContainer.addMarker(client.marker);
-
+            this._clientContainer.spiderfy();
+            
             client.marker.bindPopup(data.name);
 
             client.removalTimer = setTimeout(function() {
@@ -408,6 +420,7 @@ Display.prototype = {
 
             if(client.clientid == this.myClientId) {
                 this.focusOnClient(client.clientid);
+                if(beacon) this.showLayer(beacon.rawData.layer);
             }
         }
     },

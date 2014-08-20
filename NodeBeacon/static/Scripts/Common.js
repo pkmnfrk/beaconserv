@@ -201,6 +201,34 @@ var B = (function () {
             }
         })(),
         
+        infoMarker: (function () {
+            if (typeof window.L !== "undefined") {
+                return L.icon({
+                    iconSize: [51, 51],
+                    iconAnchor: [25, 25],
+                    popupAnchor: [0, -25],
+                    labelAnchor: [0, -25],
+                    iconUrl: "/Content/images/Info.png",
+                    iconRetinaUrl: "/Content/images/Info@2x.png"
+                    //iconRetinaUrl: "/Content/images/red-marker-2x.png",
+                });
+            }
+        })(),
+        
+        manMarker: (function () {
+            if (typeof window.L !== "undefined") {
+                return L.icon({
+                    iconSize: [33, 83],
+                    iconAnchor: [16, 79],
+                    popupAnchor: [0, -79],
+                    labelAnchor: [0, -79],
+                    iconUrl: "/Content/images/ManDude.png",
+                    iconRetinaUrl: "/Content/images/ManDude@2x.png"
+                    //iconRetinaUrl: "/Content/images/red-marker-2x.png",
+                });
+            }
+        })(),
+        
         getPrefs: function(withPrefs) {
             if(this.prefs) {
                 withPrefs(this.prefs);
