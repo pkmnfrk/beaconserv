@@ -219,7 +219,7 @@ var B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [33, 83],
-                    iconAnchor: [16, 79],
+                    iconAnchor: [16, 99],
                     popupAnchor: [0, -79],
                     labelAnchor: [0, -79],
                     iconUrl: "/Content/images/ManDude.png",
