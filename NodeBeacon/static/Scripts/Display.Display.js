@@ -312,7 +312,7 @@ Display.prototype = {
         var ret = new B.SimpleLabel([data.latitude, data.longitude], {
             text: data.text,
             minZoom: data.minZoom,
-            draggable: this.editable()
+            dragable: this.editable()
         });
         
         ret.rawData = data;

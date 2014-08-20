@@ -9,7 +9,7 @@ B.SimpleLabel = L.Class.extend({
         fontSize: "18px",
         backgroundColor: "rgba(0,0,0,0.5)",
         color: "white",
-        draggable: false
+        dragable: false
 
     },
     includes: [
