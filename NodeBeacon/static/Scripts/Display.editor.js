@@ -209,6 +209,7 @@ Display.prototype.showBeaconEditorDialog = function (beacon) {
     
     $("#beacon_major").val(beacon.rawData.major);
     $("#beacon_minor").val(beacon.rawData.minor);
+    $("#beacon_layer").val(beacon.rawData.layer);
     
     /*var dialog =*/ $("#beaconEditor").dialog({
         modal: true,
@@ -233,7 +234,7 @@ Display.prototype.showBeaconEditorDialog = function (beacon) {
                     beacon.rawData.uuid = $("#beacon_uuid").val();
                     beacon.rawData.major = parseInt($("#beacon_major").val(), 10);
                     beacon.rawData.minor = parseInt($("#beacon_minor").val(), 10);
-                    
+                    beacon.rawData.layer = $("#beacon_layer").val();
                     B.saveBeacon(beacon.rawData, function(obj) {
                         if(obj) {
                             beacon.rawData = obj;

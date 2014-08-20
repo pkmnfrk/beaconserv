@@ -17,6 +17,7 @@ function Display() {
     this.zoomOffset = 15;
     this.floor = 7;
     this.mainuuid = "2f73d96d-f86e-4f95-b88d-694cefe5837f";
+    this.layers = {};
     
     $("#debugArea").remove();
 
@@ -119,6 +120,14 @@ Display.prototype = {
 
         //L.tileLayer('/Content/maps/7thB/{z}/{x}/{y}.png', layerOpts).addTo(map);
 
+        var layers = ['Creative', 'Editorial', 'Labs', 'pm', 'web_app_dev'];
+        
+        for(var i = 0; i < layers.length; i++) {
+            var layer = L.tileLayer('/Content/maps/7th_' + layers[i] + '/{z}/{x}/{y}.png', layerOpts);
+            this.layers[layers[i]] = layer;
+        }
+        
+        
         if(!(this.inDevice() || this.inTv())) {
             L.control.scale().addTo(this.map);
         }
@@ -236,9 +245,16 @@ Display.prototype = {
         
         if(this.editable()) {
             ret.on('dragend', this._onBeaconDragEnd);
+            ret.on('click', this._onBeaconClick);
         }
         
         return ret;
+    },
+    
+    _onBeaconClick: function() {
+        if(this.rawData.layer) {
+            this.display.showLayer(this.rawData.layer);
+        }
     },
     
     _onMarkersLoaded: function()
@@ -490,6 +506,23 @@ Display.prototype = {
                 return;
             }
         }
+    },
+    
+    showLayer: function(l) {
+        
+        for(var i in this.layers) {
+            var layer = this.layers[i];
+            if(l == i) {
+                if(!this.map.hasLayer(layer)) {
+                    this.map.addLayer(layer);
+                }
+            } else {
+                if(this.map.hasLayer(layer)) {
+                    this.map.removeLayer(layer);
+                }
+            }
+        }
+        
     }
     
 };
