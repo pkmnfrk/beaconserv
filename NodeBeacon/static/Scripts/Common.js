@@ -246,7 +246,7 @@ var B = (function () {
         mySmallManMarker: (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
-                    iconSize: [21, 47],
+                    iconSize: [27, 47],
                     iconAnchor: [10, 45],
                     popupAnchor: [0, -45],
                     labelAnchor: [0, -47],
