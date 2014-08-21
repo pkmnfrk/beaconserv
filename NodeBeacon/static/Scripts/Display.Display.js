@@ -442,13 +442,13 @@ Display.prototype = {
             }
             
             //re-lay out icons at the same sport
-            var paddingLeft = 0;
+            var marginLeft = -10;
             for(var key in this.clients) {
                 var c = this.clients[key];
                 if(c.uuid == client.uuid && c.major == client.major && c.minor == client.minor) {
                     //same spot
-                    c.marker._icon.style.paddingLeft = paddingLeft + "px";
-                    paddingLeft += 20;
+                    c.marker._icon.style.marginLeft = marginLeft + "px";
+                    marginLeft += 20;
                 }
                 
             }
