@@ -233,7 +233,7 @@ var B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [21, 47],
-                    iconAnchor: [10, 45],
+                    iconAnchor: [10, 65],
                     popupAnchor: [0, -45],
                     labelAnchor: [0, -47],
                     iconUrl: "/Content/images/SmallManDude.png",
@@ -247,7 +247,7 @@ var B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [27, 47],
-                    iconAnchor: [10, 45],
+                    iconAnchor: [10, 65],
                     popupAnchor: [0, -45],
                     labelAnchor: [0, -47],
                     iconUrl: "/Content/images/MySmallManDude.png",
