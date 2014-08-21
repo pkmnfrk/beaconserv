@@ -7,7 +7,7 @@ var server = require("./server"),
     uuid = require("node-uuid"),
     WebSocketServer = require("ws").Server,
     socketServer = null,
-    debug = require("./debug");
+    debug = new (require("./debug"))();
 
 
 
@@ -53,7 +53,7 @@ var onInitialMessage = function (msg) {
                     while(clients.length) {
                         client = clients.shift();
                         if(client.pings.length) {
-                            database.findBeaconById(client.beacon_id, receiveBeacon);
+                            database.findBeaconById(client.pings[0].beacon_id, receiveBeacon);
                             break;
                         }
                     }
