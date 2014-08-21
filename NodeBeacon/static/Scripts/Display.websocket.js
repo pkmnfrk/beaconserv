@@ -63,7 +63,7 @@ Display.Websocket = L.Class.extend({
         this._watchdog = setInterval(this._watchdog_fire.bind(this), this.options.watchdogInterval * 1000);
         
         this._socket.onclose = this._onClose.bind(this);
-        this._socket.onerror = this._onClose;
+        this._socket.onerror = this._onClose.bind(this);
         this._socket.onmessage = this._onMessage.bind(this);
     },
     

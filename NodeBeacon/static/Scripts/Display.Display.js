@@ -172,6 +172,19 @@ Display.prototype = {
         
         if(alsoClick) client.marker.openPopup();
         
+        var beacon = null;
+        
+        for(var i = 0; i < this.beacons.length; i++) {
+            var b = this.beacons[i];
+            
+            if(b.uuid == client.uuid && b.major == client.major && b.minor == client.minor) {
+                beacon = b;
+                break;
+            }
+        }
+        
+        if(beacon) this.showLayer(beacon.rawData.layer);
+        
     },
     
     _loadBeacons: function(whenDone) {
@@ -424,7 +437,6 @@ Display.prototype = {
 
             if(client.clientid == this.myClientId) {
                 this.focusOnClient(client.clientid);
-                if(beacon) this.showLayer(beacon.rawData.layer);
             }
         }
     },
