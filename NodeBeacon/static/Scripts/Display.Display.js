@@ -440,6 +440,18 @@ Display.prototype = {
             if(client.clientid == this.myClientId) {
                 this.focusOnClient(client.clientid);
             }
+            
+            //re-lay out icons at the same sport
+            var paddingLeft = 0;
+            for(var key in this.clients) {
+                var c = this.clients[key];
+                if(c.uuid == client.uuid && c.major == client.major && c.minor == client.minor) {
+                    //same spot
+                    c.marker._icon.style.paddingLeft = paddingLeft + "px";
+                    paddingLeft += 20;
+                }
+                
+            }
         }
     },
     
