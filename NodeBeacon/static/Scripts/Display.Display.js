@@ -251,7 +251,8 @@ Display.prototype = {
     
     _createBeaconFromData: function(data) {
         var ret = L.marker([data.latitude, data.longitude], {
-            draggable: this.editable()
+            draggable: this.editable(),
+            icon: B.redMarker
         });
         
         //ret.bindPopup(data.title);

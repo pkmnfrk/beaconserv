@@ -161,7 +161,7 @@ var B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [25, 41],
-                    iconAnchor: [12, 41],
+                    iconAnchor: [12, 60],
                     popupAnchor: [1, -34],
                     shadowSize: [41, 41],
                     labelAnchor: [0, 0],
@@ -233,9 +233,9 @@ var B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [21, 47],
-                    iconAnchor: [10, 50],
-                    popupAnchor: [0, -50],
-                    labelAnchor: [0, -50],
+                    iconAnchor: [10, 45],
+                    popupAnchor: [0, -45],
+                    labelAnchor: [0, -47],
                     iconUrl: "/Content/images/SmallManDude.png",
                     iconRetinaUrl: "/Content/images/SmallManDude@2x.png"
                     //iconRetinaUrl: "/Content/images/red-marker-2x.png",
