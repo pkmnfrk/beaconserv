@@ -415,7 +415,7 @@ Display.prototype = {
             this.clients[data.clientid] = client;
 
             client.marker = L.marker(pos, {
-                icon: B.manMarker
+                icon: B.smalmManMarker
             }).addTo(this.map);
 
             this._clientContainer.addMarker(client.marker);

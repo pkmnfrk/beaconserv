@@ -229,6 +229,21 @@ var B = (function () {
             }
         })(),
         
+        smallManMarker: (function () {
+            if (typeof window.L !== "undefined") {
+                return L.icon({
+                    iconSize: [21, 47],
+                    iconAnchor: [10, 50],
+                    popupAnchor: [0, -50],
+                    labelAnchor: [0, -50],
+                    iconUrl: "/Content/images/SmallManDude.png",
+                    iconRetinaUrl: "/Content/images/SmallManDude@2x.png"
+                    //iconRetinaUrl: "/Content/images/red-marker-2x.png",
+                });
+            }
+        })(),
+        
+        
         getPrefs: function(withPrefs) {
             if(this.prefs) {
                 withPrefs(this.prefs);
