@@ -161,7 +161,7 @@ var B = (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
                     iconSize: [25, 41],
-                    iconAnchor: [12, 60],
+                    iconAnchor: [12, 41],
                     popupAnchor: [1, -34],
                     shadowSize: [41, 41],
                     labelAnchor: [0, 0],
