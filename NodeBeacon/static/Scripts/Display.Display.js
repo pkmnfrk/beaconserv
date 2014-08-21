@@ -183,7 +183,7 @@ Display.prototype = {
             }
         }
         
-        if(beacon) this.showLayer(beacon.rawData.layer);
+        if(beacon) this.showLayer(beacon.layer);
         
     },
     
