@@ -32,7 +32,11 @@ var onInitialMessage = function (msg) {
                 }
             }
         }, function(err, clients) {
-            debug.debug("Clients: ", clients);
+            if(err) {
+                debug.error(err);
+                return;
+            }
+            debug.log("Clients: ", clients);
             
             var client;
             
@@ -53,7 +57,7 @@ var onInitialMessage = function (msg) {
                     while(clients.length) {
                         client = clients.shift();
                         if(client.pings.length) {
-                            database.findBeaconById(client.pings[0].beacon_id, receiveBeacon);
+                            database.findBeaconById(client./*pings[0].*/beacon_id, receiveBeacon);
                             break;
                         }
                     }
