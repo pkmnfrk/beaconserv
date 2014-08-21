@@ -234,7 +234,7 @@ Display.prototype = {
             icon: B.infoMarker
         });
         
-        ret.bindPopup(data.title);
+        //ret.bindPopup(data.title);
         ret.rawData = data;
         ret.display = this;
         
