@@ -177,7 +177,7 @@ Display.prototype = {
         for(var i = 0; i < this.beacons.length; i++) {
             var b = this.beacons[i];
             
-            if(b.uuid == client.uuid && b.major == client.major && b.minor == client.minor) {
+            if(b.uuid == client.rawData.uuid && b.major == client.rawData.major && b.minor == client.rawData.minor) {
                 beacon = b;
                 break;
             }
