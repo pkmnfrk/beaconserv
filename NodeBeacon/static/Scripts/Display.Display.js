@@ -379,14 +379,14 @@ Display.prototype = {
         
         console.log("adding client " + data.name);
         
-        this._clientContainer.unspiderfy();
+        //this._clientContainer.unspiderfy();
         
         data.clientid = data.clientid.toLowerCase();
         
         var client = this.clients[data.clientid];
 
         if(client) {
-            this._clientContainer.removeMarker(client.marker);
+            //this._clientContainer.removeMarker(client.marker);
             this.map.removeLayer(client.marker);
             delete this.clients[data.clientid];
         }
@@ -419,7 +419,7 @@ Display.prototype = {
                 icon: client.clientid == this.myClientId ? B.mySmallManMarker : B.smallManMarker
             }).addTo(this.map);
 
-            this._clientContainer.addMarker(client.marker);
+            //this._clientContainer.addMarker(client.marker);
             
             //FIXME: I hope there aren't multiple clients here
             //this._clientContainer.spiderfy([client.marker]);
