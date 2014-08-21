@@ -408,7 +408,8 @@ Display.prototype = {
                 clientid: data.clientid,
                 marker: null,
                 zIndexOffset: 10000,
-                display: this
+                display: this,
+                rawData: data
             };
 
             this.clients[data.clientid] = client;
