@@ -177,7 +177,7 @@ Display.prototype = {
     _loadBeacons: function(whenDone) {
         var self = this;
         
-        if(!this.editable()) return;
+        //if(!this.editable()) return;
         B.getBeacons("2f73d96d-f86e-4f95-b88d-694cefe5837f", this.floor, function (beacons) {
             self.beacons = beacons;
 
@@ -190,10 +190,12 @@ Display.prototype = {
     
     _onBeaconsLoaded: function()
     {
-        for(var i = 0; i < this.beacons.length; i++) {
-            var b = this.beacons[i];
-            b.marker = this._createBeaconFromData(b);
-            this.map.addLayer(b.marker);
+        if(this.editable()) {
+            for(var i = 0; i < this.beacons.length; i++) {
+                var b = this.beacons[i];
+                b.marker = this._createBeaconFromData(b);
+                this.map.addLayer(b.marker);
+            }
         }
     },
     
