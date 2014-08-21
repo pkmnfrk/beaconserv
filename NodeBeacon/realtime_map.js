@@ -7,7 +7,7 @@ var server = require("./server"),
     uuid = require("node-uuid"),
     WebSocketServer = require("ws").Server,
     socketServer = null,
-    debug = new (require("./debug"))();
+    debug = require("./debug");
 
 
 
