@@ -7,7 +7,7 @@ var server = require("./server"),
     uuid = require("node-uuid"),
     WebSocketServer = require("ws").Server,
     socketServer = null,
-    debug = new (require("./debug"))("DEBUG");
+    debug = new (require("./debug"))("LOG");
 
 
 
@@ -15,7 +15,7 @@ var onInitialMessage = function (msg) {
     debug.debug("Top of onInitialMessage");
     var self = this;
     
-    debug.info("Got initial message from client: " + msg);
+    debug.debug("Got initial message from client: " + msg);
     
     msg = JSON.parse(msg);
     msg.recurseCount = 1;
@@ -94,7 +94,7 @@ var onInitialMessage = function (msg) {
         this.close();
     }
     msg.recurseCount--;
-    debug.debug("Bottom of onInitialMessage");
+    debug.log("Bottom of onInitialMessage");
 };
 
 
