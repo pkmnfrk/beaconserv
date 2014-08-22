@@ -16,9 +16,9 @@ var onInitialMessage = function (msg) {
     var self = this;
     
     debug.info("Got initial message from client: " + msg);
-    msg.recurseCount = 1;
     
     msg = JSON.parse(msg);
+    msg.recurseCount = 1;
     if(msg.ok) {
         debug.debug("Message is ok");
         
