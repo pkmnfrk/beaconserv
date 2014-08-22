@@ -71,7 +71,7 @@ Display.prototype = {
         
         var self = this;
         this.map = L.map(div, {
-            center: [-53.75 / this.scalar, 72.5 / this.scalar],
+            center: [-0.002105712890625, 0.00522613525390625],//[-53.75 / this.scalar, 72.5 / this.scalar],
             zoom: this.zoomOffset + 2,
             crs: L.CRS.Simple,
             maxZoom: this.zoomOffset + 5,
