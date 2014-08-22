@@ -420,7 +420,8 @@ var B = (function () {
                 outerLabel: '',
                 outerRadius: 176,
                 innerRadius: 80,
-                percentage: 10
+                percentage: 10,
+                drawPercentage: 0
             };
             
             if(options) {
@@ -435,12 +436,14 @@ var B = (function () {
             can.width = can.width; //clear the canvas
             
             defaults.percentage = ( defaults.percentage / 100);
+            defaults.drawPercentage = defaults.drawPercentage ? ( defaults.drawPercentage / 100) : 0;
             
             //var mx = can.width / 2;
             var my = can.height / 2;
             var pad = can.height - (defaults.outerRadius * 2);
-            var startAngle = 0 - Math.PI / 4;
+            var startAngle = 0 - Math.PI / 4 - (Math.PI * 2 * defaults.drawPercentage);
             var endAngle = Math.PI * 2 - (Math.PI * 2 * defaults.percentage) - Math.PI / 4;
+            
             var mx = pad + defaults.outerRadius;
             
             con.fillStyle = defaults.color;
