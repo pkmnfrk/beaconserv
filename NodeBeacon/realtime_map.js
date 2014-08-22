@@ -7,17 +7,20 @@ var server = require("./server"),
     uuid = require("node-uuid"),
     WebSocketServer = require("ws").Server,
     socketServer = null,
-    debug = require("./debug");
+    debug = new (require("./debug"))("DEBUG");
 
 
 
 var onInitialMessage = function (msg) {
+    debug.debug("Top of onInitialMessage");
     var self = this;
     
     debug.info("Got initial message from client: " + msg);
     
     msg = JSON.parse(msg);
     if(msg.ok) {
+        debug.debug("Message is ok");
+        
         this.removeListener("message", this.handler);
         this.handler = onMessage.bind(this);
         this.on("message", onMessage);
@@ -32,43 +35,57 @@ var onInitialMessage = function (msg) {
                 }
             }
         }, function(err, clients) {
+            debug.debug("Top of find clients result");
+            
             if(err) {
                 debug.error(err);
                 return;
             }
-            debug.log("Clients: ", clients);
+            debug.debug("About to process this list of clients", clients);
             
             var client;
             
             while(clients.length) {
                 client = clients.shift();
-                if(client.pings.length) break;
+                debug.debug("Considering for processing", client);
+                if(client.pings.length) {
+                    debug.debug("Chose",client);
+                    break;
+                }
             }
             
             if(client) {
+                debug.debug("Chose a client to process", client);
                 database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
-                    debug.info("Loaded beacon for client " + client.clientid);
+                    debug.debug("Loaded beacon for client", client.clientid, beacon);
                     if(beacon) {
                         var msg = getBeaconNotifyMessage(client, beacon);
 
                         self.send(JSON.stringify(msg));
                     }
 
+                    debug.debug("About to resume processing this list of clients", clients);
                     while(clients.length) {
                         client = clients.shift();
+                        debug.debug("Considering for processing", client);
                         if(client.pings.length) {
-                            database.findBeaconById(client./*pings[0].*/beacon_id, receiveBeacon);
+                            debug.debug("Chose",client);
+                            database.findBeaconById(client.pings[0].beacon_id, receiveBeacon);
                             break;
                         }
                     }
+                    debug.debug("Bottom of database.findBeaconById");
                 });
             }
             
+            debug.debug("Bottom of find clients result");
         });
         
     } else {
+        debug.debug("Message is not okay, closing the connection");
         this.close();
     }
+    debug.debug("Bottom of onInitialMessage");
 };
 
 

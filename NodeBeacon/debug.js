@@ -34,27 +34,40 @@ module.exports.prototype = {
     },
     error: function() {
         if(this.getLogLevel() > ERROR) return;
-        console.error.apply(console, arguments);
+        doLog("error", arguments);
     },
     warn: function() {
         if(this.getLogLevel() > WARN) return;
-        console.warn.apply(console, arguments);
+        doLog("warn", arguments);
     },
     log: function() {
         if(this.getLogLevel() > LOG) return;
-        console.log.apply(console, arguments);
+        doLog("log", arguments);
     },
     info: function() {
         if(this.getLogLevel() > INFO) return;
-        console.info.apply(console, arguments);
+        doLog("info", arguments);
     },
     debug: function() {
         if(this.getLogLevel() > DEBUG) return;
-        console.log.apply(console, arguments);
+        doLog("debug", arguments);
     }
 };
 
-
+function doLog(type, args) {
+    var func = console.log;
+    if(type == 'info') func = console.info;
+    if(type == 'warn') func = console.warn;
+    if(type == 'error') func= console.error;
+    
+    type = '[' + type.toUpperCase() + ']';
+    while(type.length < 7) {
+        type = ' ' + type;
+    }
+    
+    Array.prototype.unshift.call(args, type);
+    func.apply(console, args);
+}
     
 module.exports.setLogLevel = function(level) {
     logLevel = level;
@@ -62,27 +75,27 @@ module.exports.setLogLevel = function(level) {
 
 module.exports.error = function() {
     if(logLevel > ERROR) return;
-    console.error.apply(console, arguments);
+    doLog("error", arguments);
 };
 
 module.exports.warn = function() {
     if(logLevel > WARN) return;
-    console.warn.apply(console, arguments);
+    doLog("warn", arguments);
 };
 
 module.exports.log = function() {
     if(logLevel > LOG) return;
-    console.log.apply(console, arguments);
+    doLog("log", arguments);
 };
 
 module.exports.info = function() {
     if(logLevel > INFO) return;
-    console.info.apply(console, arguments);
+    doLog("info", arguments);
 };
 
 module.exports.debug = function() {
     if(logLevel > DEBUG) return;
-    console.log.apply(console, arguments);
+    doLog("debug", arguments);
 };
 
 module.exports.DEBUG = DEBUG;
