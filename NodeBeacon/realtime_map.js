@@ -16,6 +16,7 @@ var onInitialMessage = function (msg) {
     var self = this;
     
     debug.info("Got initial message from client: " + msg);
+    msg.recurseCount = 1;
     
     msg = JSON.parse(msg);
     if(msg.ok) {
@@ -35,7 +36,9 @@ var onInitialMessage = function (msg) {
                 }
             }
         }, function(err, clients) {
-            debug.debug("Top of find clients result");
+            msg.recurseCount++;
+            
+            debug.debug("Top of find clients result:", msg.recurseCount);
             
             if(err) {
                 debug.error(err);
@@ -57,11 +60,14 @@ var onInitialMessage = function (msg) {
             if(client) {
                 debug.debug("Chose a client to process", client);
                 database.findBeaconById(client.pings[0].beacon_id, function receiveBeacon(beacon) {
+                    msg.recurseCount++;
+                    debug.debug("Top of database.findBeaconById:", msg.recurseCount);
+                    
                     debug.debug("Loaded beacon for client", client.clientid, beacon);
                     if(beacon) {
-                        var msg = getBeaconNotifyMessage(client, beacon);
+                        var m = getBeaconNotifyMessage(client, beacon);
 
-                        self.send(JSON.stringify(msg));
+                        self.send(JSON.stringify(m));
                     }
 
                     debug.debug("About to resume processing this list of clients", clients);
@@ -74,10 +80,12 @@ var onInitialMessage = function (msg) {
                             break;
                         }
                     }
+                    msg.recurseCount--;
                     debug.debug("Bottom of database.findBeaconById");
                 });
             }
             
+            msg.recurseCount--;
             debug.debug("Bottom of find clients result");
         });
         
@@ -85,6 +93,7 @@ var onInitialMessage = function (msg) {
         debug.debug("Message is not okay, closing the connection");
         this.close();
     }
+    msg.recurseCount--;
     debug.debug("Bottom of onInitialMessage");
 };
 
