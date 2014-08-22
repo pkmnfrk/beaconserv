@@ -491,6 +491,33 @@ var B = (function () {
 
             
         },
+        
+        animateChart: function (canv, perc) {
+            var tempPerc = {};
+            for(var i in perc) {
+                tempPerc[i] = perc[i];
+            }
+            tempPerc.drawPercentage = tempPerc.percentage;
+            tempPerc.outerLabel = null;
+            var speed = 25;
+            
+            var frame = function() {
+                if(tempPerc.drawPercentage <= 0) {
+                    B.drawPieChartThing(canv, perc);
+                    return;
+                }
+                
+                tempPerc.drawPercentage -= 1;
+                
+                
+                B.drawPieChartThing(canv, tempPerc);
+                
+                setTimeout(frame, speed);
+            };
+            
+            setTimeout(frame, 500);
+        },
+        
         wrapText: function(context, text, x, y, maxWidth, lineHeight) {
             var words = text.replace(/\n/g, " {newLine} ");
             //console.log("Operating on " + words);
