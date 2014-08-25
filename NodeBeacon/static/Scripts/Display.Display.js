@@ -443,13 +443,15 @@ Display.prototype = {
             var marginLeft = {};
             for(var key in this.clients) {
                 
+                var c = this.clients[key];
+                
                 var mk = c.uuid + '-' + c.major + '-' + c.minor;
                 
                 if(!marginLeft[mk]) {
                     marginLeft[mk] = -10;
                 }
                 
-                var c = this.clients[key];
+               
                 c.marker.bindPopup(c.name, {
                     offset: [0, marginLeft[mk]]
                 });
