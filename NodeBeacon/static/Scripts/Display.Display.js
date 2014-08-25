@@ -423,8 +423,6 @@ Display.prototype = {
             
             //FIXME: I hope there aren't multiple clients here
             //this._clientContainer.spiderfy([client.marker]);
-            
-            client.marker.bindPopup(data.name);
 
             client.removalTimer = setTimeout(function() {
                 self._clientContainer.unspiderfy();
@@ -452,11 +450,11 @@ Display.prototype = {
                 }
                 
                 var c = this.clients[key];
-                if(c.uuid == client.uuid && c.major == client.major && c.minor == client.minor) {
-                    //same spot
-                    c.marker._icon.style.marginLeft = marginLeft[mk] + "px";
-                    marginLeft[mk] += 20;
-                }
+                c.marker.bindPopup(c.name, {
+                    offset: [0, marginLeft[mk]]
+                });
+                c.marker._icon.style.marginLeft = marginLeft[mk] + "px";
+                marginLeft[mk] += 20;            
                 
             }
         }

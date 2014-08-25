@@ -234,7 +234,7 @@ var B = (function () {
                 return L.icon({
                     iconSize: [21, 47],
                     iconAnchor: [10, 65],
-                    popupAnchor: [0, -45],
+                    popupAnchor: [0, -65],
                     labelAnchor: [0, -47],
                     iconUrl: "/Content/images/SmallManDude.png",
                     iconRetinaUrl: "/Content/images/SmallManDude@2x.png"
@@ -248,7 +248,7 @@ var B = (function () {
                 return L.icon({
                     iconSize: [27, 47],
                     iconAnchor: [10, 65],
-                    popupAnchor: [0, -45],
+                    popupAnchor: [0, -65],
                     labelAnchor: [0, -47],
                     iconUrl: "/Content/images/MySmallManDude.png",
                     iconRetinaUrl: "/Content/images/MySmallManDude@2x.png"
