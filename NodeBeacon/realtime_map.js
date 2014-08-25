@@ -31,7 +31,7 @@ var onInitialMessage = function (msg) {
             pings: {
                 "$elemMatch": {
                     date: {
-                        "$gt": new Date().addDays(-1)
+                        "$gt": new Date().addMinutes(-10)
                     }
                 }
             }
