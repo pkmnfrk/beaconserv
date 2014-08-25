@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=320, height=568" />
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                color: white;
+            }
+        h1 {
+            position: absolute;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 30px;
+            font-weight: normal;
+            text-align: center;
+            top: 71px;
+            left: 0;
+            right: 0;
+        }
+        p {
+            position: absolute;
+            top: 170px;
+            font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight';
+            font-size: 18px;
+            text-align: center;
+            left: 0;
+            right: 0;
+        }
+        canvas {
+            zoom: 0.5;
+            position: absolute;
+            top:658px;
+            left: 78px;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>WELCOME TO THE SEVENTH FLOOR</h1>
+        <p>HOME TO<br/>
+        CREATIVE, UX, LABS, CLIENT TEAM 1, WEB &amp; APP DEV, AND EDITORIAL<br/>
+        <br/>
+        125 out of 470 Klicksters work here</p>
+        <canvas id="stat" width="490" height="352"></canvas>
+        <script>
+            var marker, baseurl;
+            
+            var graph = {
+                "percentage" : 27,
+                "outerLabel" : "7th Floor",
+                "color" : "#eb00ff",
+                "innerLabel" : "Klicksters"
+            };
+        
+        function loadScript(url, whenDone) {
+            var script = document.createElement("script");
+            var t = Math.random() * 1000000;
+            script.src = url + "?t=" + t;
+            script.onload = whenDone;
+            document.body.appendChild(script);
+        }
+        
+        function loadContent(b) {
+            baseurl = b;
+            
+            //alert("before load");
+            
+            if(baseurl[baseurl.length - 1] == "/") {
+                baseurl = baseurl.substr(0, baseurl.length - 1);
+            }
+            
+            //alert ("About to load from " + baseurl);
+            loadScript(baseurl + "/Scripts/Common.js", onScriptLoaded);
+            
+        }
+        
+        function onScriptLoaded () {
+            //alert("Loaded");
+            B.animateChart('stat', graph);
+            
+        }
+        
+        </script>
+    </body>
+</html>

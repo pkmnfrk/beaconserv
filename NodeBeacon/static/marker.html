@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=320, height=568" />
+        <title>Detail view</title>
+        <style>
+            body {
+                background-color: black  transparent ;
+                color: white;
+                font-size: 8pt;
+                font-family: 'Roboto Light', 'Helvetica Neue Light', sans-serif;
+                font-weight: 100;
+                margin-left: 25px;
+                margin-right: 25px;
+            }
+        div#body {
+                margin: 10px;
+                color: #41a6cd;
+                font-size: 9pt;
+
+            }
+        p {
+            
+        }
+            h1 {
+                border-left: 6px solid #41a6cd;
+                padding-left: 10px;
+                font-size: 18pt;
+                font-weight: 100;
+            }
+            h2 {
+                font-size: 8pt;
+                font-weight: 200;
+                padding-left:17px;
+                text-transform: uppercase;
+                color: #ad9ab6;
+            }
+        h3 {
+            margin: 0;
+            padding: 0;
+        }
+            div.image {
+                height: 176px;
+                width: 295px;
+                display:inline-block;
+            }
+        
+        #imageCarousel {
+            overflow:auto;
+            white-space: nowrap;
+        }
+        #imageCarousel img {
+            max-height: 176px;
+            padding: 5px;
+        }
+        
+        canvas {
+            zoom: 0.5;
+        }
+        </style>
+        
+    </head>
+    <body>
+        <h1 id="title">Quality Assurance (QA)</h1>
+        <h2>Klick Health / Floor <span id="floor">7</span></h2>
+        
+        <div id="imageCarousel">
+            <!--<div class="image"></div>-->
+            
+        </div>
+        <div id="body">
+            <strong>Quality Assurance (QA)</strong> is one of our most important resources. They are the second pair of eyes that looks over every email, line of code, or other content-type we produce, ensuring it meets Klicks high standards.
+        </div>
+        <div id="statistics">
+            <h1>Department Statistics</h1>
+            <canvas id="stat" width="490" height="352"></canvas>
+        </div>
+        <div id="personnel">
+            <h1>Personnel Breakdown</h1>
+        </div>
+        <!--<script src="http://ibeacon.klick.com/Scripts/Common.js"></script>-->
+        <!--<script src="http://localhost:8081/Scripts/Common.js"></script>-->
+
+        
+        <script>
+            var marker, baseurl;
+            
+            function loadScript(url, whenDone) {
+                var script = document.createElement("script");
+                var t = Math.random() * 1000000;
+                script.src = url + "?t=" + t;
+                script.onload = whenDone;
+                document.body.appendChild(script);
+            }
+        
+            function loadContent(b, data) {
+                marker = data;
+                baseurl = b;
+                
+                //alert("before load");
+                
+                if(baseurl[baseurl.length - 1] == "/") {
+                    baseurl = baseurl.substr(0, baseurl.length - 1);
+                }
+                
+                //alert ("About to load from " + baseurl);
+                loadScript(baseurl + "/Scripts/Common.js", onScriptLoaded);
+                
+
+                //alert("Loading queued");
+                //if(beacon.image) document.getElementById("image").src = beacon.image;
+            }
+        
+        function onScriptLoaded () {
+            //alert("Script loaded");
+            document.getElementById("title").innerHTML = marker.title;
+            document.getElementById("floor").innerHTML = marker.floor;
+            document.getElementById("body").innerHTML = marker.body;
+            var imgContainer = document.getElementById("imageCarousel");
+     
+     
+            if(!marker.images || marker.images.length == 0) {
+                //alert("No images");
+                imgContainer.parentNode.removeChild(imgContainer);
+                imgContainer = null;
+            } else {
+                //alert("Adding images");
+                for(var i = 0; i < marker.images.length; i++) {
+                    var addTo = imgContainer;
+                    
+                    /*
+                    var a = document.createElement("a");
+                    a.href = baseurl + marker.images[i].url;
+                    a.rel = "lightbox[gallery]";
+                    addTo = a;
+                    imgContainer.appendChild(a);
+                    */
+                     
+                    var img = document.createElement("img");
+                    img.src = baseurl + marker.images[i].url;
+                    addTo.appendChild(img);
+                    
+
+                }
+            }
+            
+            if(marker.widget && marker.widget.type == "perc") {
+                //B.drawPieChartThing('stat',marker.widget.perc);
+                B.animateChart('stat', marker.widget.perc);
+            } else {
+                var statistics = document.getElementById("statistics");
+                statistics.parentNode.removeChild(statistics);
+            }
+            
+            {
+                var personnel = document.getElementById("personnel");
+                personnel.parentNode.removeChild(personnel);
+            }
+            //alert("Done loading");
+        }
+        
+        </script>
+    </body>
+</html>
