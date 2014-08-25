@@ -26,7 +26,7 @@ module.exports = {
         major = parseInt(path[1], 10);
         minor = parseInt(path[2], 10);
 
-        database.findClient(request.clientid, function (client) {
+        database.findClient(request.clientid, function (err, client) {
 
             database.findBeacon(uuid, major, minor, function(err, docs) {
                 if(docs.length === 0) return;
@@ -62,7 +62,7 @@ module.exports = {
         path.shift();
 
         
-        database.findClient(request.clientid, function (client) {
+        database.findClient(request.clientid, function (err, client) {
             
             var ping = {
                 date: new Date(),

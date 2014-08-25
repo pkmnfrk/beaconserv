@@ -50,7 +50,7 @@ exports.static = function staticHandler(request, response, file) {
 };
 
 exports.client = function client(request, response) {
-    database.findClient(request.clientid, function(client) {
+    database.findClient(request.clientid, function(err, client) {
         response.writeHead(200, {"Content-Type": "application/json"});
         response.write(JSON.stringify(client));
         response.end();
@@ -58,7 +58,7 @@ exports.client = function client(request, response) {
 };
 
 exports.state = function state(request, response) {
-    database.findClient(request.clientid, function (client) {
+    database.findClient(request.clientid, function (err, client) {
         
         var pings = client.pings.slice(0, 5);
         var ret = [];

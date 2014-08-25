@@ -33,7 +33,7 @@ module.exports = {
         }
         
         if(path[0] === "me") {
-            database.findClient(request.clientid, function(c) {
+            database.findClient(request.clientid, function(err, c) {
                 response.writeJson(c);
                 return;
             });
@@ -95,7 +95,7 @@ module.exports = {
         
         if(path[0] === "me") {
             if(path[1] === "name") {
-                database.findClient(request.clientid, function(c) {
+                database.findClient(request.clientid, function(err, c) {
                     var body = "";
                     
                     request.on("data", function(d) {

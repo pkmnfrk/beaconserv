@@ -2,7 +2,7 @@
 
 var mongo = require('mongodb'),
     client = mongo.MongoClient,
-    debug = require("./debug"),
+    debug = new (require("./debug"))("DEBUG"),
     db = null;
 
 function start(onReady) {
@@ -105,12 +105,19 @@ exports.start = start;
 exports.findBeacon = findBeacon;
 exports.storeBeacon = storeBeacon;
 exports.findClient = function(clientid, callback) {
+    debug.debug("Top of database.findClient");
     var clients = db.collection("client");
     
+    
     clients.findOne({ clientid: clientid }, function(err, obj) {
-        if(err) throw err;
+        debug.debug("Top of findClient result");
+        if(err) {
+            debug.debug("Returning error", err);
+            callback(err, null);
+        }
         
         if(!obj) {
+            debug.debug("Client doesn't exist, creating new one");
             obj = {
                 clientid: clientid,
                 name: null,
@@ -118,12 +125,12 @@ exports.findClient = function(clientid, callback) {
             };
             clients.save(obj, function(err) {
                 debug.info("Saving new client");
-                callback(obj);
+                callback(null, obj);
             });
         } else {
             setTimeout(function() {
                 debug.info("Returning old client");
-                callback(obj); 
+                callback(null, obj); 
             }, 0);
         }
     });
@@ -133,21 +140,27 @@ exports.storeClient = function(client, callback) {
     var clients = db.collection("client");
     
     clients.save(client, function(err) { 
-        if(err) throw err; 
-        if(callback) callback();
+        if(err) {
+            callback(err);   
+        }
+        if(callback) callback(null);
     });
 };
 
 exports.findClients = function(query, callback) {
+    debug.debug("Top of database.findClients");
     var clients = db.collection("client");
     
     if(typeof query == "function") {
+        debug.debug("Munging arguments");
         callback = query;   
         query = undefined;
     }
     
     clients.find(query).toArray(function(err, objs) {
+        debug.debug("Top of database.findClients.results");
         if(err){
+            debug.debug("Got error from collection, returning error", err);
             callback(err, null);
             return;
         }
@@ -156,11 +169,13 @@ exports.findClients = function(query, callback) {
         var toSave = [];
         
         for(var i = 0; i < objs.length; i++) {
-            
+            debug.debug("Proessing client #", i);
             var c = objs[i];
             if(c.pings.length) {
+                debug.debug("Client has pings");
                 for(var j = 0; j < c.pings.length; j++) {
                     if((now - Date.parse(c.pings[j].date)) > (1000 * 60 * 60 * 24)) {
+                        debug.debug("Trimming old pings, up to", j);
                         c.pings = c.pings.slice(0, j);
                         toSave.push(c);
                         break;
@@ -169,9 +184,19 @@ exports.findClients = function(query, callback) {
             }
         }
         
+        debug.debug("Done processing clients");
+        
+        
         (function saveFunc() {
-            if(!toSave.length) callback(null, objs);
-            else exports.storeClient(toSave.pop(), saveFunc);
+            debug.debug("Top of database.findClients.saveFunc()");
+            if(!toSave.length) {
+                debug.debug("Done saving clients, invoking callback");
+                callback(null, objs);
+            }
+            else {
+                debug.debug("Saving a client");
+                exports.storeClient(toSave.pop(), saveFunc);
+            }
         })();
     });
 };
