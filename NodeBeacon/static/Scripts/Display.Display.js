@@ -445,7 +445,7 @@ Display.prototype = {
                 
                 var c = this.clients[key];
                 
-                var mk = c.uuid + '-' + c.major + '-' + c.minor;
+                var mk = c.rawData.uuid + '-' + c.rawData.major + '-' + c.rawData.minor;
                 
                 if(!marginLeft[mk]) {
                     marginLeft[mk] = -10;
