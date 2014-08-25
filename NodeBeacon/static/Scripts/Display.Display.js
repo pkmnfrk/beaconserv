@@ -453,7 +453,7 @@ Display.prototype = {
                 
                
                 c.marker.bindPopup(c.rawData.name, {
-                    offset: [marginLeft[mk], 0]
+                    offset: [marginLeft[mk], -65]
                 });
                 c.marker._icon.style.marginLeft = marginLeft[mk] + "px";
                 marginLeft[mk] += 20;            
