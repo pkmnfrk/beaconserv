@@ -25,6 +25,8 @@ Display.Websocket = L.Class.extend({
         this._watchdog = null;
         this._deathtimer = null;
         this._userclose = false;
+        
+        this.deathBackoff = 0;
     },
     
     open: function() {
@@ -58,6 +60,7 @@ Display.Websocket = L.Class.extend({
         if(this._deathtimer) {
             clearInterval(this._deathtimer);
             this._deathtimer = null;
+            this.deathBackoff = 0;
         }
         
         this._watchdog = setInterval(this._watchdog_fire.bind(this), this.options.watchdogInterval * 1000);
@@ -74,11 +77,15 @@ Display.Websocket = L.Class.extend({
             
         }
         
+        this.close();
+        
         var self = this;
         if(!this._userclose) {
             this._deathtimer = setInterval(function() {
+                this.deathBackoff += 500;
+                this.deathBackoff *= 1.2;
                 self.open();
-            }, 5000);
+            }, 5000 + this.deathBackoff);
         }
         
     },
