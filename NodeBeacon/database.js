@@ -2,7 +2,7 @@
 
 var mongo = require('mongodb'),
     client = mongo.MongoClient,
-    debug = new (require("./debug"))("DEBUG"),
+    debug = new (require("./debug"))("LOG"),
     db = null;
 
 function start(onReady) {
