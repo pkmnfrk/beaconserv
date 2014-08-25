@@ -452,8 +452,8 @@ Display.prototype = {
                 }
                 
                
-                c.marker.bindPopup(c.name, {
-                    offset: [0, marginLeft[mk]]
+                c.marker.bindPopup(c.rawData.name, {
+                    offset: [marginLeft[mk], 0]
                 });
                 c.marker._icon.style.marginLeft = marginLeft[mk] + "px";
                 marginLeft[mk] += 20;            
