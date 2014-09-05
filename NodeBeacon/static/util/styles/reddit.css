@@ -41,7 +41,7 @@ h1 span {
     color: black;
 }
 
-p {
+p.headline {
     color: #0d82b7;
     font-size: 66px;
     line-height: 66px;
@@ -50,11 +50,19 @@ p {
     
 }
 
+
+
 div.source {
     font-size: 30px;
-    margin-bottom: 20px;
+    margin-top: 35px;
     margin-bottom: 60px;
 }
+
+div.source::after {
+    content: "";
+    clear:both;
+}
+
 
 div#dateline {
     color: #c3c3c3;
@@ -63,6 +71,24 @@ div#dateline {
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+div.body {
+    font-size: 40px;
+    max-height: 500px;
+    overflow:hidden;
+    
+}
+
+div.body img {
+    max-width: 500px;
+    max-height: 500px;
+    float: left;
+    margin-right: 20px;
+}
+
+div.body p {
+    text-overflow: ellipsis;
 }
 
 header {
@@ -85,4 +111,39 @@ section {
 
 .spacer {
     height: 720px;
+}
+
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+ }
+
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
+
+
+/*specific site hax*/
+.body a[rel='nofollow'] {
+    display:none;
+}
+.body img[width="1"] {
+    display:none;`
+}
+.body a[href*=feedsportal] {
+    display:none;
+}
+
+.feedflare {
+    display:none;
+}
+
+.body br {
+    display:none;
 }

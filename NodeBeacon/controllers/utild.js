@@ -26,6 +26,14 @@ var feeds = {
     wired: {
         name: "Wired",
         url: "http://feeds.wired.com/wired/index"
+    },
+    techcrunch: {
+        name: "TechCrunch (Gadgets/Gear)",
+        url: "http://feeds.feedburner.com/crunchgear"
+    },
+    engadget: {
+        name: "Engadget",
+        url: "http://www.engadget.com/rss.xml"
     }
 };
 
@@ -136,7 +144,8 @@ module.exports = {
                             item.push({
                                 title: articles[i].title,
                                 date: articles[i].published.getTime(),
-                                source: rssUrls[0].name
+                                source: rssUrls[0].name,
+                                body: articles[i].content
                             });
                         }
                     }

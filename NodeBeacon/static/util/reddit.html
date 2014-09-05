@@ -88,12 +88,20 @@
                             
                             var div = document.createElement("div");
                             div.className = "content";
+                            
                             var p = document.createElement("p");
+                            p.className = "headline";
                             p.appendChild(document.createTextNode(d.title));
                             div.appendChild(p);
                             
+                            /*
+                            var b = document.createElement("div");
+                            b.className = "body";
+                            b.innerHTML = d.body;
+                            div.appendChild(b);
+                            */
                             var source = document.createElement("div");
-                            source.className = "source";
+                            source.className = "source clearfix";
                             source.appendChild(document.createTextNode(d.source));
                             source.appendChild(document.createTextNode(" - "));
                             source.appendChild(document.createTextNode(d.date.toLocaleString()))
@@ -106,9 +114,12 @@
                         spacer.className = "spacer";
                         section.appendChild(spacer);
                         
+                        //$("a[href~=feedsportal]").remove();
+                        
                         onFrame();
                     } 
                 });
+                
                 
                 //setTimeout(update, 15 * 60000);
                 
