@@ -51,11 +51,16 @@
                     
                         lastTime = time;
 
-                        if(section.scrollTop > section.scrollHeight) {
-                            section.scrollTop = 0;
-                        }
-
+                        var prev = section.scrollTop;
+                        
                         section.scrollTop += dTime * pixelsPerSecond;
+                        
+                        if(prev == section.scrollTop) {
+                            section.scrollTop = 0;
+                            lastTime = null;
+                            cancelAnimationFrame(animation);
+                            update();
+                        }
                     }
                 }
             }
@@ -100,11 +105,13 @@
                         spacer = document.createElement("div");
                         spacer.className = "spacer";
                         section.appendChild(spacer);
-                    }
-                })
+                        
+                        onFrame();
+                    } 
+                });
                 
                 //setTimeout(update, 15 * 60000);
-                onFrame();
+                
             }
             
             update();
