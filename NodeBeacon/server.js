@@ -14,7 +14,7 @@ var server = null;
 
 http.ServerResponse.prototype.writeJson = function(obj, headers) {
     var my_headers = { 
-        "Content-Type": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "private, max-age=0, no-cache" //assume, by default, that JSON responses are APIs without caching
     };
     for(var k in headers) {

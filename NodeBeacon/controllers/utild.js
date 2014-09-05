@@ -14,6 +14,21 @@ var lastReddit = {};
 var lastChatterFetch = null;
 var lastChatter = null;
 
+var feeds = {
+    reddit: {
+        name: "Reddit /r/technology",
+        url: "http://www.reddit.com/r/technology/.rss"
+    },
+    ars: {
+        name: "Ars Technica",
+        url: "http://feeds.arstechnica.com/arstechnica/technology-lab"
+    },
+    wired: {
+        name: "Wired",
+        url: "http://feeds.wired.com/wired/index"
+    }
+};
+
 
 module.exports = {
     post: function (request, response) {
@@ -80,50 +95,68 @@ module.exports = {
             var feedName = path[1] || 'reddit';
             
             (function() {
-                
+                /*
                 if(lastRedditFetch[feedName] && lastRedditFetch[feedName] >= new Date(new Date().getTime() + -15*60000)) {
                     
                     response.writeJson(lastReddit[feedName]);
                     return;
                 }
+                */
                 
-                var rssUrl;
                 
-                if(feedName == "reddit") {
-                    rssUrl = "http://www.reddit.com/r/technology/.rss";
-                } else if(feedName == "ars") {
-                    rssUrl = "http://feeds.arstechnica.com/arstechnica/technology-lab";
-                } else {
-                    response.writeHead(404, "Not Found");
-                    response.end();
-                    return;
+                
+                var rssUrls = feedName.split(',');
+                
+                for(var i = 0; i < rssUrls.length; i++) {
+                    if(!feeds[rssUrls[i]]) {
+                        response.writeHead(404, "Not Found");
+                        response.end();
+                        return;
+                    }
                     
+                    rssUrls[i] = feeds[rssUrls[i]];
                 }
                 
-                feed(rssUrl, function(err, articles) {
-                    var item = [];
+                var item = [];
+                
+                var handleFeed = function(err, articles) {
                     
                     if(err) {
+                        /*
                         item.push({
                             title: "Error fetching feed",
                             date: new Date().toLocaleDateString(),
                             error: err
                         });
+                        */
+                        
+                        
                     } else {
                         for(var i = 0; i < Math.min(6, articles.length); i++) {
                             item.push({
                                 title: articles[i].title,
-                                date: articles[i].published.toLocaleDateString()
+                                date: articles[i].published.getTime(),
+                                source: rssUrls[0].name
                             });
                         }
                     }
+
+                    rssUrls.shift();
+
+                    if(!rssUrls.length) {
+                        
+                        item.sort(function(a,b) {
+                            return a.date - b.date;
+                        });
+                        
+                        response.writeJson(item);
+                        return;
+                    }
                     
-                    lastReddit[feedName] = item;
-                    lastRedditFetch[feedName] = new Date();
-                    
-                    response.writeJson(item);
-                    
-                });
+                    feed(rssUrls[0].url, handleFeed);
+                };
+                
+                feed(rssUrls[0].url, handleFeed);
             })();
             
         } else if (path[0] == "chatter") {
