@@ -45,6 +45,15 @@ p {
     color: #0d82b7;
     font-size: 66px;
     line-height: 66px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    
+}
+
+div.source {
+    font-size: 30px;
+    margin-bottom: 20px;
+    margin-bottom: 60px;
 }
 
 div#dateline {
@@ -69,3 +78,11 @@ footer {
     
 }
 
+section {
+    height: 720px;
+    overflow: hidden;
+}
+
+.spacer {
+    height: 720px;
+}

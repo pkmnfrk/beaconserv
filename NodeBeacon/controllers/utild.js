@@ -146,7 +146,7 @@ module.exports = {
                     if(!rssUrls.length) {
                         
                         item.sort(function(a,b) {
-                            return a.date - b.date;
+                            return b.date - a.date;
                         });
                         
                         response.writeJson(item);
