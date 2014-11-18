@@ -34,7 +34,7 @@
             var animation = null;
             var section = document.getElementById('section');
             var lastTime = null;
-            var pixelsPerSecond = 30.0 / 1000.0;
+            var pixelsPerSecond = 15.0 / 1000.0;
             
             function onFrame(time) {
                 
@@ -47,7 +47,7 @@
                     
                     var dTime = time - lastTime;
                     
-                    if(dTime * pixelsPerSecond >= 2) {
+                    if(dTime * pixelsPerSecond >= 1) {
                     
                         lastTime = time;
 
