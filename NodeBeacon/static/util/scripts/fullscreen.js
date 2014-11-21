@@ -97,7 +97,10 @@ var websocket = null;
 
 tryConnect();
 
-$(".fsbutton, #close-overlay").click(toggleOverlay);
+$(".fsbutton, #close-overlay").click(function() {
+    toggleOverlay();
+    
+});
 $("#go-fullscreen").click(function() {
     toggleFullScreen();
     toggleOverlay();
