@@ -97,13 +97,15 @@ var websocket = null;
 
 tryConnect();
 
-$(".fsbutton, #close-overlay").click(function() {
+$(".fsbutton").click(function(e) {
+    e.preventDefault();
     toggleOverlay();
     
 });
-$("#go-fullscreen").click(function() {
+$("#go-fullscreen").click(function(e) {
+    e.preventDefault();
     toggleFullScreen();
-    toggleOverlay();
+    //toggleOverlay();
 });
 
 $(".urlbutton").click(function(e) {
@@ -112,11 +114,34 @@ $(".urlbutton").click(function(e) {
     
     $("#main").attr("src", url);
     
+    //toggleOverlay();
+});
+
+$("#shadow, #overlay").click(function(e) {
+    e.preventDefault();
     toggleOverlay();
 });
 
 $(window).on("message", function(evt) {
     var msg = evt.originalEvent.data;
+    var blacklist = [
+        "https://www.iracing.com"
+    ];
+    
+    if(blacklist.indexOf(evt.originalEvent.origin) != -1) {
+        console.log("Ignoring message from blacklisted site", evt.originalEvent.origin);
+        return;
+    }
+    
+    try {
+        
+        var test = JSON.parse(msg);
+        
+    } catch(ex) {
+        console.log("Error parsing message from site", evt.originalEvent.origin);
+        console.error(ex);
+        return;
+    }
     
     websocket.send(msg);
 });

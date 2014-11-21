@@ -52,8 +52,12 @@ var onInitialMessage = function (msg) {
 
 var onMessage = function (msg) {
     //debug.log(msg);
-    msg = JSON.parse(msg);
-    
+    try {
+        msg = JSON.parse(msg);
+    } catch(ex) {
+        debug.error("Error parsing message:", msg);
+        return;
+    }
     if(msg.msg === "log") {
         var today = new Date();
         today = today.getFullYear() + "-" + (today.getMonth() < 10 ? "0" : "") + today.getMonth() + "-" + (today.getDay() < 10 ? "0" : "") + today.getDay();
