@@ -250,7 +250,8 @@ var B = (function () {
                     iconAnchor: [10, 65],
                     popupAnchor: [0, -65],
                     labelAnchor: [0, -47],
-                    iconUrl: "/Content/images/SmallManDude@2x.png",
+                    iconUrl: "/Content/images/mapManDude.png",
+                    iconRetinalUrl: "/Content/images/mapManDude@2x.png",
                     
                     //iconRetinaUrl: "/Content/images/red-marker-2x.png",
                 });
