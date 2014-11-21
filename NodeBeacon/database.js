@@ -315,3 +315,26 @@ exports.putFullscreenConfig = function(data, callback) {
     //setTimeout(callback, 0);
     
 };
+
+exports.getDownloads = function(callback) {
+    var downloads = db.collection("downloads");
+    
+    downloads.find({}).toArray(callback);
+};
+
+exports.saveDownload = function(dl, callback) {
+    var downloads = db.collection("downloads");
+    
+    storeObject(downloads, dl, callback);
+};
+
+exports.deleteDownload = function(dl, callback) {
+    var downloads = db.collection("downloads");
+    
+    if(!dl._id) callback(false);
+    
+    if(typeof dl._id != "object")
+        dl._id = new mongo.ObjectID(dl._id);
+    
+    downloads.delete({_id: dl._id}, callback);
+};

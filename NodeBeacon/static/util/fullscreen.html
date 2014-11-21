@@ -5,10 +5,41 @@
         <link rel="stylesheet" href="styles/fullscreen.css" />
     </head>
     <body>
-        <button class="fsbutton" type="button">Go Fullscreen</button>
+        <button class="fsbutton" type="button">Overlay</button>
         <img id="loader" src="images/loader.gif" />
         
+        <div id="shadow"></div>
+        
+        <div id="overlay">
+            <button id="close-overlay">
+                <img src="images/close-icon.png" /><br/>
+                Close
+            </button>
+            <button id="go-fullscreen">
+                <img src="images/fullscreen.png" /><br/>
+                Go Fullscreen
+            </button>
+            
+            <button class="urlbutton" data-url="about:blank">
+                <img src="images/erase.png" alt=""/><br/>
+                Blank Screen
+            </button>
+            <button class="urlbutton" data-url="/util/reddit.html?feed=ars,wired,techcrunch,engadget">
+                <img src="images/rss-icon.png" alt=""/><br/>
+                News Feed
+            </button>
+            <button class="urlbutton" data-url="/?tv">
+                <img src="images/map_marker.png" alt=""/><br/>
+                iBeacon Map
+            </button>
+            <button class="urlbutton" data-url="https://awwapp.com/draw.html">
+                <img src="images/whiteboard.png" alt=""/><br/>
+                Whiteboard
+            </button>
+        </div>
+        
         <iframe id="main"></iframe>
+        
         <script src="scripts/jquery.min.js"></script>
         <script src="scripts/fullscreen.js"></script>
     </body>

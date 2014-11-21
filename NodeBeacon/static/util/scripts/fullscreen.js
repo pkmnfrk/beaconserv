@@ -50,6 +50,11 @@ function toggleFullScreen() {
   }
 }
 
+function toggleOverlay() {
+    $("#shadow").toggle();
+    $("#overlay").toggle();
+}
+
 function tryConnect() {
     if(errorRetry) {
         clearTimeout(errorRetry);
@@ -92,7 +97,20 @@ var websocket = null;
 
 tryConnect();
 
-$(".fsbutton").click(toggleFullScreen);
+$(".fsbutton, #close-overlay").click(toggleOverlay);
+$("#go-fullscreen").click(function() {
+    toggleFullScreen();
+    toggleOverlay();
+});
+
+$(".urlbutton").click(function(e) {
+    e.preventDefault();
+    var url = $(this).data("url");
+    
+    $("#main").attr("src", url);
+    
+    toggleOverlay();
+});
 
 $(window).on("message", function(evt) {
     var msg = evt.originalEvent.data;

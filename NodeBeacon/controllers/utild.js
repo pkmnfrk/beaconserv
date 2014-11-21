@@ -6,7 +6,8 @@ var url = require("url"),
     fs = require("fs"),
     qs = require("querystring"),
     feed = require("feed-read"),
-    http = require("http");
+    http = require("http"),
+    database = require("../database");
 
 var lastRedditFetch = {};
 var lastReddit = {};
@@ -87,6 +88,34 @@ module.exports = {
             
             return;
             
+        } else if(path[0] == "downloads") {
+            request.on("data", function(d) {
+                body += d;
+                if(body.length > 1e6) {
+                    request.connection.destroy();
+                }
+            });
+            request.on("end", function() {
+                var data = JSON.parse(body);
+                
+                if(!data.url) {
+                    response.writeError({
+                        error: true,
+                        message: "No URL"
+                    });   
+                }
+                if(!data.progress) data.progress = 0;
+                if(!data.error) data.error = false;
+                
+                database.saveDownload(data, function(obj, err) {
+                    if(err) {
+                        response.writeError(err);
+                        return;
+                    }
+                    
+                    response.writeJson(obj);
+                });
+            });
         }
     },
     
@@ -252,6 +281,18 @@ module.exports = {
                 req.end();
             })();
             
+        } else if(path[0] == "downloads") {
+            (function() {
+                console.log("Downloads!");
+                database.getDownloads(function(dls, err) {
+                    if(err) {
+                        response.writeJson(err);
+                        return;
+                    }
+                    
+                    response.writeJson(dls);
+                });
+            })();
         }
     }
 };
