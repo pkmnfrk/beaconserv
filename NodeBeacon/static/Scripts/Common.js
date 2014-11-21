@@ -243,6 +243,20 @@ var B = (function () {
             }
         })(),
         
+        tvManMarker: (function () {
+            if (typeof window.L !== "undefined") {
+                return L.icon({
+                    iconSize: [21, 47],
+                    iconAnchor: [10, 65],
+                    popupAnchor: [0, -65],
+                    labelAnchor: [0, -47],
+                    iconUrl: "/Content/images/SmallManDude@2x.png",
+                    
+                    //iconRetinaUrl: "/Content/images/red-marker-2x.png",
+                });
+            }
+        })(),
+        
         mySmallManMarker: (function () {
             if (typeof window.L !== "undefined") {
                 return L.icon({
