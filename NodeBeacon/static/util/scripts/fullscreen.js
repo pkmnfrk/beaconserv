@@ -112,7 +112,18 @@ $(".urlbutton").click(function(e) {
     e.preventDefault();
     var url = $(this).data("url");
     
-    $("#main").attr("src", url);
+    //$("#main").attr("src", url);
+    
+    $.ajax({
+        url: "/fullscreen/" + myname + "/current",
+        method: "PUT",
+        data: JSON.stringify({
+            name: $(this).text(), url: url
+        }),
+        contentType: "application/json"
+    });
+    
+    $("#loader").show();
     
     //toggleOverlay();
 });
