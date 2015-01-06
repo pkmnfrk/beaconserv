@@ -117,8 +117,8 @@ function removeEntry() {
     saveSchedule(el);
 }
 
-function setScreenFromElement(src) {
-    var id = $(this).parent().attr("id");
+function setScreenFromElement(src, screen) {
+    var id = $(screen).parent().attr("id");
                 
     var data = getData(src);
 
@@ -169,7 +169,7 @@ $.ajax({
             drop: function(event, ui) {
                 var src = $(ui.draggable).parent();
                 
-                setScreenFromElement(src);
+                setScreenFromElement(src, this);
             }
         });
 
