@@ -40,7 +40,7 @@ var feeds = {
     
     "labsprojects": {
         name: "Upcoming Labs Projects",
-        url: "http://ibeacon.klick.com/utild/projectgenrss/5"
+        url: "http://ibeacon.klick.com/utild/projectgenrss/10"
     }
 };
 
