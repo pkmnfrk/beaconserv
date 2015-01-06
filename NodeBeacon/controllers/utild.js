@@ -405,7 +405,7 @@ module.exports = {
                     resp += "<title>" + title + "</title>";
                     resp += "<pubDate>";
                     var today = new Date();
-                    today.setHours(today.getHours() + i);
+                    today.setHours(today.getHours() - i - 1);
                     resp += today.toUTCString();
                     resp += "</pubDate>";
                     resp += "</item>";
