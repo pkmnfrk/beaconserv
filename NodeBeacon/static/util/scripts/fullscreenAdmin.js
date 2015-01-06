@@ -169,7 +169,7 @@ $.ajax({
             drop: function(event, ui) {
                 var src = $(ui.draggable).parent();
                 
-                setScreen(src);
+                setScreenFromElement(src);
             }
         });
 
