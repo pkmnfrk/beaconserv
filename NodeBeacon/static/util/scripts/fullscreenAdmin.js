@@ -117,6 +117,26 @@ function removeEntry() {
     saveSchedule(el);
 }
 
+function setScreenFromElement(src) {
+    var id = $(this).parent().attr("id");
+                
+    var data = getData(src);
+
+    if(!data) return;
+
+    $(".name", this).text(data.name);
+    $(".url", this).text(data.url);
+    
+    $.ajax({
+        url: "/fullscreen/" + id + "/current",
+        method: "PUT",
+        data: JSON.stringify({
+            name: data.name, url: data.url
+        }),
+        contentType: "application/json"
+    });
+}
+
 $.ajax({
     url: "/fullscreen/config",
     success: function(data) {
@@ -148,23 +168,8 @@ $.ajax({
             hoverClass: "screenDrop",
             drop: function(event, ui) {
                 var src = $(ui.draggable).parent();
-                var id = $(this).parent().attr("id");
                 
-                var data = getData(src);
-                
-                if(!data) return;
-                
-                $(".name", this).text(data.name);
-                $(".url", this).text(data.url);
-                
-                $.ajax({
-                    url: "/fullscreen/" + id + "/current",
-                    method: "PUT",
-                    data: JSON.stringify({
-                        name: data.name, url: data.url
-                    }),
-                    contentType: "application/json"
-                });
+                setScreen(src);
             }
         });
 

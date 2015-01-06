@@ -7,7 +7,8 @@ var url = require("url"),
     qs = require("querystring"),
     feed = require("feed-read"),
     http = require("http"),
-    database = require("../database");
+    database = require("../database"),
+    Generator = require("../generator");
 
 var lastRedditFetch = {};
 var lastReddit = {};
@@ -35,7 +36,84 @@ var feeds = {
     engadget: {
         name: "Engadget",
         url: "http://www.engadget.com/rss.xml"
+    },
+    
+    "labsprojects": {
+        name: "Upcoming Labs Projects",
+        url: "http://ibeacon.klick.com/utild/projectgenrss/5"
     }
+};
+
+var projectGenerator = new Generator();
+
+projectGenerator.templates = [
+    "{modifier?}{product}{enabled?} {projectType}{suffixModifier?}",
+    
+];
+
+projectGenerator.wordLists = {
+    enabled: [
+        "-enabled"
+    ],
+    modifier: [
+        "Wearable ",
+        "Responsive ",
+        "Smart ",
+        "Connected ",
+        "Gamified ",
+        "Service-oriented ",
+        "Rich ",
+        "Programmatic ",
+        "Disruptive "
+    ],
+    product: [
+        "Oculus Rift",
+        "Apple Watch",
+        "Leap Motion",
+        "Kinect",
+        "iPhone",
+        ".NET",
+        "Javascript/HTML",
+        "WebGL"
+    ],
+    
+    technology: [
+        " .NET ",
+        " Javascript/HTML ",
+        " Ruby on Rails ",
+        " Node.js ",
+        " Objective-C ",
+        " PHP "
+        
+    ],
+    
+    projectType: [
+        "mobile app",
+        "website",
+        "VR experience",
+        "interactive visual aid",
+        //"PDUFA site",
+        "method of action"
+    ],
+    
+    diseaseAdj: [
+        "diabetic",
+        "chronic pain",
+        "oncology"
+    ],
+    
+    audience: [
+        "patients",
+        "reps"
+    ],
+        
+    suffixModifier: [
+        " aimed at {diseaseAdj} {audience}",
+        "-in-a-box",
+        " in the cloud",
+        " with social hooks",
+        " written in {technology}"
+    ]
 };
 
 
@@ -292,6 +370,52 @@ module.exports = {
                     
                     response.writeJson(dls);
                 });
+            })();
+        } else if(path[0] == "projectgen") {
+            (function() {
+                
+                var n = 1;
+                
+                if(path[1]) n = parseInt(path[1], 10) || 1;
+                
+                var ret = [];
+                
+                for(var i = 0; i < n; i++) {
+                    ret.push(projectGenerator.generate());
+                }
+                
+                response.writeJson(ret);
+            })();
+        } else if(path[0] == "projectgenrss") {
+            (function() {
+                
+                var n = 1;
+                
+                if(path[1]) n = parseInt(path[1], 10) || 1;
+                
+                var resp = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                resp += "<rss version=\"2.0\">";
+                resp += "<channel>";
+                resp += "<title>Lab Projects</title>";
+                resp += "<link>http://ibeacon.klick.com/</link>";
+                resp += "<description />";
+                for(var i = 0; i < n; i++) {
+                    var title = projectGenerator.generate();
+                    resp += "<item>";
+                    resp += "<title>" + title + "</title>";
+                    resp += "<pubDate>";
+                    var today = new Date();
+                    today.setHours(today.getHours() + i);
+                    resp += today.toUTCString();
+                    resp += "</pubDate>";
+                    resp += "</item>";
+                }
+                resp += "</channel>";
+                resp += "</rss>";
+                
+                response.writeHead(200, { "Content-Type": "text/xml" });
+                response.write(resp);
+                response.end();
             })();
         }
     }
